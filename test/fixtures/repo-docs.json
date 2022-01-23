@@ -1,0 +1,36 @@
+[
+  {
+    "id": "tauri",
+    "title": "Tauri",
+    "type": "repo",
+    "kind": "code",
+    "stars": 28400,
+    "latestVersion": "1.0.0-beta.8",
+    "description": "Description",
+    "body": "Tauri is a framework for building tiny, blazing fast binaries for all major desktop platforms. Developers can integrate any front-end framework that compiles to HTML, JS and CSS for building their user interface. The backend of the application is a rust-sourced binary with an API that the front-end can interact with.\nThe user interface in Tauri apps currently leverages tao as a window handling library on macOS and Windows, and gtk on Linux via the Tauri-team incubated and maintained WRY, which creates a unified interface to the system webview (and other goodies like Menu and Taskbar), leveraging WebKit on macOS, WebView2 on Windows and WebKitGTK on Linux.\nTo learn more about the details of how all of these pieces fit together, please consult this ARCHITECTURE.md document.",
+    "url": "https://github.com/tauri-apps/tauri"
+  },
+  {
+    "id": "tauri-docs",
+    "title": "Tauri",
+    "type": "repo",
+    "kind": "documentation",
+    "stars": 28400,
+    "latestVersion": "1.0.0-beta.8",
+    "description": "Description",
+    "body": "lorem ipsum",
+    "url": "https://github.com/tauri-apps/tauri-docs"
+  },
+  {
+    "id": "wry",
+    "title": "Wry",
+    "type": "repo",
+    "kind": "code",
+    "stars": 28400,
+    "latestVersion": "0.12.2",
+    "description": "Description",
+    "body": "Cross-platform WebView rendering library in Rust that supports all major desktop platforms like Windows, macOS, and Linux.",
+    "url": "https://github.com/tauri-apps/tauri-apps"
+  }
+
+]

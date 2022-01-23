@@ -1,0 +1,1274 @@
+{
+  "name": "Prose",
+  "item": [
+    {
+      "name": "Search",
+      "item": [
+        {
+          "name": "Search in index",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/search?q=prinec",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "prinec"
+                },
+                {
+                  "key": "offset",
+                  "value": "0",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "attributesToRetrieve",
+                  "value": "title,author",
+                  "disabled": true
+                },
+                {
+                  "key": "attributesToCrop",
+                  "value": "title",
+                  "disabled": true
+                },
+                {
+                  "key": "attributesToHighlight",
+                  "value": "*",
+                  "disabled": true
+                },
+                {
+                  "key": "cropLength",
+                  "value": "5",
+                  "disabled": true
+                },
+                {
+                  "key": "filter",
+                  "value": "genre=\"fantasy\"",
+                  "disabled": true
+                },
+                {
+                  "key": "matches",
+                  "value": "true",
+                  "disabled": true
+                },
+                {
+                  "key": "facetsDistribution",
+                  "value": "genre",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "price",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search in index",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "content-type": true
+            }
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"q\": \"\",\n    \"attributesToHighlight\": [\"title\"]\n}"
+            },
+            "url": {
+              "raw": "{{url}}/indexes{{prose}}/search",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes{{prose}}",
+                "search"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "Get one document",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/documents/2",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "documents",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get documents",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/documents",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "documents"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "offset",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "attributesToRetrieve",
+                  "value": "*",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add or replace documents",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"id\": \"tauri\",\n    \"title\": \"Tauri\",\n    \"type\": \"repo\",\n    \"kind\": \"code\",\n    \"stars\": 28400,\n    \"latestVersion\": \"1.0.0-beta.8\",\n    \"description\": \"Description\",\n    \"body\": \"Tauri is a framework for building tiny, blazing fast binaries for all major desktop platforms. Developers can integrate any front-end framework that compiles to HTML, JS and CSS for building their user interface. The backend of the application is a rust-sourced binary with an API that the front-end can interact with.\\nThe user interface in Tauri apps currently leverages tao as a window handling library on macOS and Windows, and gtk on Linux via the Tauri-team incubated and maintained WRY, which creates a unified interface to the system webview (and other goodies like Menu and Taskbar), leveraging WebKit on macOS, WebView2 on Windows and WebKitGTK on Linux.\\nTo learn more about the details of how all of these pieces fit together, please consult this ARCHITECTURE.md document.\",\n    \"url\": \"https://github.com/tauri-apps/tauri\"\n  },\n  {\n    \"id\": \"tauri-docs\",\n    \"title\": \"Tauri\",\n    \"type\": \"repo\",\n    \"kind\": \"documentation\",\n    \"stars\": 28400,\n    \"latestVersion\": \"1.0.0-beta.8\",\n    \"description\": \"Description\",\n    \"body\": \"lorem ipsum\",\n    \"url\": \"https://github.com/tauri-apps/tauri-docs\"\n  },\n  {\n    \"id\": \"wry\",\n    \"title\": \"Wry\",\n    \"type\": \"repo\",\n    \"kind\": \"code\",\n    \"stars\": 28400,\n    \"latestVersion\": \"0.12.2\",\n    \"description\": \"Description\",\n    \"body\": \"Cross-platform WebView rendering library in Rust that supports all major desktop platforms like Windows, macOS, and Linux.\",\n    \"url\": \"https://github.com/tauri-apps/tauri-apps\"\n  }\n\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/documents",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "documents"
+              ],
+              "query": [
+                {
+                  "key": "primaryKey",
+                  "value": "id",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"id\": \"tauri\",\n    \"title\": \"Tauri\",\n    \"type\": \"repo\",\n    \"kind\": \"code\",\n    \"stars\": 28400,\n    \"latestVersion\": \"1.0.0-beta.8\",\n    \"description\": \"Description\",\n    \"body\": \"Tauri is a framework for building tiny, blazing fast binaries for all major desktop platforms. Developers can integrate any front-end framework that compiles to HTML, JS and CSS for building their user interface. The backend of the application is a rust-sourced binary with an API that the front-end can interact with.\\nThe user interface in Tauri apps currently leverages tao as a window handling library on macOS and Windows, and gtk on Linux via the Tauri-team incubated and maintained WRY, which creates a unified interface to the system webview (and other goodies like Menu and Taskbar), leveraging WebKit on macOS, WebView2 on Windows and WebKitGTK on Linux.\\nTo learn more about the details of how all of these pieces fit together, please consult this ARCHITECTURE.md document.\",\n    \"url\": \"https://github.com/tauri-apps/tauri\"\n  },\n  {\n    \"id\": \"tauri-docs\",\n    \"title\": \"Tauri\",\n    \"type\": \"repo\",\n    \"kind\": \"documentation\",\n    \"stars\": 28400,\n    \"latestVersion\": \"1.0.0-beta.8\",\n    \"description\": \"Description\",\n    \"body\": \"lorem ipsum\",\n    \"url\": \"https://github.com/tauri-apps/tauri-docs\"\n  },\n  {\n    \"id\": \"wry\",\n    \"title\": \"Wry\",\n    \"type\": \"repo\",\n    \"kind\": \"code\",\n    \"stars\": 28400,\n    \"latestVersion\": \"0.12.2\",\n    \"description\": \"Description\",\n    \"body\": \"Cross-platform WebView rendering library in Rust that supports all major desktop platforms like Windows, macOS, and Linux.\",\n    \"url\": \"https://github.com/tauri-apps/tauri-apps\"\n  }\n\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/documents",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "documents"
+                  ],
+                  "query": [
+                    {
+                      "key": "primaryKey",
+                      "value": "id",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "transfer-encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "content-encoding",
+                  "value": "gzip"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "date",
+                  "value": "Wed, 19 Jan 2022 22:03:58 GMT"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"uid\": 2,\n    \"indexUid\": \"repos\",\n    \"status\": \"enqueued\",\n    \"type\": \"documentAddition\",\n    \"enqueuedAt\": \"2022-01-19T22:03:59.151759887Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Add or update documents",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n\t\"id\": 2,\n\t\"author\": \"J. Austen\",\n\t\"date\": \"1813\"\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/documents",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "documents"
+              ],
+              "query": [
+                {
+                  "key": "primaryKey",
+                  "value": "id",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete one document",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/documents/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "documents",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete all documents",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/documents",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "documents"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "item": [
+        {
+          "name": "Sub-routes",
+          "item": [
+            {
+              "name": "Get ranking rules",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/ranking-rules",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "ranking-rules"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update ranking rules",
+              "protocolProfileBehavior": {
+                "disabledSystemHeaders": {
+                  "content-type": true
+                }
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n\t\"typo\"\n]\n"
+                },
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/ranking-rules",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "ranking-rules"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reset ranking rules",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/ranking-rules",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "ranking-rules"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get distinct attribute",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/distinct-attribute",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "distinct-attribute"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update distinct attribute",
+              "protocolProfileBehavior": {
+                "disabledSystemHeaders": {
+                  "content-type": true
+                }
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "\"genre\""
+                },
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/distinct-attribute",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "distinct-attribute"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reset distinct attribute",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/distinct-attribute",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "distinct-attribute"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get searchable attributes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/searchable-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "searchable-attributes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update searchable attributes",
+              "protocolProfileBehavior": {
+                "disabledSystemHeaders": {
+                  "content-type": true
+                }
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\"title\", \"author\"]"
+                },
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/searchable-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "searchable-attributes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reset searchable attributes",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/searchable-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "searchable-attributes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get displayed attributes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/displayed-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "displayed-attributes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update displayed attributes",
+              "protocolProfileBehavior": {
+                "disabledSystemHeaders": {
+                  "content-type": true
+                }
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\"title\"]"
+                },
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/displayed-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "displayed-attributes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reset displayed attributes",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/displayed-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "displayed-attributes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get synonyms",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/synonyms",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "synonyms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update synonyms",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "type": "text",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"hp\": [\"harry potter\"],\n    \"harry potter\": [\"hp\"]\n}"
+                },
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/synonyms",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "synonyms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reset synonyms",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "type": "text",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "\"[\"wizard\"]\""
+                },
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/synonyms",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "synonyms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get stop-words",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "type": "text",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\"the\"]"
+                },
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/stop-words",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "stop-words"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update stop-words",
+              "protocolProfileBehavior": {
+                "disabledSystemHeaders": {
+                  "content-type": true
+                }
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\"the\", \"of\"]"
+                },
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/stop-words",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "stop-words"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reset stop-words",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/stop-words",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "stop-words"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get filterable attributes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/filterable-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "filterable-attributes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update filterable attributes",
+              "protocolProfileBehavior": {
+                "disabledSystemHeaders": {
+                  "content-type": true
+                }
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\"genre\"]"
+                },
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/filterable-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "filterable-attributes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reset filterable attributes",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/filterable-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "filterable-attributes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get sortable attributes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/sortable-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "sortable-attributes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update sortable attributes",
+              "protocolProfileBehavior": {
+                "disabledSystemHeaders": {
+                  "content-type": true
+                }
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\"price\"]"
+                },
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/sortable-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "sortable-attributes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reset sortable attributes",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/settings/sortable-attributes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "settings",
+                    "sortable-attributes"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get all settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/settings",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update settings",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "content-type": true
+            }
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"searchableAttributes\": [\"title\", \"author\"],\n\t\"stopWords\": [\"of\", \"the\"],\n    \"displayedAttributes\": [\"title\", \"author\", \"genre\", \"price\"],\n    \"filterableAttributes\": [\"genre\", \"price\"],\n    \"sortableAttributes\": [\"price\"]\n}"
+            },
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/settings",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset all settings",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/settings",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "settings"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Indexes",
+      "item": [
+        {
+          "name": "Create REPOs Index",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "content-type": true
+            }
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"uid\": \"repos\",\n    \"primaryKey\": \"id\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/indexes",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update index",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "content-type": true
+            }
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"primaryKey\": \"title\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}"
+              ]
+            },
+            "description": "Can only change the document identifier if it has not already been added before."
+          },
+          "response": []
+        },
+        {
+          "name": "Show index",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Index Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/stats",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "stats"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/indexes/{{prose}}/stats",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "indexes",
+                    "{{prose}}",
+                    "stats"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "transfer-encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "content-encoding",
+                  "value": "gzip"
+                },
+                {
+                  "key": "date",
+                  "value": "Wed, 19 Jan 2022 22:29:31 GMT"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"numberOfDocuments\": 3,\n    \"isIndexing\": false,\n    \"fieldDistribution\": {\n        \"body\": 3,\n        \"description\": 3,\n        \"id\": 3,\n        \"kind\": 3,\n        \"latestVersion\": 3,\n        \"stars\": 3,\n        \"title\": 3,\n        \"type\": 3,\n        \"url\": 3\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "All tasks",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/indexes/{{prose}}/tasks",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "indexes",
+            "{{prose}}",
+            "tasks"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/indexes/{{prose}}/tasks",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "indexes",
+                "{{prose}}",
+                "tasks"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "transfer-encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "date",
+              "value": "Wed, 19 Jan 2022 22:04:45 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"results\": [\n        {\n            \"uid\": 2,\n            \"indexUid\": \"repos\",\n            \"status\": \"succeeded\",\n            \"type\": \"documentAddition\",\n            \"details\": {\n                \"receivedDocuments\": 3,\n                \"indexedDocuments\": 3\n            },\n            \"duration\": \"PT0.135544174S\",\n            \"enqueuedAt\": \"2022-01-19T22:03:59.151759887Z\",\n            \"startedAt\": \"2022-01-19T22:03:59.198132912Z\",\n            \"finishedAt\": \"2022-01-19T22:03:59.333677086Z\"\n        },\n        {\n            \"uid\": 1,\n            \"indexUid\": \"repos\",\n            \"status\": \"failed\",\n            \"type\": \"documentAddition\",\n            \"details\": {\n                \"receivedDocuments\": 3,\n                \"indexedDocuments\": 0\n            },\n            \"error\": {\n                \"message\": \"Document identifier `repo::tauri` is invalid. A document identifier can be of type integer or string, only composed of alphanumeric characters (a-z A-Z 0-9), hyphens (-) and underscores (_).\",\n                \"code\": \"invalid_document_id\",\n                \"type\": \"invalid_request\",\n                \"link\": \"https://docs.meilisearch.com/errors#invalid_document_id\"\n            },\n            \"duration\": \"PT0.041476765S\",\n            \"enqueuedAt\": \"2022-01-19T21:57:13.472122896Z\",\n            \"startedAt\": \"2022-01-19T21:57:13.539152863Z\",\n            \"finishedAt\": \"2022-01-19T21:57:13.580629628Z\"\n        },\n        {\n            \"uid\": 0,\n            \"indexUid\": \"repos\",\n            \"status\": \"succeeded\",\n            \"type\": \"indexCreation\",\n            \"details\": {\n                \"primaryKey\": \"id\"\n            },\n            \"duration\": \"PT0.915210695S\",\n            \"enqueuedAt\": \"2022-01-19T21:47:56.231399444Z\",\n            \"startedAt\": \"2022-01-19T21:47:56.303189398Z\",\n            \"finishedAt\": \"2022-01-19T21:47:57.218400093Z\"\n        }\n    ]\n}"
+        }
+      ]
+    }
+  ],
+  "description": "Git repos which are either directly managed by `tauri-apps` or are popular in community."
+}

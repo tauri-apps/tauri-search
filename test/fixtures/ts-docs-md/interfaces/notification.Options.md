@@ -1,0 +1,51 @@
+[@tauri-apps/api](../README.md) / [Exports](../modules.md) / [notification](../modules/notification.md) / Options
+
+# Interface: Options
+
+[notification](../modules/notification.md).Options
+
+Options to send a notification.
+
+## Table of contents
+
+### Properties
+
+- [body](notification.Options.md#body)
+- [icon](notification.Options.md#icon)
+- [title](notification.Options.md#title)
+
+## Properties
+
+### body
+
+• `Optional` **body**: `string`
+
+Optional notification body.
+
+#### Defined in
+
+[notification.ts:36](https://github.com/ksnyde/tauri/blob/3a04c036/tooling/api/src/notification.ts#L36)
+
+___
+
+### icon
+
+• `Optional` **icon**: `string`
+
+Optional notification icon.
+
+#### Defined in
+
+[notification.ts:38](https://github.com/ksnyde/tauri/blob/3a04c036/tooling/api/src/notification.ts#L38)
+
+___
+
+### title
+
+• **title**: `string`
+
+Notification title.
+
+#### Defined in
+
+[notification.ts:34](https://github.com/ksnyde/tauri/blob/3a04c036/tooling/api/src/notification.ts#L34)

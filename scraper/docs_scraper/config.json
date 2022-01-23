@@ -1,0 +1,32 @@
+{
+  "index_uid": "rust-api",
+  "start_urls": ["https://docs.rs/tauri/latest/tauri"],
+  "sitemap_urls": [],
+  "selectors": {
+    "lvl0": {
+      "selector": "h1",
+      "global": true,
+      "default_value": "Title"
+    },
+    "lvl1": {
+      "selector": "h2",
+      "global": true,
+      "default_value": "Section"
+    },
+    "lvl2": "null",
+    "lvl3": ".docblock-short",
+    "lvl4": "h4",
+    "lvl5": "h5",
+    "lvl6": "null",
+    "text": "#main"
+  },
+  "strip_chars": " .,;:#",
+  "scrap_start_urls": true,
+  "custom_settings": {
+    "synonyms": {
+      "relevancy": ["relevant", "relevance"],
+      "relevant": ["relevancy", "relevance"],
+      "relevance": ["relevancy", "relevant"]
+    }
+  }
+}

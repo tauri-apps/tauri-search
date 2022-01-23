@@ -1,0 +1,15 @@
+button:
+  about: About
+  back: Back
+  go: GO
+  home: Home
+home:
+  search: Search
+  desc: Documentation and Interactive Playground
+  ask-for-search: Search for Something
+not-found: Not found
+nav:
+  indexing: Indexing
+  toggle_dark: Toggle dark mode
+  toggle_langs: Change languages
+  
