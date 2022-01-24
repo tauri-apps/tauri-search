@@ -24,6 +24,6 @@ export const tsFunction = createMapper<TsAstFunction, ApiModel>("tsFunction", (i
     type: s.type.name,
     comment: s.comment?.text || s.comment?.shortText,
   })),
-  declaration: `function ${i.name}(${i.signature.map((s) => `s.name`).join(", ")})`,
+  declaration: `function ${i.name}(${i.signature.map((s) => `${s.name}`).join(", ")})`,
   url: `${TAURI_JS_DOCS_URL}/modules/${i.module}#${i.name}`,
 }));

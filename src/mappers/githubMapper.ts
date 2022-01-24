@@ -1,4 +1,4 @@
-import { RepoModel } from "~/models/RepoModel";
+import { IRepoModel } from "~/models/RepoModel";
 import { url } from "~/types/aliases";
 import { createMapper } from "~/utils/createMapper";
 import { GithubRepoResp } from "~/utils/github/getRepo";
@@ -6,7 +6,7 @@ import { GithubRepoResp } from "~/utils/github/getRepo";
 /**
  * Maps a **Typescript Module** to the Meilisearch documents for that module.
  */
-export const githubMapper = createMapper<GithubRepoResp["data"], RepoModel>(
+export const githubMapper = createMapper<GithubRepoResp["data"], IRepoModel>(
   "githubMapper",
   (i) => ({
     id: `github_${i.full_name.replace("/", "_")}`,

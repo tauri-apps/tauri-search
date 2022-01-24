@@ -2,14 +2,17 @@ lockfileVersion: 5.3
 
 specifiers:
   '@antfu/eslint-config': ^0.16.0
+  '@iconify-json/ant-design': ^1.0.2
   '@iconify-json/bx': ^1.0.3
   '@iconify-json/carbon': ^1.0.14
   '@iconify-json/cib': ^1.0.1
   '@iconify-json/fluent': ^1.0.15
   '@iconify-json/ic': ^1.0.8
   '@iconify-json/mdi': ^1.0.12
+  '@iconify-json/ph': ^1.0.4
   '@iconify-json/tabler': ^1.0.12
   '@iconify-json/teenyicons': ^1.0.1
+  '@iconify-json/vscode-icons': ^1.0.3
   '@intlify/vite-plugin-vue-i18n': ^3.2.1
   '@types/markdown-it-link-attributes': ^3.0.1
   '@types/nprogress': ^0.2.0
@@ -32,6 +35,7 @@ specifiers:
   nprogress: ^0.2.0
   pinia: ^2.0.9
   prism-theme-vars: ^0.2.2
+  tauri-search: link:../
   ts-morph: ^13.0.3
   typescript: ^4.5.5
   unplugin-auto-import: ^0.5.11
@@ -60,6 +64,7 @@ dependencies:
   nprogress: 0.2.0
   pinia: 2.0.9_typescript@4.5.5+vue@3.2.28
   prism-theme-vars: 0.2.2
+  tauri-search: link:..
   ts-morph: 13.0.3
   vue: 3.2.28
   vue-demi: 0.12.1_vue@3.2.28
@@ -68,14 +73,17 @@ dependencies:
 
 devDependencies:
   '@antfu/eslint-config': 0.16.0_eslint@8.7.0+typescript@4.5.5
+  '@iconify-json/ant-design': 1.0.2
   '@iconify-json/bx': 1.0.3
   '@iconify-json/carbon': 1.0.14
   '@iconify-json/cib': 1.0.1
   '@iconify-json/fluent': 1.0.15
   '@iconify-json/ic': 1.0.8
   '@iconify-json/mdi': 1.0.12
+  '@iconify-json/ph': 1.0.4
   '@iconify-json/tabler': 1.0.12
   '@iconify-json/teenyicons': 1.0.1
+  '@iconify-json/vscode-icons': 1.0.3
   '@intlify/vite-plugin-vue-i18n': 3.2.1_vite@2.7.13+vue-i18n@9.1.9
   '@types/markdown-it-link-attributes': 3.0.1
   '@types/nprogress': 0.2.0
@@ -1584,6 +1592,12 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
+  /@iconify-json/ant-design/1.0.2:
+    resolution: {integrity: sha512-pyD1RM5gB61vgP1g3F9yMfmZkxCHW6zbHsJJJaBQG1YkJBUmN/9i3pJjyprwCmlOcw16E8DMUWKMCWG00edDCw==}
+    dependencies:
+      '@iconify/types': 1.0.12
+    dev: true
+
   /@iconify-json/bx/1.0.3:
     resolution: {integrity: sha512-nwUxwOwocTp5u+KcBUraqEXiC7VG6niL6RQIdbLsRjZwouxayyVXPIkBPwMEmxpcTk1SA8Jh52MI+Scex1wJSA==}
     dependencies:
@@ -1620,6 +1634,12 @@ packages:
       '@iconify/types': 1.0.12
     dev: true
 
+  /@iconify-json/ph/1.0.4:
+    resolution: {integrity: sha512-hcxC2k25/Lh/bgXgbwAD4WvnC8BeunSqafFwIOyL1dCu3QGBgKmPFIBUv4W2kBm+rbrv7F3WHPFBAJDVrjpunA==}
+    dependencies:
+      '@iconify/types': 1.0.12
+    dev: true
+
   /@iconify-json/tabler/1.0.12:
     resolution: {integrity: sha512-ZUXFwecBxSrJhtMiJgLwd+ol2etNRl5T/yMfRFRq5ZGIDSmkk+W0ZbkMroSlglo2Eu3UZ4gNYLNg3x3efGzDlg==}
     dependencies:
@@ -1628,6 +1648,12 @@ packages:
 
   /@iconify-json/teenyicons/1.0.1:
     resolution: {integrity: sha512-Xndzke88iDwt3GzCVFyhc0oi46UG7I+Vo8euC4VOGpMkDU/eK08iqJ1zBeT7cE5pJMxJ+8+qCMtWY0f5j7lz5g==}
+    dependencies:
+      '@iconify/types': 1.0.12
+    dev: true
+
+  /@iconify-json/vscode-icons/1.0.3:
+    resolution: {integrity: sha512-3GW+zXEqQxqYCUcglAITagE945qCJUOihCC7yJwE7yPKkYOEsEb+w6GKNkqJ8RMM0vJFA4uNqSJTtqaFS9QF+A==}
     dependencies:
       '@iconify/types': 1.0.12
     dev: true

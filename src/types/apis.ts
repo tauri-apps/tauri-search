@@ -147,22 +147,6 @@ export type PropCharacteristicsApi<E extends string> = Omit<
   E
 >;
 
-// name: p => p.string().searchable().
-const prose: ModelDefnApi = {
-  document: {
-    foo: (m) => m.string("foo", "bar").displayed().searchable(),
-    bar: (m) => m.boolean().searchable(),
-    baz: (m) => m.number(),
-  },
-  index: {
-    rankingRules: (r) => r.words().attribute().exactness(),
-    stopWords: [],
-    synonyms: {
-      ts: ["typescript"],
-      typescript: ["ts"],
-    },
-  },
-};
 
 export type SearchModel<N extends string, T extends any> = {
   /** the name of the model */

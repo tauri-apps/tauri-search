@@ -6,6 +6,7 @@ import { parseFunction } from "./parseFunction";
 import { parseInterface } from "./parseInterface";
 import { parseReference } from "./parseReference";
 import { parseTypeAlias } from "./parseTypeAlias";
+import { parseVariable } from "./parseVariable";
 
 export function parseModule(mod: TypescriptBlock) {
   const modDefn: TsAstModule = {
@@ -25,7 +26,7 @@ export function parseModule(mod: TypescriptBlock) {
   for (const i of mod.children || []) {
     switch (i.kindString) {
       case TypescriptKind.Enumeration:
-        modDefn.enums.push(parseEnumeration(mod, i));
+        modDefn.enums.push(parseEnumeration(mod.name, i));
         break;
       case TypescriptKind.Function:
         modDefn.functions.push(parseFunction(mod.name, i));
@@ -37,7 +38,7 @@ export function parseModule(mod: TypescriptBlock) {
         modDefn.classes.push(parseClass(mod.name, i));
         break;
       case TypescriptKind.Variable:
-        modDefn.variables.push(i);
+        modDefn.variables.push(parseVariable(mod.name, i));
         break;
       case TypescriptKind.TypeAlias:
         modDefn.typeAliases.push(parseTypeAlias(mod.name, i));

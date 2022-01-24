@@ -1,7 +1,7 @@
 import { datetime, url } from "~/types/aliases";
 import { createModel } from "~/utils/createModel";
 
-export interface RepoModel {
+export interface IRepoModel {
   id: string;
   name: string;
   description: string | null;
@@ -28,4 +28,4 @@ export interface RepoModel {
   url: url;
 }
 
-export const RepoModel = createModel<RepoModel>("repo");
+export const RepoModel = createModel<IRepoModel>("repo");

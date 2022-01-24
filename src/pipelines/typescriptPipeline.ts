@@ -1,4 +1,4 @@
-import api from "~/models/api";
+import {ApiModel} from "~/models";
 import {
   tsClass,
   tsFunction,
@@ -20,7 +20,7 @@ import { tsEnumeration } from "~/mappers/tsEnumeration";
 export async function typescriptPipeline() {
   // get AST from output of TSDoc's JSON option
   const ast = await parseTypescriptAst();
-  const model = await api;
+  const model = await ApiModel;
 
   const waitFor: Promise<MsAddOrReplace>[] = [];
 

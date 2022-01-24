@@ -2,16 +2,24 @@
 
 +++ Install Dependencies and Start Docs Site (_looks like you already did_)
 ```bash
-# install npm dependencies (in all repos)
+# 1. installs deps for both CLI and Docs
+# 2. starts Docs server (in dev mode with HMR), opens in browser
+# 3. starts Meilisearch server in Docker
 pnpm run start
-# start Docker services (you must have Docker installed)
-docker compose up
-# bring up documentation / playground site
-pnpm run dev
 ```
-A browser window should now have openned up pointing to `http://localhost:3333`.
 
-You are now up and running with the documentation site and assuming your Docker services also started up -- the [search server](./meilisearch) and [scraper utility](./scraper) -- then you will be able to start trying out searches immediately.
+> A browser window should now have opened to [`http://localhost:3333`](http://localhost:3333).
+
+You are now up and running with the documentation site -- and assuming you have Docker installed -- a local [search server](./meilisearch) which you can interact with.
+
+### Already installed Deps?
+
+If you've already installed all the deps and want more granular control you can choose from the various script targets or just choose _watch_ to look at docs with active editing capability:
+
+```bash
+# turn on watcher mode for both CLI and Docs
+pnpm run watch
+```
 +++
 
 

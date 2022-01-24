@@ -8,11 +8,11 @@ const config: Config.InitialOptions = {
   transform: {
     "^.+\\.ts$": "ts-jest",
   },
-  testPathIgnorePatterns: ["/node_modules/"],
+  testPathIgnorePatterns: ["/node_modules/", "/docs/"],
   moduleNameMapper: {
     "^[/]{0,1}~/(.*)$": resolve(process.cwd(), "src", "$1"),
   },
-  testMatch: ["test/**/?(*[-.])+(spec|test).ts"],
+  testMatch: ["**/?(*[-.])+(spec|test).ts"],
   setupFilesAfterEnv: ["jest-extended"],
   testEnvironment: "node",
 };

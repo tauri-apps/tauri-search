@@ -19,7 +19,7 @@
       "vite-plugin-vue-layouts/client"
     ],
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["src/*"],
     }
   },
   "include": ["src", "test", "vite.config.ts"],

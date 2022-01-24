@@ -4,22 +4,33 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    'AntDesign:fileMarkdownOutlined': typeof import('~icons/ant-design/file-markdown-outlined')['default']
     'Bx:bxSearchAlt': typeof import('~icons/bx/bx-search-alt')['default']
+    'Carbon:document': typeof import('~icons/carbon/document')['default']
+    'Carbon:errorFilled': typeof import('~icons/carbon/error-filled')['default']
+    'Carbon:listDropdown': typeof import('~icons/carbon/list-dropdown')['default']
+    'Carbon:nextFilled': typeof import('~icons/carbon/next-filled')['default']
     CarbonLanguage: typeof import('~icons/carbon/language')['default']
     CarbonMoon: typeof import('~icons/carbon/moon')['default']
     CarbonSun: typeof import('~icons/carbon/sun')['default']
-    CarbonWarning: typeof import('~icons/carbon/warning')['default']
     Counter: typeof import('./components/Counter.vue')['default']
     'Fluent:databaseSearch24Regular': typeof import('~icons/fluent/database-search24-regular')['default']
     Footer: typeof import('./components/Footer.vue')['default']
-    'Ic:roundScreenSearchDesktop': typeof import('~icons/ic/round-screen-search-desktop')['default']
     'Mdi:folderHome': typeof import('~icons/mdi/folder-home')['default']
+    'Mdi:github': typeof import('~icons/mdi/github')['default']
     'Mdi:languageRust': typeof import('~icons/mdi/language-rust')['default']
     'Mdi:languageTypescript': typeof import('~icons/mdi/language-typescript')['default']
+    'Ph:linkLight': typeof import('~icons/ph/link-light')['default']
     README: typeof import('./components/README.md')['default']
+    SearchActions: typeof import('./components/SearchActions.vue')['default']
+    SearchHit: typeof import('./components/SearchHit.vue')['default']
+    SearchResults: typeof import('./components/SearchResults.vue')['default']
+    SearchStats: typeof import('./components/SearchStats.vue')['default']
     SimpleCard: typeof import('./components/SimpleCard.vue')['default']
     'Tabler:databaseImport': typeof import('~icons/tabler/database-import')['default']
     'Teenyicons:dockerOutline': typeof import('~icons/teenyicons/docker-outline')['default']
+    'VscodeIcons:fileTypeRust': typeof import('~icons/vscode-icons/file-type-rust')['default']
+    'VscodeIcons:fileTypeTypescriptOfficial': typeof import('~icons/vscode-icons/file-type-typescript-official')['default']
   }
 }
 

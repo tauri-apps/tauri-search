@@ -7,10 +7,12 @@
     "ts-ast": "./bin/ts-ast.cjs"
   },
   "scripts": {
-    "start": "run-p start:*",
-    "start:seach": "pnpm install",
-    "start:docs": "pnpm -C ./docs/ pnpm install",
-    "up": "docker compose up",
+    "start": "run-s prep watch",
+    "prep": "run-p start:*",
+    "start:cli": "pnpm install",
+    "start:docs": "pnpm -C docs start",
+    "start:docker": "run-s up",
+    "up": "docker compose up -d",
     "down": "docker compose down",
     "restart": "docker compose restart",
     "vol:inspect": "run-s vol:inspect:*",
@@ -23,25 +25,29 @@
     "into:scraper": "docker exec -it scraper bash",
     "ping": "http GET localhost:7700/health",
     "prune": "docker system prune",
-    "mountpoint": "bash scripts/mountpoint.bash",
-    "dev": "pnpm -C demo pnpm run dev",
+    "dev": "pnpm -C docs dev",
     "lint": "eslint src --ext ts,js,tsx,jsx --fix --no-error-on-unmatched-pattern",
     "test": "echo \"Error: no test specified\" && exit 1",
     "ts-ast-overview": "node ./bin/ts-ast-overview.js",
     "ts-ast": "node ./bin/ts-ast.js",
     "watch": "run-p watch:*",
-    "watch:docs": "pnpm -C docs/ run dev",
-    "watch:cli": "tsup src/cli/*.ts --format=esm,cjs --clean --sourcemap -d bin --watch"
+    "watch:docs": "pnpm -C docs dev",
+    "watch:cli": "tsup src/cli/*.ts --format=esm,cjs --clean --sourcemap -d bin --watch",
+    "watch:types": "tsup src/models/index.ts src/type/index.ts --dts"
   },
   "author": "Ken Snyder<ken@ken.net>",
   "license": "MIT",
+  "engines": {
+    "node": ">=14",
+    "pnpm": ">=3"
+  },
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
     "gray-matter": "^4.0.3",
     "inferred-types": "^0.18.4",
     "native-dash": "^1.21.5",
-    "node-fetch": "^3.1.1",
-    "ts-morph": "^13.0.2",
+    "node-fetch": "^3.2.0",
+    "ts-morph": "^13.0.3",
     "xxhash-wasm": "^1.0.1"
   },
   "devDependencies": {
@@ -49,17 +55,18 @@
     "@octokit/types": "^6.34.0",
     "@types/jest": "^27.4.0",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "14",
-    "@typescript-eslint/eslint-plugin": "^5.9.1",
-    "@typescript-eslint/parser": "^5.9.1",
+    "@types/node": "^14.18.9",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
     "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jest": "^25.3.4",
+    "eslint-plugin-jest": "^25.7.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "fx": "^20.0.2",
+    "husky": "^7.0.4",
     "jest": "^27.4.7",
     "jest-extended": "^1.2.0",
     "markdown-it": "^12.3.2",
@@ -73,6 +80,6 @@
     "ts-jest": "^27.1.3",
     "ts-node": "^10.4.0",
     "tsup": "^5.11.11",
-    "typescript": "^4.6.0-dev.20220117"
+    "typescript": "^4.6.0-dev.20220124"
   }
 }

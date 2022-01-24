@@ -2,7 +2,7 @@ import { TypescriptKind } from "~/enums";
 import { en } from "~/stop-words";
 import { createModel } from "~/utils/createModel";
 
-export interface ApiModel {
+export interface IApiModel {
   id: string;
   language: "rust" | "typescript";
   /**
@@ -29,10 +29,9 @@ export interface ApiModel {
   parameters?: { name: string; type?: string; comment?: string; kind: TypescriptKind }[];
 }
 
-const model = createModel<ApiModel>("api", (c) =>
+export const ApiModel = createModel<IApiModel>("api", (c) =>
   c //
     .stopWords(en)
     .filterable("language", "kind", "module", "tags")
 );
 
-export default model;

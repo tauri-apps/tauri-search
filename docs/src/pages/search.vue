@@ -1,37 +1,32 @@
 <script setup lang="ts">
-import { onStartTyping, useIntervalFn } from '@vueuse/core'
-const el = ref()
-const searchText = ref('')
+import { onStartTyping } from "@vueuse/core";
+import { useSearch } from "~/modules/search";
+const el = ref();
+const searchText = ref("");
+const s = useSearch();
+const { t } = useI18n();
+
+
+debouncedWatch(
+  searchText,
+  async() => {
+    await s.search(searchText.value);
+  },
+  { debounce: 500 }
+);
 
 onStartTyping(() => {
-  if (!el.value.active)
-    el.value.focus()
-})
+  if (!el.value.active) {el.value.focus();};
+});
 
-const searchAvailable = ref(false)
-
-useIntervalFn(async() => {
-  const response = await (await fetch('http://localhost:7700/health')).json() as { status: string }
-  searchAvailable.value = response.status === 'available'
-}, 5000)
-
-const router = useRouter()
-const search = async() => {
-  const response = await (await fetch(`http://localhost:7700/indexes/repo/search?q=${searchText.value}`)).json()
-}
-
-const { t } = useI18n()
 </script>
 
 <template>
-  <div class="py-8 w-full flex flex-col space-y-4">
-    <div class="text-xl">
-      Use the local Meilisearch here.
-    </div>
-    <div class="text-xs" :class="searchAvailable ? 'text-green-500' : 'text-red-500'">
-      <span v-if="searchAvailable">Meilisearch Found Locally!</span>
-      <span v-else>Meilisearch is not available locally!</span>
-    </div>
+  <div class="py-3 w-full h-full">
+    <h1 class="text-xl mb-4">
+      Meilisearch Playground
+    </h1>
+    
     <input
       id="input"
       ref="el"
@@ -40,25 +35,22 @@ const { t } = useI18n()
       :aria-label="t('home.ask-for-search')"
       type="text"
       autocomplete="false"
-      class="px-auto px-4 py-2 w-250px text-center bg-transparent self-center"
+      spellcheck="false"
+      class="px-auto px-4 py-3 w-350px text-center bg-transparent self-center"
       border="~ rounded gray-200 dark:gray-700"
       outline="none active:none"
-      @keydown.enter="search"
     >
     <label class="hidden" for="input">{{ t('home.ask-for-search') }}</label>
 
-    <div>
-      <button
-        class="m-3 text-sm btn"
-        :disabled="!searchText"
-        @click="search"
-      >
-        {{ t('button.go') }}
-      </button>
-    </div>
+    <div class="results-area grid grid-cols-3 gap-4 h-full mt-8 mx-4">
+      <div class="flex flex-col col-span-1 space-y-4">
+        <search-actions />
+        <search-stats class="mt-4" />
+      </div>
 
-    <div class="results-area flex flex-col flex-grow">
-      results
+      <div class="col-span-2 rounded-md bg-gray-100/25 dark:bg-gray-900/25">
+        <search-results :query="searchText" />
+      </div>
     </div>
   </div>
 </template>

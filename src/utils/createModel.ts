@@ -8,7 +8,6 @@ import {
   MsSettingsResponse,
   RankingRule,
   RankingRulesApi,
-  StopWords,
 } from "~/types";
 import xxhash from "xxhash-wasm";
 import fetch from "node-fetch";
@@ -122,7 +121,7 @@ export type SearchModel<T extends {}> = {
     filterable?: (keyof T)[];
     distinct?: (keyof T)[];
     sortable?: (keyof T)[];
-    stopWords?: StopWords;
+    stopWords?: string[];
     synonyms?: IndexSynonyms;
   };
   query: {
