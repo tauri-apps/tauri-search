@@ -19,7 +19,7 @@
     "nprogress": "^0.2.0",
     "pinia": "^2.0.9",
     "prism-theme-vars": "^0.2.2",
-    "tauri-search": "link:../",
+    "tauri-search": "workspace:*",
     "ts-morph": "^13.0.3",
     "vue": "^3.2.28",
     "vue-demi": "^0.12.1",

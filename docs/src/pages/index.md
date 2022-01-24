@@ -21,7 +21,19 @@ If you've already installed all the deps and want more granular control you can 
 pnpm run watch
 ```
 +++
-
++++ Ways to Consume this library
+- **Search Development** - if you are updating docs, index definitions, etc. you'll run this in _watch_ mode (aka., `pnpm run start` (first time) or `pnpm run watch`)
+- **Deployment** - When an _upstream_ dependency is updated this repo should be trigged by a Netlify build hook. For instance:
+- `tauri` has a new release to production branch, as a `postbuild` step in Netlify build process, it will call Netlify's API and ask for a rebuild of this repo.
+  - we care about picking up the two AST files to build the API docs (`ts-docs.json`, `rust.json`)
+- `tauri-docs` releases new docs, again a `postbuild` hook on Netlify is called to it requests a rebuild from this repo
+  - here we need to pickup the directly or MD files
+- `NPM Dependency` - the `Models` you've defined along with all of the _types_ defined are available as an NPM dependency
+  ```ts
+  import { ProseModel } from "tauri-search";
+  import type { MeiliSearchResponse } from "tauri-search";
+  ```
++++
 
 
 ## Sitemap

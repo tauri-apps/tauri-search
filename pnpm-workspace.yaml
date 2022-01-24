@@ -1,0 +1,7 @@
+packages:
+  - "docs"
+  # excludes test dirs and node_modules
+  - "!**/test/**"
+  - "!**/node_modules/**"
+# [Ref](https://pnpm.io/workspaces#shared-workspace-lockfile)  
+shared-workspace-lockfile: true

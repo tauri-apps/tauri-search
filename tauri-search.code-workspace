@@ -1,0 +1,15 @@
+{
+  "folders": [
+    {
+      "name": "✨ tauri-search",
+      "path": "."
+    },
+    {
+      "name": "📚 docs",
+      "path": "./docs"
+    }
+  ],
+  "settings": {
+    "monorepoWorkspace.includeRoot": true
+  }
+}
