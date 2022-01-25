@@ -38,3 +38,5 @@ export const githubMapper = createMapper<GithubRepoResp["data"], IRepoModel>(
     url: i.html_url as url,
   })
 );
+
+const g = githubMapper.map();

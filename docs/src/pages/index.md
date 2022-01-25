@@ -24,32 +24,73 @@ pnpm run watch
 +++ Ways to Consume this library
 - **Search Development** - if you are updating docs, index definitions, etc. you'll run this in _watch_ mode (aka., `pnpm run start` (first time) or `pnpm run watch`)
 - **Deployment** - When an _upstream_ dependency is updated this repo should be trigged by a Netlify build hook. For instance:
-- `tauri` has a new release to production branch, as a `postbuild` step in Netlify build process, it will call Netlify's API and ask for a rebuild of this repo.
-  - we care about picking up the two AST files to build the API docs (`ts-docs.json`, `rust.json`)
-- `tauri-docs` releases new docs, again a `postbuild` hook on Netlify is called to it requests a rebuild from this repo
-  - here we need to pickup the directly or MD files
-- `NPM Dependency` - the `Models` you've defined along with all of the _types_ defined are available as an NPM dependency
+  - `tauri` has a new release to production branch, as a `postbuild` step in Netlify build process, it will call Netlify's API and ask for a rebuild of this repo.
+    - we care about picking up the two AST files to build the API docs (`ts-docs.json`, `rust.json`)
+  - `tauri-docs` releases new docs, again a `postbuild` hook on Netlify is called to it requests a rebuild from this repo
+    - here we need to pickup the directly or MD files
+- **NPM Dependency** - the `Models` you've defined along with all of the _types_ defined are available as an NPM dependency
   ```ts
   import { ProseModel } from "tauri-search";
   import type { MeiliSearchResponse } from "tauri-search";
   ```
 +++
 
+## Models
 
-## Sitemap
+Central to using this library to build and refresh your search indexes is understanding the concept of `Model`.
+- A Model has a `1:1` relationship with search indexes (or at least _potential_ indexes)
+- A Model is intended to represent:
+  - the **document structure** that will be used for docs in the index
+  - allows for **configuring the index** itself (e.g., stop words, synonyms, etc.)
+  - allows you to embed data mappers which map from one document structure to another
+  +++ Take a look at the examples here to get a better bearing:
+    - +++ define the model:
+        ```ts
+        /** structure for documents in the Prose index */
+        export interface IProse {
+          title: string; section: string;
+          lastUpdated: number; url: string;
+        }
+        /** structure for the input data structure */
+        export interface IMarkdownAst {
+          h1: string; h2: string; h3: string;
+          url: string;
+        }
 
-Use the Nav bar at the top to navigation to the various sections:
+        /** create the Prose model */
+        const Prose = createModel("prose", c => c //
+          .synonomys({ js: ["javascript"], javascript: ["js"]})
+          .addMapper("markdown").mapDefn<IMarkdownAst>(i => {
+            title: i.h1,
+            section: i.h2,
+            lastUpdated: i.lastUpdated,
+            url: i.url
+          })
+        )
+        ```
+    - +++ use the model to call the MeiliSearch API
+      ```ts
+      import { Prose } from "./models";
+      // create an index
+      await Prose.api.createIndex();
+      // get index stats
+      await Prose.api.stats();
+      // search on index 
+      await Prose.api.search("foobar");
+      ```
+    - +++ leverage mappers embedded in the model
+      ```ts
+      import { Prose } from "./models";
 
-- MeiliSearch Info
-- Search Bar Info
-- Docker Info
+      // map from Input structure to expected document structure
+      const doc: IProse = Prose.mapWith("markdown", data);
 
-Then we move into the core content types:
-
-- Typescript API Content
-- Rust API Content
-- Prose Content
-
+      // using mapping to perform an update on the index
+      await Prose.updateWith("markdown", data);
+      ```
+      > note: in the examples we're supposing `data` to be a single Node/Record but
+      > you can actually pass in either a single record or a list and it will manage
+      > both
 
 ## External Resources
 - General Documentation

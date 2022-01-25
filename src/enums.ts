@@ -1,12 +1,3 @@
-export enum RankingRule {
-  Words = "Words",
-  Typo = "Typo",
-  Proximity = "Proximity",
-  Attribute = "Attribute",
-  Sort = "Sort",
-  Exactness = "Exactness",
-}
-
 export enum TypescriptKind {
   Project = "Project",
   Namespace = "Namespace",
