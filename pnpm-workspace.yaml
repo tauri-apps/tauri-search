@@ -1,5 +1,5 @@
 packages:
-  - "docs"
+  - "packages/**"
   # excludes test dirs and node_modules
   - "!**/test/**"
   - "!**/node_modules/**"

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "ESNext",
-    "target": "ES2020",
+    "target": "es2019",
     "lib": ["DOM", "ESNext"],
     "moduleResolution": "node",
     "strict": true,
@@ -15,8 +15,10 @@
     "forceConsistentCasingInFileNames": true,
     "types": [],
 
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"]
+    }
   },
-  "include": ["**/src", "**/test"],
-  "exclude": ["**/dist", "**/node_modules", "**/bin"]
+  "exclude": ["dist", "node_modules"]
 }
