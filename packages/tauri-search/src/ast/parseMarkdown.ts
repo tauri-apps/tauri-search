@@ -1,31 +1,39 @@
+/* eslint-disable no-console */
+/* eslint-disable no-use-before-define */
 import { readFile } from "fs/promises";
-import xxhash from "xxhash-wasm";
+// import xxhash from "xxhash-wasm";
 import matter from "gray-matter";
 import smd from "simple-markdown";
+import { ITauriFrontmatter, MarkdownAst } from "~/types/markdown";
 
 export function isHeading(something: string): something is "h1" | "h2" | "h3" {
   return ["h1", "h2", "h3"].includes(something);
 }
 
-export type MarkdownAst = {
-  filename: string;
-  filepath: string;
-  /** the full text of the markdown content */
-  text: string;
-  /** a hash indicating the current state of the document */
-  hash: number;
-  /** a key-value dictionary of frontmatter variables */
-  frontmatter: Record<string, any>;
-  h1: { content: string; type: string }[];
-  h2: { content: string; type: string }[];
-  h3: { content: string; type: string }[];
-  /** boolean flag indicating whether there was a code block */
-  hasCodeBlock: boolean;
-  /** if there were code blocks, this will list the languages found */
-  programmingLanguages: string[];
-  /** other symbols found in the markdown that weren't specifically expressed */
-  otherSymbols: string[];
-};
+function validateFrontmatter(f: string, matter: Record<string, any>) {
+  const typedMatter = { ...matter } as ITauriFrontmatter;
+  if (matter?.title && typeof matter.title !== "string") {
+    console.error(
+      `The frontmatter for "title" property needs to be a string but was a "${typeof matter.title}" in file ${f}.`
+    );
+    typedMatter.title = "UNKNOWN";
+  }
+
+  if (matter?.tags && Array.isArray(matter.tags)) {
+    console.error(
+      `The frontmatter for "tags" property needs to be an array of strings but was detected as "${typeof matter.title}" in file ${f}.`
+    );
+    typedMatter.tags = [];
+  }
+  if (matter?.category && typeof matter.category !== "string") {
+    console.error(
+      `The frontmatter for "category" property needs to be a string but was a "${typeof matter.title}" in file ${f}.`
+    );
+    typedMatter.category = undefined;
+  }
+
+  return typedMatter;
+}
 
 /**
  * Takes in a list of files and parses them in three ways:
@@ -40,7 +48,7 @@ export type MarkdownAst = {
  * 3. finally it will also add the `filepath` and `filename` along with a content `hash`
  * which can be used detect whether content has changed
  */
-export async function markdownParser(files: string[]) {
+export async function parseMarkdown(files: string[]) {
   // const { h32 } = await xxhash();
 
   const tokens: MarkdownAst[] = [];
@@ -58,7 +66,7 @@ export async function markdownParser(files: string[]) {
         filename,
         filepath,
         hash,
-        frontmatter,
+        frontmatter: validateFrontmatter(f, frontmatter),
         text,
         h1,
         h2,
@@ -68,7 +76,7 @@ export async function markdownParser(files: string[]) {
         otherSymbols,
       });
     } catch (err) {
-      err.message = `Problem parsing file ${f}: ${err.message}`;
+      (err as Error).message = `Problem parsing file ${f}: ${(err as Error).message}`;
       throw err;
     }
   }
@@ -96,7 +104,6 @@ function simpleParse(f: string, content: string) {
 
   const extract = (nodeArray: smd.SingleASTNode[]) => {
     if (!Array.isArray(nodeArray)) {
-      console.log("not an array", nodeArray);
       return;
     }
     for (const node of nodeArray) {
@@ -109,7 +116,7 @@ function simpleParse(f: string, content: string) {
             if (Array.isArray(node.content)) {
               headings[tag].push(node.content[0] as { content: string; type: string });
               if (node.content.length > 1) {
-                console.warn(
+                console.error(
                   `A heading tag in "${f}" was found which accumulated ${
                     node.content.length
                   } content elements in a single entry; only expected 1: ${node.content
@@ -118,7 +125,7 @@ function simpleParse(f: string, content: string) {
                 );
               }
             } else {
-              console.warn(
+              console.error(
                 `The file ${f} got a headings tag that wasn't wrapped in an array element; this wasn't expected.`
               );
             }

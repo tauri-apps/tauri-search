@@ -10,8 +10,9 @@ function parseModule(mod: TypescriptBlock) {
     name: mod.name,
     module: mod.name,
     type: mod.type,
-    fileName: mod.sources?.shift()?.fileName,
-    comment: mod.comment,
+    fileName: mod.sources?.shift()?.fileName || "UNKNOWN",
+    comment: mod?.comment?.text || mod?.comment?.text,
+    commentTags: mod?.comment?.tags,
     children: [],
   };
   const symbols: TypescriptSymbol[] = [modDefn];
@@ -21,9 +22,10 @@ function parseModule(mod: TypescriptBlock) {
       kind: i.kindString,
       name: i.name,
       module: mod.name,
-      comment: i.comment,
+      comment: i?.comment?.text || i?.comment?.text,
+      commentTags: i?.comment?.tags,
       type: i.type,
-      fileName: i.sources?.shift()?.fileName || "",
+      fileName: i.sources?.shift()?.fileName || "UNKNOWN",
       signatures: i.signatures?.map((s) => ({
         name: s.name,
         kind: s.kindString,
@@ -54,23 +56,17 @@ export async function parseTypescriptAst(
 ): Promise<TsDocProject> {
   const content = JSON.parse(await fetchContent(source)) as TypescriptBlock;
   /**
-   * The top level isn't probably worth putting into the index,
+   * The top level "project" isn't probably worth putting into the index,
    * but instead we'll start at the modules level.
    */
   const project: TsDocProject = {
     project: content.name,
     comment: content.comment,
-    /**
-     * flattened list of all TS symbols (including modules
-     * and the symbols owned by them)
-     */
     symbols: [],
   };
 
   for (const mod of content.children || []) {
     if (mod.kindString === "Namespace") {
-      // each module will insert a row for itself
-      // then then one each for each symbol it owns
       project.symbols.push(...parseModule(mod));
     } else {
       console.error(

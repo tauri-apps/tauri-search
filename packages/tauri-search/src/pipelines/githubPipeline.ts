@@ -1,4 +1,4 @@
-import { githubMapper } from "~/mappers/githubMapper";
+import { GithubMapper } from "~/mappers/GithubMapper";
 import { RepoModel } from "~/models/RepoModel";
 import { MsAddOrReplace } from "~/types";
 import { getRepo } from "~/utils/github/getRepo";
@@ -47,7 +47,7 @@ export async function githubPipeline() {
   const waitFor: Promise<MsAddOrReplace>[] = [];
   for (const repo of REPOS) {
     const resp = await getRepo(repo);
-    waitFor.push(model.query.addOrReplaceDoc(githubMapper.map(resp)));
+    waitFor.push(model.query.addOrReplaceDoc(GithubMapper(resp)));
   }
 
   await Promise.all(waitFor);

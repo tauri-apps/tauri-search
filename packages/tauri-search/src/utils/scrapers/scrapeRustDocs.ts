@@ -1,4 +1,4 @@
-import c, { Cheerio, Element } from "cheerio";
+import c from "cheerio";
 import fetch from "node-fetch";
 
 export async function scrapeRustDocs() {

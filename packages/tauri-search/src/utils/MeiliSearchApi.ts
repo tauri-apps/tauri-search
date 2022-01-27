@@ -45,7 +45,7 @@ export function MeiliSearchApi<TDoc extends {}>(
   const get = <T>(url: string, options: AxiosRequestConfig = {}) => {
     return call("get", `${baseUrl}/${url.startsWith("/" ? url.slice(1) : url)}`, options);
   };
-  const put = <T, D extends any>(
+  const put = <T>(
     url: string,
     data?: AxiosRequestConfig["data"],
     options: AxiosRequestConfig = {}
@@ -79,7 +79,7 @@ export function MeiliSearchApi<TDoc extends {}>(
     getDocument: (docId: string) => get<TDoc>(`indexes/${idx}/documents/${docId}`),
     deleteDocument: (docId: string) =>
       del<MsTaskStatus>(`indexes/${idx}/documents/${docId}`),
-    getDocuments: (paging: PagingOptions = {}) => get<TDoc[]>(`indexes/${idx}/documents`),
+    getDocuments: (o: AxiosRequestConfig = {}) => get<TDoc[]>(`indexes/${idx}/documents`, o),
     deleteAllDocuments: del<MsTaskStatus>(`indexes/${idx}/documents`),
     addOrReplaceDocuments: (doc: TDoc, o: ApiOptions = {}) =>
       post<MsAddOrReplace>(`indexes/${idx}/documents`, JSON.stringify(doc), o),

@@ -1,8 +1,15 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, beforeAll } from "vitest";
 import { parseTypescriptAst } from "~/ast/parseTypescriptAst";
 import { TypescriptKind } from "~/enums";
+import type { Expect, Equal } from "@type-challenges/utils";
+import { TsDocProject, TypescriptSymbol } from "~/types";
 
-describe("typescriptParser() - AST to List", () => {
+let prj: TsDocProject;
+
+describe.only("typescriptParser() - AST to List", () => {
+  beforeAll(async () => {
+    prj = await parseTypescriptAst();
+  });
   // Initiation Tests
 
   it("calling parser without parameters defaults to fixture data", async () => {
@@ -39,9 +46,82 @@ describe("typescriptParser() - AST to List", () => {
 
   // HL Structural Tests
 
-  it.todo("parsed data comes back as a list", () => {});
-  it.todo("all items in the list have a tag 'module' to indicate ownership", () => {});
-  it.todo("type information for each item is correctly set as 'ITypescriptSymbol'");
+  it("all items in the list have a 'module' property to indicate ownership", async () => {
+    expect(prj.symbols.every((i) => i.module && i.module.length > 0));
+  });
+  it("type information for each item is correctly set as 'ITypescriptSymbol'", async () => {
+    type Received = typeof prj;
+
+    type cases = [
+      Expect<Equal<Received, TsDocProject>>,
+      Expect<Equal<Received["symbols"], TypescriptSymbol[]>>
+    ];
+    const cases: cases = [true, true];
+    expect(cases).toBeTruthy();
+  });
 
   // Specific "Depth Charge" Tests (using fixtures)
+  // 1. symbol existance tests
+  const modules = [
+    "app",
+    "cli",
+    "clipboard",
+    "dialog",
+    "event",
+    "fs",
+    "globalShortcut",
+    "http",
+    "notification",
+    "os",
+    "path",
+    "process",
+    "shell",
+    "tauri",
+    "updater",
+    "window",
+  ];
+
+  it("found at least as many top level modules as was statically known in test", () => {
+    const foundModules = Array.from(new Set(prj.symbols.map((i) => i.module)));
+
+    expect(
+      foundModules.length,
+      `the modules found were: ${foundModules.join(", ")}`
+    ).toBeGreaterThanOrEqual(modules.length);
+  });
+
+  it("all top level modules found", async () => {
+    const foundModules = Array.from(new Set(prj.symbols.map((i) => i.module)));
+
+    for (const f of modules) {
+      expect(foundModules.includes(f), `module "${f}" was not found!`).toBeTruthy();
+    }
+  });
+
+  const expectedSymbols = [
+    {
+      m: "notification",
+      s: ["isPermissionGranted", "requestPermission", "sendNotification", "Permission"],
+    },
+    {
+      m: "http",
+      s: ["FetchOptions", "HttpVerb", "Part", "RequestOptions", "fetch", "getClient"],
+    },
+    {
+      m: "clipboard",
+      s: ["readText", "writeText"],
+    },
+  ];
+
+  for (const s of expectedSymbols) {
+    it(`Module "${s.m}" has all expected symbols: ${s.s.join(", ")}`, () => {
+      const found = prj.symbols.filter((i) => i.module === s.m).map((i) => i.name);
+      for (const lookFor of s.s) {
+        expect(
+          found.includes(lookFor),
+          `expected module ${s.m} to have the symbol "${s.s}"`
+        ).toBeTruthy();
+      }
+    });
+  }
 });

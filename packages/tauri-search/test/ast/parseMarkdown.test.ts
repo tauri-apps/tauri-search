@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { markdownParser } from "../../src/ast/markdownParser";
+import { parseMarkdown } from "../../src/ast/parseMarkdown";
 
 describe("markdownParser()", () => {
   describe("Fixture tests", async () => {
@@ -9,8 +9,17 @@ describe("markdownParser()", () => {
       "guides/cli.md", //
     ].map((i) => `test/fixtures/prose/${i}`);
 
-    const fileMeta = await markdownParser(files);
-    const expectations = {
+    const fileMeta = await parseMarkdown(files);
+    const expectations: Record<
+      string,
+      {
+        h1?: string[];
+        h2: string[];
+        h3: string[];
+        programmingLanguages: string[];
+        frontmatter: Record<string, any>;
+      }
+    > = {
       "cli.md": {
         h1: [],
         h2: [
@@ -94,5 +103,9 @@ describe("markdownParser()", () => {
         }
       });
     }
+    it("json", async () => {
+      const meta = (await parseMarkdown(["test/fixtures/guides/updater.md"]))[0];
+      console.log(meta.otherSymbols);
+    });
   });
 });

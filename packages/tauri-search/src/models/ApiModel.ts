@@ -1,10 +1,14 @@
 import { TypescriptKind } from "~/enums";
 import { en } from "~/stop-words";
 import { createModel } from "~/utils/createModel";
+import { TsComment } from "..";
 
 export interface IApiModel {
   id: string;
   language: "rust" | "typescript";
+  /** the name of the Symbol */
+  name: string;
+
   /**
    * The symbol's type (aka, Interface, Function, etc.)
    *
@@ -25,8 +29,11 @@ export interface IApiModel {
   tags?: string[];
 
   comment?: string;
+  commentTags?: TsComment["tags"];
 
   parameters?: { name: string; type?: string; comment?: string; kind: TypescriptKind }[];
+
+  url: string;
 }
 
 export const ApiModel = createModel<IApiModel>("api", (c) =>

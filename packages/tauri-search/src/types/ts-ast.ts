@@ -120,8 +120,9 @@ export type TypescriptSymbol = {
   name: string;
   module: string;
   type: TsType;
-  fileName?: string;
-  comment?: TsComment;
+  fileName: string;
+  comment?: string;
+  commentTags?: TsComment["tags"];
   signatures?: { name: string; kind: string; comment: TsComment; type: TsType }[];
   children?: TypescriptBlock[];
 };
