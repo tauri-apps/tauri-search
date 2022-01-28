@@ -66,7 +66,7 @@ Users can run your app as `$ ./app tauri.txt dest.txt` and the arg matches map w
 
 A named argument is a (key, value) pair where the key identifies the value. With the following configuration:
 
-```json title=src-tauri/tauri.conf.json:tauri.cli
+```json
 {
   "args": [
     {

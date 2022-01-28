@@ -9,3 +9,4 @@
 **/.idea/
 **/*.log
 **/.do-devops.json
+**/*.env

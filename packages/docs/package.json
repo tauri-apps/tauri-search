@@ -8,10 +8,12 @@
     "lint": "eslint \"**/*.{vue,ts,js}\"",
     "preview": "vite preview",
     "preview-https": "serve dist",
-    "test": "vitest",
+    "test": "vitest run",
     "test:e2e": "cypress open",
     "test:unit": "vitest",
-    "typecheck": "vue-tsc --noEmit"
+    "test:dev": "vitest dev",
+    "typecheck": "vue-tsc --noEmit",
+    "watch": "pnpm run dev"
   },
   "dependencies": {
     "@vueuse/core": "^7.5.4",
@@ -53,6 +55,7 @@
     "eslint": "^8.7.0",
     "eslint-plugin-cypress": "^2.12.1",
     "https-localhost": "^4.7.0",
+    "jsdom": "^19.0.0",
     "markdown-it-collapsible": "^1.0.0",
     "markdown-it-link-attributes": "^4.0.0",
     "markdown-it-prism": "^2.2.2",

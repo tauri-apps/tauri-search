@@ -10,7 +10,7 @@ export type IGetContentOptions = IGetContentFallback | {};
  * **getContent**
  *
  * Utility which allows for setting a fallback location and then exposing a
- * consumer facing fuction which allows a user to choose from a file or network
+ * consumer facing function which allows a user to choose from a file or network
  * based location for content.
  *
  * Note: the first caller who sets up this higher-order function gets to choose

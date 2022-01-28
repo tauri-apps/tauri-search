@@ -165,7 +165,7 @@ export default defineConfig({
     include: ["test/**/*.test.ts"],
     environment: "jsdom",
     api: {
-      port: 5555,
+      port: 4444,
       host: "0.0.0.0",
 
     },

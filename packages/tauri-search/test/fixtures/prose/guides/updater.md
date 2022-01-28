@@ -154,6 +154,7 @@ PENDING is emitted when the download is started and DONE when the install is com
 ERROR is emitted when there is an error with the updater. We suggest to listen to this event even if the dialog is enabled.
 
 ### Rust
+
 ```rust
 window.listen("tauri://update-status".to_string(), move |msg| {
   println!("New status: {:?}", msg);

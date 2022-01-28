@@ -10,6 +10,9 @@ export function isHeading(something: string): something is "h1" | "h2" | "h3" {
   return ["h1", "h2", "h3"].includes(something);
 }
 
+/**
+ * Checks that frontmatter content is in the right form
+ */
 function validateFrontmatter(f: string, matter: Record<string, any>) {
   const typedMatter = { ...matter } as ITauriFrontmatter;
   if (matter?.title && typeof matter.title !== "string") {
@@ -35,10 +38,44 @@ function validateFrontmatter(f: string, matter: Record<string, any>) {
   return typedMatter;
 }
 
+function isLocalFiles(input: MarkdownInput): input is { files: string[] } {
+  return "files" in input;
+}
+// function isContentWithFile(input: ParseMarkdown):
+
+export type MarkdownInput = { files: string[] } | { content: string; file: string };
+
+function parseContent(f: string, content: string) {
+  // const hash = h32(content);
+  // TODO: turn hashing back on once figure out why Vite is throwing a compiler error
+  const hash = 42;
+  const { data: frontmatter, content: text } = matter(content);
+  const { h1, h2, h3, hasCodeBlock, programmingLanguages, otherSymbols } = simpleParse(
+    f,
+    content
+  );
+  const { filename, filepath } = splitFile(f);
+
+  return {
+    filename,
+    filepath,
+    hash,
+    frontmatter: validateFrontmatter(f, frontmatter),
+    text,
+    h1,
+    h2,
+    h3,
+    hasCodeBlock,
+    programmingLanguages,
+    otherSymbols,
+  } as MarkdownAst;
+}
+
 /**
- * Takes in a list of files and parses them in three ways:
+ * Takes in either list of files (in filesystem) or the content of a markdown along with it's filename
+ * and parses it in three ways:
  *
- * 1. uses the `greymatter` library to extract
+ * 1. uses the `graymatter` library to extract
  *    - all frontmatter data
  *    - the MD content with the frontmatter extracted
  * 2. uses the `simple-markdown` parser to detect:
@@ -48,39 +85,25 @@ function validateFrontmatter(f: string, matter: Record<string, any>) {
  * 3. finally it will also add the `filepath` and `filename` along with a content `hash`
  * which can be used detect whether content has changed
  */
-export async function parseMarkdown(files: string[]) {
-  // const { h32 } = await xxhash();
-
-  const tokens: MarkdownAst[] = [];
-  for (const f of files) {
-    try {
-      const { filename, filepath } = splitFile(f);
-      const content = await readFile(f, { encoding: "utf-8" });
-      // const hash = h32(content);
-      // TODO: turn hashing back on once figure out why Vite is throwing a compiler error
-      const hash = 42;
-      const { data: frontmatter, content: text } = matter(content);
-      const { h1, h2, h3, hasCodeBlock, programmingLanguages, otherSymbols } =
-        simpleParse(f, content);
-      tokens.push({
-        filename,
-        filepath,
-        hash,
-        frontmatter: validateFrontmatter(f, frontmatter),
-        text,
-        h1,
-        h2,
-        h3,
-        hasCodeBlock,
-        programmingLanguages,
-        otherSymbols,
-      });
-    } catch (err) {
-      (err as Error).message = `Problem parsing file ${f}: ${(err as Error).message}`;
-      throw err;
+export async function parseMarkdown<T extends MarkdownInput>(input: T) {
+  let ast: MarkdownAst | MarkdownAst[];
+  if (isLocalFiles(input)) {
+    const tokens: MarkdownAst[] = [];
+    for (const f of input.files) {
+      try {
+        const content = await readFile(f, { encoding: "utf-8" });
+        tokens.push(parseContent(f, content));
+      } catch (err) {
+        (err as Error).message = `Problem parsing file ${f}: ${(err as Error).message}`;
+        throw err;
+      }
     }
+    ast = tokens;
+  } else {
+    ast = parseContent(input.file, input.content);
   }
-  return tokens;
+
+  return ast as T extends { files: string[] } ? MarkdownAst[] : MarkdownAst;
 }
 
 function splitFile(f: string) {
@@ -136,6 +159,12 @@ function simpleParse(f: string, content: string) {
         case "codeBlock":
           hasCodeBlock = true;
           programmingLanguages.add(node.lang);
+          break;
+
+        case "paragraph":
+          if (Array.isArray(node.content)) {
+            extract(node.content);
+          }
           break;
 
         default:

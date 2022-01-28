@@ -9,7 +9,7 @@ describe("markdownParser()", () => {
       "guides/cli.md", //
     ].map((i) => `test/fixtures/prose/${i}`);
 
-    const fileMeta = await parseMarkdown(files);
+    const fileMeta = await parseMarkdown({ files });
     const expectations: Record<
       string,
       {
@@ -65,7 +65,7 @@ describe("markdownParser()", () => {
           "Rust",
           "Javascript",
         ],
-        programmingLanguages: ["json", "js", "rust"],
+        programmingLanguages: ["json", "js", "rust", "none", "bash"],
         frontmatter: {},
       },
       "intro.md": {
@@ -86,16 +86,22 @@ describe("markdownParser()", () => {
           expect(f.h2.every((i) => h3.includes(i.content)));
         }
       });
-      it(`Prog Lang:: ${f.filepath}/${f.filename}`, async () => {
+      it(`Prog Lang: ${f.filepath}/${f.filename}`, async () => {
+        // expect(
+        //   f.programmingLanguages.length,
+        //   `We expect programming languages to include: ${expectations[f.filename][
+        //     "programmingLanguages"
+        //   ].join(", ")} but instead got: ${f.programmingLanguages.join(", ")}`
+        // ).toBe(expectations[f.filename]["programmingLanguages"].length);
+        const expectedLangs = expectations[f.filename]["programmingLanguages"];
         expect(
-          f.programmingLanguages.length,
-          `We expect programming languages to include: ${expectations[f.filename][
+          f.programmingLanguages.every((i) => expectedLangs.includes(i)),
+          `found: ${f.programmingLanguages.join(
+            ", "
+          )} but but expected every member of [${expectations[f.filename][
             "programmingLanguages"
-          ].join(", ")} but instead got: ${f.programmingLanguages.join(", ")}`
-        ).toBe(expectations[f.filename]["programmingLanguages"].length);
-        for (const plang of expectations[f.filename]["programmingLanguages"]) {
-          expect(f.programmingLanguages.every((i) => plang.includes(i))).toBeTruthy();
-        }
+          ].join(", ")}]`
+        ).toBeTruthy();
       });
       it(`Frontmatter:: ${f.filepath}/${f.filename}`, async () => {
         for (const key of Object.keys(expectations[f.filename]["frontmatter"] || {})) {
@@ -103,9 +109,5 @@ describe("markdownParser()", () => {
         }
       });
     }
-    it("json", async () => {
-      const meta = (await parseMarkdown(["test/fixtures/guides/updater.md"]))[0];
-      console.log(meta.otherSymbols);
-    });
   });
 });
