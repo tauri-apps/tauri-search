@@ -93,20 +93,25 @@ export async function refreshProse(
       );
     }
   }
-  console.log(
-    `- finished writing markdown AST files [ ${changed.length} changed, ${unchanged.length} unchanged]`
-  );
-  await write(
-    documentsCacheFile("documents.json", repo, branch),
-    JSON.stringify(documents)
-  );
-  console.log(
-    `- wrote Meilisearch documents to "${documentsCacheFile(
-      "documents.json",
-      repo,
-      branch
-    )}"`
-  );
+  if (changed.length === 0 && !options.force) {
+    console.log(`- all AST cache files remain valid; nothing new written to cache`);
+  } else {
+    console.log(
+      `- finished writing markdown AST files [ ${changed.length} changed, ${unchanged.length} unchanged]`
+    );
+    await write(
+      documentsCacheFile("documents.json", repo, branch),
+      JSON.stringify(documents)
+    );
+    console.log(
+      `- wrote Meilisearch documents to "${documentsCacheFile(
+        "documents.json",
+        repo,
+        branch
+      )}"`
+    );
+  }
+
   if (currentSitemap) {
     // look for files which have been removed, since last time
     const current = flattenSitemap(JSON.parse(await readFile(sitemapFile, "utf-8")));
