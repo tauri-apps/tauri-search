@@ -2,12 +2,8 @@ import { Endpoints } from "@octokit/types";
 import axios from "axios";
 import { join } from "node:path";
 import { GITHUB_API_BASE } from "~/constants";
+import { GithubContentsReq, GithubContentsResp } from "~/types";
 import { getEnv } from "../getEnv";
-
-export type GithubContentsReq =
-  Endpoints["GET /repos/{owner}/{repo}/contents/{path}"]["parameters"];
-export type GithubContentsResp =
-  Endpoints["GET /repos/{owner}/{repo}/contents/{path}"]["response"];
 
 const DEFAULT: GithubContentsReq = {
   owner: "tauri-apps",
@@ -34,7 +30,7 @@ async function getDirectory(o: GithubContentsReq) {
 
   const url = `${GITHUB_API_BASE}/repos/${o.owner}/${o.repo}/contents/${o.path}?ref=${o.ref}`;
   try {
-    const res = await axios.get(url, {
+    const res = await axios.get<GithubContentsResp>(url, {
       httpAgent: "Tauri Search",
       ...(github_token && github_user
         ? { auth: { username: github_user, password: github_token } }
@@ -58,7 +54,7 @@ async function getDirectory(o: GithubContentsReq) {
 
 function reduceClutter(
   dir: string,
-  resp: GithubContentsResp["data"]
+  resp: GithubContentsResp
 ): [files: IDocsSitemap["files"], children: string[]] {
   if (!Array.isArray(resp)) {
     resp = [resp];

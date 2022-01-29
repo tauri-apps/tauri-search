@@ -6,22 +6,39 @@ export const rankingRules = (update: (r: RankingRule[]) => void) => {
   ): RankingRulesApi<E> => {
     return {
       typo: () => {
-        api<E | "typo">([...rules, "typo"]);
+        const updated = [...rules, "typo"] as RankingRule[];
+        update(updated);
+
+        return api<E | "typo">(updated);
       },
+
       proximity: () => {
-        api<E | "proximity">([...rules, "proximity"]);
+        const updated = [...rules, "proximity"] as RankingRule[];
+        update(updated);
+        return api<E | "proximity">(updated);
       },
+
       attribute: () => {
-        api<E | "attribute">([...rules, "attribute"]);
+        const updated = [...rules, "attribute"] as RankingRule[];
+        update(updated);
+        return api<E | "attribute">(updated);
       },
+
       exactness: () => {
-        api<E | "exactness">([...rules, "exactness"]);
+        const updated = [...rules, "exactness"] as RankingRule[];
+        update(updated);
+        return api<E | "exactness">(updated);
       },
+
       sort: () => {
-        api<E | "sort">([...rules, "sort"]);
+        const updated = [...rules, "sort"] as RankingRule[];
+        update(updated);
+        return api<E | "sort">(updated);
       },
       words: () => {
-        api<E | "words">([...rules, "words"]);
+        const updated = [...rules, "words"] as RankingRule[];
+        update(updated);
+        return api<E | "words">(updated);
       },
     } as unknown as RankingRulesApi<E>;
   };

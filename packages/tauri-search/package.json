@@ -14,6 +14,7 @@
     "restart": "docker compose restart",
     "build:cli": "tsup src/cli/*.ts --format=esm,cjs --clean --sourcemap -d bin",
     "test": "vitest run",
+    "test:watch": "vitest watch",
     "ts-ast": "node ./bin/ts-ast.js",
     "ts-ast-overview": "node ./bin/ts-ast-overview.js",
     "watch": "run-p watch:*",

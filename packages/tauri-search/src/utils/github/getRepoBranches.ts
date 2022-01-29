@@ -1,5 +1,5 @@
 import { Endpoints } from "@octokit/types";
-import fetch from "node-fetch";
+import axios from "axios";
 import { GITHUB_API_BASE } from "~/constants";
 
 export type GithubRepoBranchesReq =
@@ -12,7 +12,7 @@ export type GithubRepoBranchesResp =
  */
 export async function getRepoBranches(ownerRepo: `${string}/${string}`) {
   const url = `${GITHUB_API_BASE}/repos/${ownerRepo}/branches&per_page=30&page=1`;
-  const res = await fetch(url);
+  const res = await axios.get(url);
 
   if (res.ok) {
     const result = (await res.json()) as GithubRepoBranchesResp["data"];

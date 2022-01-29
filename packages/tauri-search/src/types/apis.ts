@@ -1,17 +1,5 @@
 import { Keys, UnionToTuple } from "inferred-types";
-import { Type as MorphType } from "ts-morph";
 import { Type } from "~/enums";
-
-export type ModelDefnApi = {
-  /**
-   * Define the Model's expected field/values for documents brought into the index.
-   *
-   * **NOTE:** _you do _not_ have to state the `id` property as all documents in Tauri's search
-   * solution will use `id` as their primary key_
-   */
-  document: Record<string, (m: ModelPropsApi) => void>;
-  index?: IndexDefnApi;
-};
 
 /** represents valid choices for ranking rules */
 export type RankingRule =
@@ -36,7 +24,45 @@ export type TT<E extends Keys<UnionToTuple<RankingRule>> = never> = Record<
  * [Ranking Rules Documentation](https://docs.meilisearch.com/learn/core_concepts/relevancy.html#ranking-rules) */
 export type RankingRulesApi<E extends RankingRule = never> = Omit<
   {
-    [P in RankingRule]: () => RankingRulesApi<E | P>;
+    /**
+     * Results are sorted by increasing number of typos. Returns documents that
+     * match query terms with fewer typos first.
+     */
+    typo: () => RankingRulesApi<E | "typo">;
+    /**
+     * Results are sorted by increasing distance between matched query terms. Returns
+     * documents where query terms occur close together and in the same order as the
+     * query string first.
+     */
+    proximity: () => RankingRulesApi<E | "proximity">;
+    /**
+     * Results are sorted according to the
+     * [attribute ranking order](https://docs.meilisearch.com/learn/core_concepts/relevancy.html#attribute-ranking-order).
+     * Returns documents that contain query terms in more important attributes first.
+     *
+     * Also, note the documents with attributes containing the query words at the beginning
+     * of the attribute list will be considered more relevant than documents containing the query
+     * words at the end of the attributes.
+     */
+    attribute: () => RankingRulesApi<E | "attribute">;
+    /**
+     * Results are sorted by the similarity of the matched words with the query words.
+     * Returns documents that contain exactly the same terms as the ones queried first.
+     */
+    exactness: () => RankingRulesApi<E | "exactness">;
+    /**
+     * Results are sorted according to parameters decided at query time. When the sort
+     * ranking rule is in a higher position, sorting is exhaustive: results will be less
+     * relevant, but follow the user-defined sorting order more closely. When sort is in a
+     * lower position, sorting is relevant: results will be very relevant, but might not
+     * always follow the order defined by the user.
+     */
+    sort: () => RankingRulesApi<E | "sort">;
+    /**
+     * Results are sorted by decreasing number of matched query terms. Returns documents
+     * that contain all query terms first.
+     */
+    words: () => RankingRulesApi<E | "words">;
   },
   E
 >;
