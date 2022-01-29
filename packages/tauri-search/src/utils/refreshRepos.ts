@@ -1,7 +1,11 @@
-import { getRepo, GithubRepoResp } from "./github/getRepo";
+/* eslint-disable no-console */
+import { getRepo } from "./github/getRepo";
 import { getRepoReadme } from "./github/getRepoReadme";
-import { REPOS } from "~/constants";
+import { REPOS, REPO_DOCS_CACHE } from "~/constants";
 import { GithubMapper } from "~/mappers";
+import { GithubRepoResp } from "~/types";
+import { IRepoModel } from "..";
+import { writeFile } from "fs/promises";
 
 /**
  * Responsible for iterating through each of the designated repos
@@ -9,7 +13,7 @@ import { GithubMapper } from "~/mappers";
  * indexes.
  */
 export async function refreshRepos() {
-  const repoPromise: Promise<GithubRepoResp["data"]>[] = [];
+  const repoPromise: Promise<GithubRepoResp>[] = [];
   const readmePromise: Promise<[string, string | undefined]>[] = [];
   for (const repo of REPOS) {
     const resp = getRepo(repo);
@@ -20,9 +24,13 @@ export async function refreshRepos() {
   const readmes = (await Promise.all(readmePromise)).reduce((acc, tuple) => {
     return { ...acc, [tuple[0]]: tuple[1] };
   }, {} as Record<string, string | undefined>);
+
   const repos = await Promise.all(repoPromise);
   console.log(`- all repo's meta info has been retrieved from Github API`);
+  const docs: IRepoModel[] = [];
   for (const r of repos) {
-    GithubMapper({...r, text: readmes[r.name]) 
+    docs.push(GithubMapper({ ...r, text: readmes[r.full_name] }));
   }
+  await writeFile(REPO_DOCS_CACHE, JSON.stringify(docs), "utf-8");
+  console.log(`- repo documents have been written to cache: ${REPO_DOCS_CACHE} `);
 }

@@ -1,19 +1,23 @@
 import { IRepoModel } from "~/models/RepoModel";
 import { url } from "~/types/aliases";
-import { GithubRepoResp } from "~/utils/github/getRepo";
-import { ModelMapper } from "..";
+import { GithubRepoResp, ModelMapper } from "~/types";
 
 /**
  * Maps Github Repo's API response to the appropriate document response for a Repo
  */
-export const GithubMapper: ModelMapper<GithubRepoResp["data"], IRepoModel> = (i) => ({
-  id: `github_${i.full_name.replace("/", "_")}`,
+export const GithubMapper: ModelMapper<
+  GithubRepoResp & { text: string | undefined },
+  IRepoModel
+> = (i) => ({
+  id: `github_${i.full_name.replace(/[\/-]/g, "_")}`,
   name: i.name,
   description: i.description,
   kind: i.name.includes("plugin")
     ? "plugin"
     : i.language?.toLowerCase().includes("rust")
     ? "code"
+    : i.name.includes("docs")
+    ? "documentation"
     : "unknown",
 
   stars: i.stargazers_count,
@@ -31,7 +35,7 @@ export const GithubMapper: ModelMapper<GithubRepoResp["data"], IRepoModel> = (i)
   createdAt: i.created_at,
   license: i.license?.name,
 
-  text: "",
+  text: i.text || "",
 
   url: i.html_url as url,
 });
