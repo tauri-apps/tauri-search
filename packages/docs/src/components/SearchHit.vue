@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PropType } from "vue";
-import { GenericDoc } from "~/types/meilisearch";
+import { GenericDoc } from "tauri-search";
 
 const props = defineProps({
   document: {
@@ -84,7 +84,7 @@ const details = () => {
       {{apiKind}}
     </div>
     <div class="flex px-1 hover:text-green-600 hover:font-bold ">
-      <a :href="doc.url" target="_new">
+      <a :href="(doc.url as string)" target="_new">
         <ph:link-light class="flex" />
       </a>
     </div>

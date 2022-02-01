@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Keys } from "inferred-types";
 import { useSearch } from "~/modules/search";
+import type { IMeilisearchInterface} from "tauri-search";
 const s = useSearch();
 
 /**
  * this allows all expected indexes to be shown and in a sensible order
  */
-const knownIndexes = ["api", "prose", "repo", "consolidated"];
+const knownIndexes = ["api", "prose", "repo", "consolidated"] as const;
 /** the name of the indexes current known by MeiliSearch */
 const currentIndexes = computed(() => s.$state.indexes.map(i => i.name));
 
@@ -14,7 +15,7 @@ const currentIndexes = computed(() => s.$state.indexes.map(i => i.name));
  * we do want to see ANY index that exists though too
  */
 const unknownIndexes = computed(() => {
-  return s.$state.indexes.filter(i => !knownIndexes.includes(i.name));
+  return s.$state.indexes.filter(i => !knownIndexes.includes(i.name as Keys<typeof knownIndexes>));
 });
 
 const indexStateOptions = ["consolidated", "individual", "bespoke"] as const;
@@ -80,7 +81,7 @@ const optionStyle = (opt: IndexState) => computed(() => {
     </div>
 
     <template v-for="idx in knownIndexes" :key="idx">
-      <current-index v-if="currentIndexes.includes(idx)" :idx="s.$state.indexes.find(i => i.name === idx)"/>
+      <current-index v-if="currentIndexes.includes(idx)" :idx="((s.indexes.find(i => i.name === idx))as IMeilisearchInterface)"/>
       <missing-index v-else :idx="idx" />
     </template>
     <template v-for="idx in unknownIndexes" :key="idx">

@@ -3,11 +3,11 @@
 import { useSearch } from "~/modules/search";
 import { format } from "date-fns";
 import { PropType } from "vue";
-import { MeiliSearchInterface } from "~/types/meilisearch";
 import { ApiModel } from "tauri-search";
+import type { IMeilisearchInterface} from "tauri-search";
 const s = useSearch();
 const props = defineProps({
-  idx: {type: Object as PropType<MeiliSearchInterface>, required: true},
+  idx: {type: Object as PropType<IMeilisearchInterface>, required: true},
   unknown: {type: Boolean, default: false, required: false}
 });
 const settings = computed(() => s.$state.indexSettings[props.idx.name]);
