@@ -53,6 +53,6 @@ export const TypescriptMapper: ModelMapper<TypescriptSymbol, IApiModel> = (i) =>
   comment: i.comment,
 
   // Type Specific
-  url: symbolToUrl(i.module, i.kind, i.name),
   declaration: symbolToDeclaration(i),
+  url: symbolToUrl(i.module, i.kind, i.name),
 });
