@@ -1,6 +1,6 @@
 {
   "extends": ["plugin:vue/vue3-recommended", "prettier"],
-  "plugins": ["cypress", "@typescript-eslint"],
+  "plugins": ["@typescript-eslint"],
   "parserOptions": {
     "parser": "@typescript-eslint/parser"
   },
@@ -20,6 +20,7 @@
     "vue/no-lone-template": "off",
     "vue/no-multiple-template-root": "off",
     "vue/no-vmodel-argument": "off",
+    "vue/multi-word-component-names": "warn",
     /**
      * turn this back on once the false warning for using string literals goes away;
      * for now, so long as we express an "emits" clause then TS should keep us honest

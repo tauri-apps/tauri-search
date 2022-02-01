@@ -4,16 +4,28 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    'Bx:bxSearchAlt': typeof import('~icons/bx/bx-search-alt')['default']
+    'Carbon:document': typeof import('~icons/carbon/document')['default']
+    'Carbon:listDropdown': typeof import('~icons/carbon/list-dropdown')['default']
+    CarbonLanguage: typeof import('~icons/carbon/language')['default']
+    CarbonMoon: typeof import('~icons/carbon/moon')['default']
+    CarbonSun: typeof import('~icons/carbon/sun')['default']
     Checkbox: typeof import('./components/Checkbox.vue')['default']
     Counter: typeof import('./components/Counter.vue')['default']
     CurrentIndex: typeof import('./components/CurrentIndex.vue')['default']
+    'Fluent:databaseSearch24Regular': typeof import('~icons/fluent/database-search24-regular')['default']
     Footer: typeof import('./components/Footer.vue')['default']
+    'Mdi:folderHome': typeof import('~icons/mdi/folder-home')['default']
+    'Mdi:languageRust': typeof import('~icons/mdi/language-rust')['default']
+    'Mdi:languageTypescript': typeof import('~icons/mdi/language-typescript')['default']
     MissingIndex: typeof import('./components/MissingIndex.vue')['default']
     README: typeof import('./components/README.md')['default']
     SearchHit: typeof import('./components/SearchHit.vue')['default']
     SearchIndexes: typeof import('./components/SearchIndexes.vue')['default']
     SearchResults: typeof import('./components/SearchResults.vue')['default']
     SimpleCard: typeof import('./components/SimpleCard.vue')['default']
+    'Tabler:databaseImport': typeof import('~icons/tabler/database-import')['default']
+    'Teenyicons:dockerOutline': typeof import('~icons/teenyicons/docker-outline')['default']
   }
 }
 

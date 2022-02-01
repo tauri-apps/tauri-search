@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ApiModel, ConsolidatedModel, ProseModel, RepoModel } from "tauri-search";
 import { PropType } from "vue";
-import { useSearch } from "~/modules/search";
-const s = useSearch();
 const props = defineProps({
   idx: {type: String as PropType<"api" | "prose" | "repo" | "consolidated">, required: true}
 });

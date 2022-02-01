@@ -1,5 +1,3 @@
-// import type { StructureKind, SyntaxKind } from "ts-morph";
-
 /**
  * Note: while not all `lvl[x]` fields need to be filled out with a selector
  * if you're using the docs-searchbar then empty values should be set to

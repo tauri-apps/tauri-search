@@ -10,6 +10,7 @@
     "start": "pnpm -r install && pnpm run start:tauri-search && pnpm run start:docs && pnpm run up",
     "start:tauri-search": "pnpm -C ./packages/tauri-search run watch",
     "start:docs": "pnpm -C ./packages/docs run watch",
+    "build": "run-p build:*",
     "build:cli": "pnpm -C ./packages/tauri-search run build:cli",
     "build:npm": "pnpm -C ./packages/tauri-search run build:npm",
     "watch": "run-s watch:prep watch:rest",
@@ -27,8 +28,9 @@
     "down": "docker compose down",
     "into:scraper": "docker exec -it scraper bash",
     "into:search": "docker exec -it search bash",
-    "lint": "pnpm -r eslint src --ext ts,js,tsx,jsx --fix --no-error-on-unmatched-pattern",
-    "lint:docs": "pnpm -C docs run lint",
+    "lint": "run-p lint:*",
+    "lint:tauri-search": "pnpm -C ./packages/tauri-search run lint ",
+    "lint:docs": "pnpm -C ./packages/docs run lint",
     "ping": "npx http GET localhost:7700/health --timeout 2",
     "prune": "docker system prune",
     "restart": "docker compose restart",
@@ -41,11 +43,11 @@
     "vol:inspect": "run-s vol:inspect:*",
     "vol:inspect:scraper": "docker volume inspect scraper",
     "vol:inspect:search": "docker volume inspect search_db",
-    "docs": "pnpm -C ./packages/docs run dev",
     "npm": "pnpm -C ./packages/tauri-search run watch:npm",
     "npm:test": "pnpm -C ./packages/tauri-search run test"
   },
   "devDependencies": {
+    "changeset": "^0.2.6",
     "npm-run-all": "^4.1.5"
   }
 }

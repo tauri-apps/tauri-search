@@ -1,1 +1,1 @@
-declare module 'markdown-it-collapsible';
+declare module "markdown-it-collapsible";
