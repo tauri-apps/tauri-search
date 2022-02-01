@@ -18,6 +18,28 @@ blockquote {
   @apply text-2xl;
 }
 
+.prose blockquote {
+  margin-inline-start: 0.75rem;
+  margin-inline-end: 1rem;
+}
+
+.prose blockquote p:first-of-type::before {
+  content: ""
+}
+.prose blockquote p:first-of-type::after {
+  content: ""
+}
+
+.prose code::before{
+  content: "";
+}
+.prose code::after{
+  content: "";
+}
+.prose :not(pre)>code {
+  @apply px-0.75 py-0.25 bg-gray-200 dark:bg-gray-600 rounded;
+}
+
 a code {
   @apply dark:bg-blue-600/25 hover:dark:bg-blue-700 dark:text-gray-300 px-0.5 py-0.25 rounded;
 }
