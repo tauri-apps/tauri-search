@@ -1,13 +1,13 @@
 import { TAURI_BASE_URL } from "~/constants";
 import { IProseModel } from "~/models/ProseModel";
-import { MarkdownAst } from "~/types/markdown";
-import { ModelMapper } from "../types";
+import { MarkdownAst, ModelMapper } from "~/types";
+import { sanitizeDocId } from "~/utils/sanitizeDocId";
 
 /**
  * Map markdown AST to the appropriate document structure
  */
 export const ProseMapper: ModelMapper<MarkdownAst, IProseModel> = (i) => ({
-  id: `prose_${i.filepath.replace("/", "_")}_${i.filename}`,
+  id: sanitizeDocId(`prose_${i.filepath}_${i.filename}`),
   title: i.frontmatter.title || i.h1.shift() || "UNKNOWN",
   tags: i.frontmatter.tags as string[],
   category: i.frontmatter.section as string,

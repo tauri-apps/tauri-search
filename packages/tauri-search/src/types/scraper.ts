@@ -8,6 +8,7 @@
 export type ScrapeSelector =
   /** the simple representation is just to put a selector in as a string **/
   | string
+  | null
   /** but there is an object notation for greater control */
   | {
       selector: string;
@@ -18,7 +19,8 @@ export type ScrapeSelector =
       default_value?: string;
     };
 
-export type ScrapeSelectorTargets = {
+export type IScrapeSelectorTargets = {
+  id: string;
   lvl0: ScrapeSelector;
   lvl1: ScrapeSelector;
   lvl2: ScrapeSelector;
@@ -27,7 +29,9 @@ export type ScrapeSelectorTargets = {
   lvl5: ScrapeSelector;
   lvl6: ScrapeSelector;
   /** the main body of text */
-  text: ScrapeSelector;
+  content: ScrapeSelector;
+
+  url: string;
 };
 
 export type ScrapeUrls =
@@ -67,7 +71,7 @@ export interface MeiliSearchConfig {
    * different pages (`default` is the fallback). To use this format you must also add
    * `selectors_key` props to the start_urls
    */
-  selectors: ScrapeSelectorTargets | Record<string, ScrapeSelectorTargets>;
+  selectors: IScrapeSelectorTargets | Record<string, IScrapeSelectorTargets>;
   /**
    * This expects an array of CSS selectors. Any element matching one of those selectors
    * will be removed from the page before any data is extracted from it.

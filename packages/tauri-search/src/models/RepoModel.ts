@@ -18,7 +18,6 @@ export interface IRepoModel {
   topics?: string[];
   isTemplate?: boolean;
 
-  // latestVersion: string;
   lastUpdated: datetime;
   createdAt: datetime;
 
@@ -28,4 +27,6 @@ export interface IRepoModel {
   url: url;
 }
 
-export const RepoModel = createModel<IRepoModel>("repo");
+export const RepoModel = createModel<IRepoModel>("repo", (c) =>
+  c.searchable("name", "description", "topics")
+);

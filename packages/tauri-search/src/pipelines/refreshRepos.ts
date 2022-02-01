@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
-import { getRepo } from "./github/getRepo";
-import { getRepoReadme } from "./github/getRepoReadme";
+import { getRepo } from "~/utils/github/getRepo";
+import { getRepoReadme } from "~/utils/github/getRepoReadme";
 import { REPOS, REPO_DOCS_CACHE } from "~/constants";
 import { GithubMapper } from "~/mappers";
 import { GithubRepoResp } from "~/types";
-import { IRepoModel } from "..";
+import { IRepoModel } from "~/models";
 import { writeFile } from "fs/promises";
 
 /**
@@ -19,7 +19,6 @@ export async function refreshRepos() {
     const resp = getRepo(repo);
     repoPromise.push(resp);
     readmePromise.push(getRepoReadme(repo).then((i) => [repo, i]));
-    // waitFor.push(model.query.addOrReplaceDoc(GithubMapper(resp)))
   }
   const readmes = (await Promise.all(readmePromise)).reduce((acc, tuple) => {
     return { ...acc, [tuple[0]]: tuple[1] };

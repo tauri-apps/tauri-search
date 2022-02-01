@@ -1,5 +1,5 @@
+import { refreshProse } from "~/pipelines/refreshProse";
 import { getEnv } from "~/utils/getEnv";
-import { refreshProse } from "~/utils/refreshProse";
 
 (async () => {
   const { repo, branch, force } = getEnv();

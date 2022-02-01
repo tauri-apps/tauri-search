@@ -23,5 +23,5 @@
     }
   },
   "include": ["src", "test", "vite.config.ts"],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules",]
 }

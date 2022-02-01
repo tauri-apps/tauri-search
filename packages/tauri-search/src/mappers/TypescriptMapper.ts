@@ -2,6 +2,7 @@ import { TAURI_JS_DOCS_URL } from "~/constants";
 import { TypescriptKind } from "~/enums";
 import { IApiModel } from "~/models/ApiModel";
 import { ModelMapper, TypescriptSymbol } from "~/types";
+import { sanitizeDocId } from "~/utils/sanitizeDocId";
 
 function symbolToUrl(module: string, kind: TypescriptKind, symbol: string) {
   switch (kind) {
@@ -41,7 +42,7 @@ function symbolToDeclaration(i: TypescriptSymbol) {
  * Maps a Typescript symbol definition to an API document modeled as `IApiModel`
  */
 export const TypescriptMapper: ModelMapper<TypescriptSymbol, IApiModel> = (i) => ({
-  id: `ts_${i.module}_${i.kind}_${i.name}`,
+  id: sanitizeDocId(`ts_${i.module}_${i.kind}_${i.name}`),
   name: i.name,
   kind: i.kind,
   module: i.module,

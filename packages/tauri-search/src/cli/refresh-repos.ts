@@ -1,5 +1,6 @@
-import { refreshRepos } from "~/utils/refreshRepos";
+import { refreshRepos } from "~/pipelines/refreshRepos";
 
 (async () => {
-  await refreshRepos();
+  console.log(`- Refreshing Repo info to cache`);
+  const tasks = await refreshRepos();
 })();

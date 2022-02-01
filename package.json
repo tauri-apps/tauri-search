@@ -9,9 +9,18 @@
     "start:tauri-search": "pnpm -C ./packages/tauri-search run watch",
     "start:docs": "pnpm -C ./packages/docs run watch",
     "build:cli": "pnpm -C ./packages/tauri-search run build:cli",
-    "watch": "pnpm run watch --filter ./packages/* ",
-    "test": "pnpm run test --filter ./packages/*",
+    "build:npm": "pnpm -C ./packages/tauri-search run build:npm",
+    "watch": "run-s watch:prep watch:rest",
+    "watch:prep": "pnpm -C ./packages/tauri-search run build:npm",
+    "watch:rest": "run-p watch:tauri-search watch:docs",
+    "watch:tauri-search": "pnpm -C ./packages/tauri-search run watch",
+    "watch:docs": "pnpm -C ./packages/docs run watch",
+    "test": "pnpm -C ./packages/docs run test && pnpm -C ./packages/tauri-search run test",
+    "test:watch": "pnpm -C ./packages/tauri-search run test:watch",
+    "current-indexes": "pnpm -C ./packages/tauri-search run current-indexes",
+    "create-indexes": "pnpm -C ./packages/tauri-search run create-indexes",
     "refresh-prose": "pnpm -C ./packages/tauri-search run refresh-prose",
+    "push-prose": "pnpm -C ./packages/tauri-search run push-prose",
     "up": "docker compose up -d",
     "down": "docker compose down",
     "into:scraper": "docker exec -it scraper bash",
@@ -33,5 +42,8 @@
     "docs": "pnpm -C ./packages/docs run dev",
     "npm": "pnpm -C ./packages/tauri-search run watch:npm",
     "npm:test": "pnpm -C ./packages/tauri-search run test"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
   }
 }

@@ -1,15 +1,18 @@
-import { RankingRulesApi } from "~/types/apis";
+import { IndexSynonyms, RankingRule, RankingRulesApi } from "~/types/apis";
 import { MeiliSearchApi } from "~/utils/MeiliSearchApi";
+import { MeiliSearchQueryApi } from ".";
 
 export type MeiliApi = ReturnType<typeof MeiliSearchApi>;
 
+export type Wildcard<T> = (keyof T)[] | ["*"];
+
 export type IndexApi<TDoc, TExclude extends string = never> = Omit<
   {
-    searchable: (...props: (keyof TDoc)[]) => IndexApi<TDoc, TExclude | "searchable">;
-    displayed: (...props: (keyof TDoc)[]) => IndexApi<TDoc, TExclude | "displayed">;
-    distinct: (...props: (keyof TDoc)[]) => IndexApi<TDoc, TExclude | "distinct">;
-    filterable: (...props: (keyof TDoc)[]) => IndexApi<TDoc, TExclude | "filterable">;
-    sortable: (...props: (keyof TDoc)[]) => IndexApi<TDoc, TExclude | "sortable">;
+    searchable: (...props: Wildcard<TDoc>) => IndexApi<TDoc, TExclude | "searchable">;
+    displayed: (...props: Wildcard<TDoc>) => IndexApi<TDoc, TExclude | "displayed">;
+    distinct: (...props: Wildcard<TDoc>) => IndexApi<TDoc, TExclude | "distinct">;
+    filterable: (...props: Wildcard<TDoc>) => IndexApi<TDoc, TExclude | "filterable">;
+    sortable: (...props: Wildcard<TDoc>) => IndexApi<TDoc, TExclude | "sortable">;
     /**
      * Because your website might provide content with structured English sentences, we
      * recommend adding stop words. Indeed, the search-engine would not be "spoiled" by
@@ -37,3 +40,26 @@ export type IndexApi<TDoc, TExclude extends string = never> = Omit<
   },
   TExclude
 >;
+
+/**
+ * The interface/API surface which a **Model** exposes
+ */
+export type ISearchModel<TDoc extends {}> = {
+  name: string;
+  type: TDoc;
+  index: {
+    pk: string;
+    rules?: RankingRule[];
+    displayed?: Wildcard<TDoc>;
+    searchable?: Wildcard<TDoc>;
+    filterable?: Wildcard<TDoc>;
+    distinct?: Wildcard<TDoc>;
+    sortable?: Wildcard<TDoc>;
+    stopWords?: string[];
+    synonyms?: IndexSynonyms;
+  };
+  query: MeiliSearchQueryApi<TDoc>;
+  toString(): string;
+};
+
+export type ISearchConfig<TDoc extends {}> = Omit<ISearchModel<TDoc>, "query">;

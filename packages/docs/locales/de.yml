@@ -16,3 +16,8 @@ home:
   search: Suche
   desc: Spielplatz für die Tauri-Suche
   whats-your-name: Suchen Sie nach etwas
+  ask-for-search: Suchen Sie nach etwas
+nav:
+  indexing: Indizierung
+  toggle_langs: Sprachen ändern
+  toggle_dark: Dunkelmodus umschalten

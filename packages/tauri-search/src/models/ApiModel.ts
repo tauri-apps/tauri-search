@@ -1,7 +1,7 @@
-import { TypescriptKind } from "~/enums";
 import { en } from "~/stop-words";
 import { createModel } from "~/utils/createModel";
-import { TsComment } from "..";
+import { TypescriptKind } from "~/enums";
+import { TsComment } from "~/types";
 
 export interface IApiModel {
   id: string;
@@ -39,5 +39,5 @@ export interface IApiModel {
 export const ApiModel = createModel<IApiModel>("api", (c) =>
   c //
     .stopWords(en)
-    .filterable("language", "kind", "module", "tags")
+    .sortable("language", "kind", "module", "tags")
 );

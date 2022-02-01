@@ -1,6 +1,7 @@
 import { IRepoModel } from "~/models/RepoModel";
 import { url } from "~/types/aliases";
 import { GithubRepoResp, ModelMapper } from "~/types";
+import { sanitizeDocId } from "~/utils/sanitizeDocId";
 
 /**
  * Maps Github Repo's API response to the appropriate document response for a Repo
@@ -9,7 +10,7 @@ export const GithubMapper: ModelMapper<
   GithubRepoResp & { text: string | undefined },
   IRepoModel
 > = (i) => ({
-  id: `github_${i.full_name.replace(/[\/-]/g, "_")}`,
+  id: sanitizeDocId(`github_${i.full_name}`),
   name: i.name,
   description: i.description,
   kind: i.name.includes("plugin")

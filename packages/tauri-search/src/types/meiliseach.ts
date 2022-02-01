@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from "axios";
+import { ApiOptions } from "~/utils/MeiliSearchApi";
 import { RankingRule } from ".";
 
 export interface MsIndexStatusResponse {
@@ -19,6 +21,12 @@ export interface MsTaskStatus {
   indexUid: string;
   status: string;
   type: string;
+  error?: {
+    message: string;
+    link?: string;
+    type: string;
+    code: string;
+  };
   enqueuedAt: string;
 }
 
@@ -47,6 +55,32 @@ export interface MsSettingsResponse<T extends {}> {
   stopWords: string[];
   synonyms: Record<string, string[]>;
   distinctAttribute: null | (keyof T)[] | ["*"];
+}
+
+export interface MsSettingsUpdate<T extends {}> {
+  /** List of associated words treated similarly. A word associated to an array of word as synonyms. */
+  synonyms?: Record<string, string[]>;
+  /** List of words ignored when present in search queries. */
+  stopWords?: string[];
+  /**
+   * List of ranking rules sorted by order of importance. The order is customizable.
+   *
+   * The default is: words, typo, proximity, attribute, sort, exactness
+   */
+  rankingRules?: RankingRule[];
+  /** Search returns documents with distinct (different) values of the given field. */
+  distinctAttribute?: null | keyof T;
+  /** Fields in which to search for matching query words sorted by order of importance. */
+  searchableAttributes?: (keyof T)[];
+  /** Fields displayed in the returned documents. */
+  displayedAttributes?: (keyof T)[];
+  /**
+   * Attributes to use for facetting and filtering. See
+   * [Filtering and Faceted Search](https://docs.meilisearch.com/reference/features/filtering_and_faceted_search.html).
+   */
+  filterableAttributes?: (keyof T)[];
+  /** List of attributes to sort on at search. */
+  sortableAttributes?: (keyof T)[];
 }
 
 export interface MeiliSearchHealth {
@@ -106,21 +140,29 @@ export type WithIndex<T extends MeiliSearchResponse> = Omit<T, "hits"> & {
   }[number];
 };
 
-export interface MsIndexTasks {
-  results: {
-    uid: number;
-    indexUid: string;
-    status: string;
+export interface MsIndexTask {
+  uid: number;
+  indexUid: string;
+  status: string;
+  type: string;
+  details: {
+    receiveDocuments: number;
+    indexedDocuments: number;
+  };
+  error?: {
+    message: string;
+    link?: string;
     type: string;
-    details: {
-      receiveDocuments: number;
-      indexedDocuments: number;
-    };
-    duration: string;
-    enqueuedAt: string;
-    startedAt: string;
-    finishedAt: string;
-  }[];
+    code: string;
+  };
+  duration: string;
+  enqueuedAt: string;
+  startedAt: string;
+  finishedAt: string;
+}
+
+export interface MsAllTasks {
+  results: MsIndexTask[];
 }
 
 export interface MsVersion {
@@ -146,4 +188,55 @@ export interface MsKey {
 
   /** todo: check that this can be a number, it CAN be a null value */
   expiresAt: number | null;
+}
+
+export interface MeiliSearchQueryApi<TDoc extends {}> {
+  /**
+   * Creates an index for the given model.
+   *
+   * Note: the primary key will be set to whatever is in your Model
+   * which will be `id` unless stated otherwise.
+   */
+  createIndex: () => Promise<MsTaskStatus>;
+  getIndexTasks: () => Promise<MsAllTasks>;
+  getDocument: (docId: string) => Promise<TDoc>;
+  deleteDocument: (docId: string) => Promise<MsTaskStatus>;
+  getDocuments: (o?: AxiosRequestConfig) => Promise<TDoc[]>;
+  deleteAllDocuments: () => Promise<MsTaskStatus>;
+  /**
+   * Delete's an index on MeiliSeach (including all docs).
+   *
+   * If no index name is
+   * given then it will delete the index associated with this model but you can
+   * override that to whatever you like.
+   */
+  deleteIndex: (idx?: string) => Promise<MsTaskStatus>;
+  addOrReplaceDocuments: (doc: TDoc, o?: ApiOptions) => Promise<MsAddOrReplace>;
+  addOrUpdateDocuments: (doc: TDoc, o?: ApiOptions) => Promise<MsAddOrReplace>;
+
+  search: (text: string) => Promise<MeiliSearchResponse>;
+
+  getAllIndexSettings: () => Promise<MsSettingsResponse<TDoc>>;
+  updateIndexSettings: (settings: MsSettingsUpdate<TDoc>) => Promise<MsTaskStatus>;
+
+  resetIndexSettings: () => Promise<MsTaskStatus>;
+  updateRankingRules: () => Promise<MsTaskStatus>;
+  updateDistinctAttribute: () => Promise<MsTaskStatus>;
+  updateSearchableAttributes: () => Promise<MsTaskStatus>;
+  updateSortableAttributes: () => Promise<MsTaskStatus>;
+  updateDisplayedAttributes: () => Promise<MsTaskStatus>;
+  updateSynonyms: () => Promise<MsTaskStatus>;
+  updateStopWords: () => Promise<MsTaskStatus>;
+
+  //  cross-index
+
+  stats: () => Promise<MeiliSearchStats>;
+  health: () => Promise<MeiliSearchHealth>;
+  /** all of the indexes which currently exist in MeiliSearch */
+  currentIndexes: () => Promise<MsIndexStatusResponse[]>;
+  version: () => Promise<MsVersion>;
+  getKeys: () => Promise<MsKey[]>;
+  getTask: (id: number) => Promise<MsTaskStatus>;
+  createKey: (key: MsKey) => Promise<MsTaskStatus>;
+  deleteKey: (key: string) => Promise<MsTaskStatus>;
 }

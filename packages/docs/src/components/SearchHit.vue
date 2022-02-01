@@ -33,17 +33,52 @@ const details = () => {
 </script>
 
 <template>
-<div class="flex flex-col border-1 rounded px-2 py-1 border-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 ">
+<div class="flex flex-col border-1 rounded px-2 py-1 border-gray-500 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 ">
   <div class="flex flex-row space-x-1 items-center place-content-center cursor-pointer" @click="details">
-    <mdi:github v-if="doc._idx === 'repo'" class="flex flex-shrink-0" />
-    <vscode-icons:file-type-typescript-official v-if="doc._idx === 'api' && doc.language === 'typescript'" class="flex  flex-shrink-0" />
-    <vscode-icons:file-type-rust v-if="doc._idx === 'api' && doc.language === 'rust'" class="flex" />
-    <ant-design:file-markdown-outlined v-if="doc._idx === 'prose'"  class="flex" />
-    <div class="flex flex-shrink-0">{{doc.name}}</div>
-  
-    <div class="flex flex-grow ml-1 font-light text-xs italic truncate">
-      {{doc.description}}
+    <div v-if="doc._idx === 'repo'" class="flex flex-row flex-grow space-x-1 items-center place-items-center">
+      <mdi:github  class="flex flex-shrink-0" />
+      <div class="name font-semibold flex-shrink-0 pr-2">{{doc.name}}</div>
+      <div class="description flex flex-grow font-light text-sm truncate text-gray-500">{{doc.description}}</div>
     </div>
+
+    <div v-if="doc._idx === 'api'">
+      <vscode-icons:file-type-typescript-official v-if="doc.language === 'typescript'" class="flex  flex-shrink-0" />
+      <vscode-icons:file-type-rust v-if="doc.language === 'rust'" class="flex" />
+      <span class="flex">{{ doc.name }}</span>
+    </div>
+
+    <div v-if="doc._idx === 'prose'">
+      <ant-design:file-markdown-outlined  class="flex" />
+    
+    </div>
+
+    <div v-if="doc._idx === 'consolidated'" class="w-full">
+      <div v-if="doc.from === 'api'" class="flex flex-row flex-grow space-x-2 place-items-center items-center">
+        <vscode-icons:file-type-rust v-if="doc.language === 'rust'" class="flex" />
+        <vscode-icons:file-type-typescript-official v-else class="flex" />
+
+        <div class="symbolName font-semibold">{{doc.lvl0}}</div>
+        <div class="text-sm font-light">{{doc.symbol}}</div>
+      </div>
+
+      <!-- PROSE -->
+      <div v-if="doc.from === 'prose'" class="flex flex-row flex-grow space-x-2 place-items-center items-center">
+        <teenyicons:text-document-solid  class="flex" />
+        <div class="title font-semibold flex-shrink-0">{{doc.lvl0}}</div>
+        <div class="title font-light truncate text-gray-500">{{doc.lvl1}}</div>
+      </div>
+
+      <!-- REPOs -->
+      <div v-if="doc.from === 'repo'" class="flex flex-row flex-grow space-x-2 place-items-center items-center">
+        <mdi:github  class="flex flex-shrink-0" />
+        <div class="name font-semibold flex-shrink-0">{{doc.lvl0}}</div>
+        <div class="description truncate flex-shrink text-gray-500 font-light">{{doc.lvl1}}</div>
+      </div>
+      
+    </div>
+
+    
+  
 
     <div v-if="doc._idx === 'api'" class="flex text-xs font-medium px-1 py-0.5 bg-blue-500 dark:bg-blue-600 text-gray-50 rounded">
       {{apiKind}}

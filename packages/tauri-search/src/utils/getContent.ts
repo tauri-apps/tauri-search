@@ -1,10 +1,32 @@
 import axios from "axios";
 import { readFile } from "fs/promises";
+import { getRepoDefaultBranch } from "./github/getRepoDefaultBranch";
+import { getRepoFile } from "./github/getRepoFile";
 
-export type IGetContentFallback =
-  | { file: string; url?: undefined }
-  | { url: string; file?: undefined };
+export type FileSource = { file: string; url?: undefined; repo?: undefined };
+export type UrlSource = { url: string; file?: undefined; repo?: undefined };
+export type RepoSource = {
+  url?: undefined;
+  file?: undefined;
+  repo: `${string}/${string}`;
+  filepath: string;
+  branch?: string;
+};
+
+export type IGetContentFallback = FileSource | UrlSource | RepoSource;
 export type IGetContentOptions = IGetContentFallback | {};
+
+export function isRepoSource(source: IGetContentFallback): source is RepoSource {
+  return "repo" in source && "branch" in source;
+}
+
+export function isFileSource(source: IGetContentFallback): source is FileSource {
+  return "file" in source;
+}
+
+export function isUrlSource(source: IGetContentFallback): source is UrlSource {
+  return "url" in source;
+}
 
 /**
  * **getContent**
@@ -22,10 +44,16 @@ export const getContent =
     const config =
       Object.keys(options).length > 0 ? (options as IGetContentFallback) : fallback;
     let content: string;
-    if (config?.file) {
+    if (isFileSource(config)) {
       content = await readFile(config.file, { encoding: "utf-8" });
-    } else if (config?.url) {
+    } else if (isUrlSource(config)) {
       content = (await axios.get(config.url)).data;
+    } else if (isRepoSource(config)) {
+      content = (await getRepoFile(
+        config.repo,
+        config.filepath,
+        config.branch
+      )) as string;
     } else {
       throw new Error(`No content reference passed in!`);
     }

@@ -20,8 +20,8 @@ export default defineConfig({
       entry: path.resolve(__dirname, "src/index.ts"),
       formats: ["es", "cjs"],
     },
+    // watch: {},
   },
-
   test: {
     include: ["test/**{test,spec}.{js,mjs,cjs,ts,mts}"],
     exclude: ["test/e2e/**"],
@@ -35,5 +35,5 @@ export default defineConfig({
       // inline: ["@vue/test-utils", "@vue", "@vueuse", "vue-demi"],
     },
   },
-  plugins: [dts(), inspect()],
+  plugins: [dts({ logDiagnostics: true }), inspect()],
 } as UserConfig);

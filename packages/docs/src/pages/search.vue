@@ -24,7 +24,7 @@ onStartTyping(() => {
 <template>
   <div class="py-3 w-full h-full">
     <h1 class="text-xl mb-4">
-      Meilisearch Playground
+      MeiliSearch Playground
     </h1>
     
     <input
@@ -44,8 +44,7 @@ onStartTyping(() => {
 
     <div class="results-area grid grid-cols-3 gap-4 h-full mt-8 mx-4">
       <div class="flex flex-col col-span-1 space-y-4">
-        <search-actions />
-        <search-stats class="mt-4" />
+        <search-indexes class="" />
       </div>
 
       <div class="col-span-2 rounded-md bg-gray-100/25 dark:bg-gray-900/25">

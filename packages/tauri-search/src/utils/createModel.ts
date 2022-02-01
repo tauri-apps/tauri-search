@@ -1,23 +1,12 @@
-import { IndexApi, IndexSynonyms, RankingRule, RankingRulesApi } from "~/types";
+import {
+  IndexApi,
+  ISearchConfig,
+  ISearchModel,
+  RankingRule,
+  RankingRulesApi,
+} from "~/types";
 import { MeiliSearchApi } from "./MeiliSearchApi";
 import { rankingRules } from "./model-api/rankingRules";
-
-export type ISearchModel<T extends {}> = {
-  name: string;
-  type: T;
-  index: {
-    rules?: RankingRule[];
-    displayed?: (keyof T)[];
-    searchable?: (keyof T)[];
-    filterable?: (keyof T)[];
-    distinct?: (keyof T)[];
-    sortable?: (keyof T)[];
-    stopWords?: string[];
-    synonyms?: IndexSynonyms;
-  };
-  query: ReturnType<typeof MeiliSearchApi>;
-  toString(): string;
-};
 
 export type PartialModel<T extends {}> = Omit<Partial<ISearchModel<T>>, "index"> & {
   index: Partial<ISearchModel<T>["index"]>;
@@ -78,32 +67,34 @@ const modelConfigApi = <TDoc extends {}>(update: (s: PartialModel<TDoc>) => void
   return api();
 };
 
-export const createModel = <T extends Record<string, any>>(
+export const createModel = <TDoc extends Record<string, any>>(
   /** the MeiliSearch index name which this model is servicing */
   name: string,
-  cb?: (api: IndexApi<T>) => void,
+  cb?: (api: IndexApi<TDoc>) => void,
   url: string = "http://localhost:7700"
 ) => {
-  const state: ISearchModel<T> = {
+  const state: ISearchConfig<TDoc> = {
     name,
-    type: {} as unknown as T,
-    index: {},
-    query: MeiliSearchApi(name, { url }),
+    type: {} as unknown as TDoc,
+    index: {
+      pk: "id",
+    },
   };
-  const updateState = (s: PartialModel<T>) => {
+  const updateState = (s: PartialModel<TDoc>) => {
     if (s.index) {
       state.index = { ...state.index, ...s.index };
     }
   };
 
   if (cb) {
-    cb(modelConfigApi<T>(updateState));
+    cb(modelConfigApi<TDoc>(updateState));
   }
 
   return {
     ...state,
+    query: MeiliSearchApi<TDoc>(state, { url }),
     toString() {
-      return `Model(${name})`;
+      return `Model(${name}[${state.index.pk}])`;
     },
-  } as ISearchModel<T>;
+  } as ISearchModel<TDoc>;
 };

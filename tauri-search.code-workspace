@@ -14,6 +14,7 @@
     }
   ],
   "settings": {
-    "monorepoWorkspace.includeRoot": true
+    "monorepoWorkspace.includeRoot": true,
+    "i18n-ally.keystyle": "nested"
   }
 }

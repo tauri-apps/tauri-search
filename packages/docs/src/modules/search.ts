@@ -3,6 +3,15 @@
 import { acceptHMRUpdate, defineStore } from "pinia";
 import type { UserModule } from "~/types";
 import { MeiliSearchHealth, MeiliSearchIndex, MeiliSearchInterface, MeiliSearchResponse, MeiliSearchStats } from "~/types/meilisearch";
+import {ApiModel, ProseModel } from "tauri-search";
+
+export function createIndexes() {
+  console.group("Establishing known search indexes");
+
+ApiModel.query.createIndex().then(() => console.log(`ApiModel index created`));
+ProseModel.query.createIndex().then(() => console.log(`ApiModel index created`));
+ApiModel.query.createIndex().then(() => console.log(`ApiModel index created`));
+}
 
 //#region STORE
 export interface SearchState {
@@ -11,6 +20,9 @@ export interface SearchState {
 
   /** the indexes which are defined on MeiliSearch */
   indexes: MeiliSearchInterface[];
+
+  /** indexes to use when searching */
+  searchUsing: string[];
 
   /** database stats for MeiliSearch */
   stats?: MeiliSearchStats;
@@ -24,19 +36,18 @@ export const useSearch = defineStore("search", ({
   state: () => ({
     health: "initializing",
     indexes: [],
+    searchUsing: ["consolidated"],
     stats: undefined,
     searchStatus: "not-ready",
     searchResults: [],
   }) as SearchState,
   actions: {
-    async search(text: string, indexes?: string[]) {
+    async search(text: string) {
       if(text.trim()==="") {
         this.$state.searchResults = [];
         return;
       }
-      if(!indexes) {
-        indexes = this.$state.indexes.map(i => i.uid);
-      }
+      const indexes = this.$state.searchUsing;
       console.group(`searching for: "${text}"`);
       console.info(`search on ${indexes.length} indexes`, indexes);
       console.time("search");
@@ -71,6 +82,13 @@ export const useSearch = defineStore("search", ({
 
       return results;
     },
+    toggleUseOfIndex(idx: string) {
+      if(this.$state.searchUsing.includes(idx)) {
+        this.$state.searchUsing = this.$state.searchUsing.filter(i => i !== idx);
+      } else {
+        this.$state.searchUsing = [...this.$state.searchUsing, idx];
+      }
+    },
     statsUpdate(s: MeiliSearchStats) {
       this.$state.stats = s;
     },
@@ -78,10 +96,17 @@ export const useSearch = defineStore("search", ({
       this.$state.health = h;
     },
     indexUpdate(idx: MeiliSearchInterface[]) {
+      const current = this.$state.indexes.map(i => i.name);
+      const newList = idx.map(i => i.name);
+      if(current.length === newList.length && newList.every(i => current.includes(i))) {
+        return;
+      }
+      
       this.$state.indexes = idx;
     }
   },
   getters: {
+    indexIsUsed: (state) => (idx: string) => state.searchUsing.includes(idx),
     dbSize: (state) =>  state.stats?.databaseSize || 0,
     indexInfo: (state) => (idx: string): MeiliSearchIndex | undefined => state.stats?.indexes[idx]
   }
@@ -118,8 +143,11 @@ export const install: UserModule = ({ isClient }) => {
       s.healthUpdate(h);
       s.$state.searchStatus = !h ? "not-ready": "ready";
 
-      if(h === true && !isActive) resume();
-      if(h === false && isActive) pause();
+      if(h === true && !isActive.value) {
+        createIndexes();
+        resume();
+      };
+      if(h === false && isActive.value) pause();
     }, 1000, {immediate: true});
 
   }
@@ -157,10 +185,14 @@ function api(base: string = "http://localhost:7700") {
 }
 
 async function health(): Promise<boolean> {
-  const response = await (
-    await fetch(api().health)
-  ).json() as MeiliSearchHealth;
-  return response.status === "available";
+  try {
+    const response = await (
+      await fetch(api().health)
+    ).json() as MeiliSearchHealth;
+    return response.status === "available";
+  } catch {
+    return false;
+  }
 }
 
 async function indexes() {

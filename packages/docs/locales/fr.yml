@@ -16,3 +16,8 @@ home:
   desc: Aire de jeux pour Tauri Search
   search: Chercher
   whats-your-name: Rechercher quelque chose
+  ask-for-search: Rechercher quelque chose
+nav:
+  indexing: Indexage
+  toggle_dark: Basculer en mode sombre
+  toggle_langs: Changer de langue
