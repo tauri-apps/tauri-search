@@ -1,15 +1,20 @@
 {
   "folders": [
     {
-      "name": "✨ tauri-search",
+      "name": "✨ root",
       "path": "."
     },
     {
-      "name": "📚 docs",
-      "path": "./docs"
+      "name": "📦 tauri-search",
+      "path": "packages/tauri-search"
+    },
+    {
+      "name": "📚 Docs",
+      "path": "packages/docs"
     }
   ],
   "settings": {
-    "monorepoWorkspace.includeRoot": true
+    "monorepoWorkspace.includeRoot": true,
+    "i18n-ally.keystyle": "nested"
   }
 }
