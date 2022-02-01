@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import { ApiOptions } from "~/utils/MeiliSearchApi";
-import { RankingRule } from ".";
+import { RankingRule, Wildcard } from ".";
 
 export interface MsIndexStatusResponse {
   uid: string;
@@ -67,16 +67,16 @@ export interface IMeilisearchIndexSettings<T extends {}> {
   /** Search returns documents with distinct (different) values of the given field. */
   distinctAttribute?: null | keyof T;
   /** Fields in which to search for matching query words sorted by order of importance. */
-  searchableAttributes?: (keyof T)[];
+  searchableAttributes?: Wildcard<T>;
   /** Fields displayed in the returned documents. */
-  displayedAttributes?: (keyof T)[];
+  displayedAttributes?: Wildcard<T>;
   /**
    * Attributes to use for facetting and filtering. See
    * [Filtering and Faceted Search](https://docs.meilisearch.com/reference/features/filtering_and_faceted_search.html).
    */
-  filterableAttributes?: (keyof T)[];
+  filterableAttributes?: Wildcard<T>;
   /** List of attributes to sort on at search. */
-  sortableAttributes?: (keyof T)[];
+  sortableAttributes?: Wildcard<T>;
 }
 
 export interface IMeiliSearchHealth {
@@ -202,7 +202,7 @@ export interface IMeiliSearchQueryApi<TDoc extends {}> {
 
   search: (text: string) => Promise<IMeilisearchSearchResponse>;
 
-  getAllIndexSettings: () => Promise<IMeilisearchSettingsResponse<TDoc>>;
+  getIndexSettings: (override?: string) => Promise<IMeilisearchIndexSettings<TDoc>>;
   updateIndexSettings: (
     settings: IMeilisearchIndexSettings<TDoc>
   ) => Promise<IMeilisearchTaskStatus>;

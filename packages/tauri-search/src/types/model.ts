@@ -25,6 +25,10 @@ export type IndexApi<TDoc, TExclude extends string = never> = Omit<
      */
     stopWords: (words: string[]) => IndexApi<TDoc, TExclude | "stopWords">;
 
+    synonyms: (
+      synonyms: Record<string, string[]>
+    ) => IndexApi<TDoc, TExclude | "synonyms">;
+
     /**
      * Specify the order for the various _ranking rules_. The default ranking rules are:
      *

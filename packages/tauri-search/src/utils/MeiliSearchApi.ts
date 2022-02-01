@@ -5,7 +5,6 @@ import {
   IMeiliSearchStats,
   IMeilisearchVersion,
   IMeilisearchAddOrReplace,
-  IMeilisearchSettingsResponse,
   IMeilisearchTaskStatus,
   IMeilisearchKey,
   MsIndexStatusResponse,
@@ -120,11 +119,29 @@ export function MeiliSearchApi<TDoc extends {}>(
 
   const endpoints: IMeiliSearchQueryApi<TDoc> = {
     // per index
-    createIndex: () =>
-      post<IMeilisearchTaskStatus, { uid: string; primaryKey: string }>(`indexes`, {
+    createIndex: async () => {
+      const task = await post<
+        IMeilisearchTaskStatus,
+        { uid: string; primaryKey: string }
+      >(`indexes`, {
         uid: model.name,
         primaryKey: model.index.pk,
-      }),
+      });
+
+      await endpoints.updateIndexSettings({
+        displayedAttributes: model.index.displayed,
+        filterableAttributes: model.index.filterable,
+        searchableAttributes: model.index.searchable,
+        sortableAttributes: model.index.sortable,
+        // TODO: need to explore this attribute more
+        distinctAttribute: model.index.distinct as any,
+        rankingRules: model.index.rules,
+        stopWords: model.index.stopWords,
+        synonyms: model.index.synonyms,
+      });
+
+      return task;
+    },
     getIndexTasks: () => get<IMeilisearchAllTasks>(`indexes/${idx}/tasks`),
     getDocument: (docId: string) => get<TDoc>(`indexes/${idx}/documents/${docId}`),
     deleteIndex: (indexName?: string) =>
@@ -140,8 +157,8 @@ export function MeiliSearchApi<TDoc extends {}>(
       put<IMeilisearchAddOrReplace>(`indexes/${idx}/documents`, JSON.stringify(doc), o),
     search: (text: string) =>
       get<IMeilisearchSearchResponse>(`indexes/${idx}/search?q=${text}`),
-    getAllIndexSettings: () =>
-      get<IMeilisearchSettingsResponse<TDoc>>(`indexes/${idx}/settings`),
+    getIndexSettings: (override?: string) =>
+      get<IMeilisearchIndexSettings<TDoc>>(`indexes/${override || idx}/settings`),
     updateIndexSettings: (settings: IMeilisearchIndexSettings<TDoc>) =>
       post<IMeilisearchTaskStatus, IMeilisearchIndexSettings<TDoc>>(
         `indexes/${idx}/settings`,

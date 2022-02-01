@@ -1,3 +1,4 @@
+import { en } from "~/stop-words";
 import { datetime, url } from "~/types/aliases";
 import { createModel } from "~/utils/createModel";
 
@@ -28,5 +29,13 @@ export interface IRepoModel {
 }
 
 export const RepoModel = createModel<IRepoModel>("repo", (c) =>
-  c.searchable("name", "description", "topics")
+  c //
+    .searchable("name", "description", "topics")
+    .stopWords(en)
+    .synonyms({
+      ts: ["typescript", "javascript", "js"],
+      js: ["typescript", "javascript", "js"],
+      typescript: ["ts", "javascript", "js"],
+      javascript: ["ts", "typescript", "js"],
+    })
 );

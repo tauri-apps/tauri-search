@@ -1,3 +1,4 @@
+import { en } from "~/stop-words";
 import { createModel } from "~/utils/createModel";
 
 export interface IProseModel {
@@ -19,4 +20,13 @@ export interface IProseModel {
   url: `https://${string}`;
 }
 
-export const ProseModel = createModel<IProseModel>("prose");
+export const ProseModel = createModel<IProseModel>("prose", (c) =>
+  c //
+    .stopWords(en)
+    .synonyms({
+      ts: ["typescript", "javascript", "js"],
+      js: ["typescript", "javascript", "js"],
+      typescript: ["ts", "javascript", "js"],
+      javascript: ["ts", "typescript", "js"],
+    })
+);

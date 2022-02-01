@@ -3,7 +3,7 @@
 import { acceptHMRUpdate, defineStore } from "pinia";
 import type { UserModule } from "~/types";
 import { MeiliSearchHealth, MeiliSearchIndex, MeiliSearchInterface, MeiliSearchResponse, MeiliSearchStats } from "~/types/meilisearch";
-import { IMeilisearchIndexSettings } from "tauri-search";
+import { ApiModel, IMeilisearchIndexSettings } from "tauri-search";
 
 
 //#region STORE
@@ -89,18 +89,29 @@ export const useSearch = defineStore("search", ({
 
       return results;
     },
+    /** updates settings for all active indexes */
+    async updateIndexSettings() {
+      for (const idx of this.indexes.map(i => i.name)) {
+        const result = await ApiModel.query.getIndexSettings(idx) as IMeilisearchIndexSettings<any>;
+        
+        this.$state.indexSettings = {...this.$state.indexSettings, [idx]:result} ;
+      }
+    },
     toggleUseOfIndex(idx: string) {
       if(this.$state.searchUsing.includes(idx)) {
         this.$state.searchUsing = this.$state.searchUsing.filter(i => i !== idx);
         this.search(this.searchQuery, true);
+        this.updateIndexSettings();
       } else {
         this.$state.searchUsing = [...this.$state.searchUsing, idx];
         this.search(this.searchQuery, true);
+        this.updateIndexSettings();
       }
     },
     setUseOfIndexes(indexes: string[]) {
       this.$state.searchUsing = indexes;
       this.search(this.searchQuery, true);
+      this.updateIndexSettings();
     },
     statsUpdate(s: MeiliSearchStats) {
       this.$state.stats = s;
@@ -157,8 +168,11 @@ export const install: UserModule = ({ isClient }) => {
       s.healthUpdate(h);
       s.$state.searchStatus = !h ? "not-ready": "ready";
 
-      if(h === true && !isActive.value) {
-        resume();
+      if(h === true) {
+        s.updateIndexSettings();
+        if(!isActive.value) {
+          resume();
+        }
       };
       if(h === false && isActive.value) pause();
     }, 1000, {immediate: true});

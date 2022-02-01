@@ -9,5 +9,13 @@ export type IConsolidatedModel = IScrapeSelectorTargets & {
 };
 
 export const ConsolidatedModel = createModel<IConsolidatedModel>("consolidated", (c) =>
-  c.stopWords(en)
+  c
+    .stopWords(en)
+    .synonyms({
+      ts: ["typescript", "javascript", "js"],
+      js: ["typescript", "javascript", "js"],
+      typescript: ["ts", "javascript", "js"],
+      javascript: ["ts", "typescript", "js"],
+    })
+    .filterable("from", "language", "symbol")
 );

@@ -39,5 +39,11 @@ export interface IApiModel {
 export const ApiModel = createModel<IApiModel>("api", (c) =>
   c //
     .stopWords(en)
+    .synonyms({
+      ts: ["typescript", "javascript", "js"],
+      js: ["typescript", "javascript", "js"],
+      typescript: ["ts", "javascript", "js"],
+      javascript: ["ts", "typescript", "js"],
+    })
     .sortable("language", "kind", "module", "tags")
 );

@@ -10,6 +10,7 @@ const props = defineProps({
   idx: {type: Object as PropType<MeiliSearchInterface>, required: true},
   unknown: {type: Boolean, default: false, required: false}
 });
+const settings = computed(() => s.$state.indexSettings[props.idx.name]);
 const indexName = computed(() => props.idx.name as "api" | "repo" | "prose");
 
 const remove = async () => {
@@ -64,7 +65,7 @@ const usedInSearch = computed(() => s.indexIsUsed(indexName.value));
             class=" flex flex-grow-0 ml-2 dark:text-gray-500/75 hover:text-opacity-100 "
           />
           <template #popper>
-            <div class="w-56 text-sm">
+            <div class="w-96 text-sm p-2">
               <div class="font-bold text-lg">
                 {{indexName}}
                 &nbsp;
@@ -72,16 +73,36 @@ const usedInSearch = computed(() => s.indexIsUsed(indexName.value));
               </div>
               <table width="100%">
                 <tr>
-                  <td class="font-normal">created:</td>
-                  <td  class="font-light" align="right">{{format(new Date(props.idx.createdAt), "do MMM, yyyy")}}</td>
+                  <td class="font-normal w-100px">created:</td>
+                  <td  class="font-light" align="left">{{format(new Date(props.idx.createdAt), "do MMM, yyyy")}}</td>
                 </tr>
                 <tr>
                   <td class="font-normal">updated:</td>
-                  <td class="font-light justify-end" align="right" >{{format(new Date(props.idx.updatedAt), "do MMM, yyyy")}}</td>
+                  <td class="font-light justify-end" align="left" >{{format(new Date(props.idx.updatedAt), "do MMM, yyyy")}}</td>
                 </tr>
                 <tr>
                   <td>stop words</td>
-                  <td>[]</td>
+                  <td>{{settings?.stopWords?.length}} words</td>
+                </tr>
+                <tr>
+                  <td>synonyms</td>
+                  <td>{{Object.keys(settings?.synonyms || {}).length}} keys</td>
+                </tr>
+                <tr>
+                  <td>searchable</td>
+                  <td>{{settings.searchableAttributes?.join(", ")}}</td>
+                </tr>
+                <tr>
+                  <td>sortable</td>
+                  <td>{{settings.sortableAttributes?.join(", ")}}</td>
+                </tr>
+                <tr>
+                  <td>displayed</td>
+                  <td>{{settings.displayedAttributes?.join(", ")}}</td>
+                </tr>
+                <tr>
+                  <td>rules</td>
+                  <td>{{settings.rankingRules?.join(" -> ")}}</td>
                 </tr>
                 <tr v-if="s.indexInfo(indexName)?.numberOfDocuments || 0 > 0" class="text-xs">
                   <td>Prop<br/>Distribution</td>
@@ -108,5 +129,16 @@ const usedInSearch = computed(() => s.indexIsUsed(indexName.value));
 <style lang="css" scoped>
 .unknown {
   @apply border-orange-500/50
+}
+table, th, td {
+  @apply border-1 border-solid border-gray-500/25;
+}
+
+table {
+  @apply rounded mt-4;
+}
+
+td {
+  @apply p-1;
 }
 </style>

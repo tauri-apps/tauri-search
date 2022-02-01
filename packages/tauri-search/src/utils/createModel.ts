@@ -53,6 +53,11 @@ const modelConfigApi = <TDoc extends {}>(update: (s: PartialModel<TDoc>) => void
         return api<TExclude | "stopWords">();
       },
 
+      synonyms(synonyms) {
+        update({ index: { synonyms } });
+        return api<TExclude | "synonyms">();
+      },
+
       rankingRules(cb: (r: RankingRulesApi) => void) {
         const updateRules = (r: RankingRule[]) => {
           update({ index: { rules: r } });
