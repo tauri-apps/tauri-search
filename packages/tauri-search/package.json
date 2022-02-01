@@ -10,6 +10,8 @@
     "clean": "rimraf dist/* bin/*",
     "lint": "eslint src --ext ts,js,tsx,jsx --fix --no-error-on-unmatched-pattern",
     "prune": "docker system prune",
+    "clear-caches": "node bin/clear-caches.js",
+    "rebuild-caches": "node bin/rebuild-caches.js",
     "sitemap": "node bin/sitemap.js",
     "current-indexes": "node bin/current-indexes.js",
     "create-indexes": "node bin/create-indexes.js",
@@ -38,6 +40,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
     "dotenv": "^14.3.2",
+    "fast-glob": "^3.2.11",
     "gray-matter": "^4.0.3",
     "inferred-types": "^0.18.4",
     "native-dash": "^1.21.5",

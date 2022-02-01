@@ -41,15 +41,15 @@ const details = () => {
       <div class="description flex flex-grow font-light text-sm truncate text-gray-500">{{doc.description}}</div>
     </div>
 
-    <div v-if="doc._idx === 'api'">
+    <div v-if="doc._idx === 'api'" class="flex flex-row flex-grow space-x-2 place-items-center items-center">
       <vscode-icons:file-type-typescript-official v-if="doc.language === 'typescript'" class="flex  flex-shrink-0" />
       <vscode-icons:file-type-rust v-if="doc.language === 'rust'" class="flex" />
       <span class="flex">{{ doc.name }}</span>
     </div>
 
-    <div v-if="doc._idx === 'prose'">
+    <div v-if="doc._idx === 'prose'" class="flex flex-row flex-grow space-x-2 place-items-center items-center">
       <ant-design:file-markdown-outlined  class="flex" />
-    
+      <div class="name">{{doc.title}}</div>
     </div>
 
     <div v-if="doc._idx === 'consolidated'" class="w-full">

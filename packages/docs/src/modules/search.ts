@@ -3,15 +3,8 @@
 import { acceptHMRUpdate, defineStore } from "pinia";
 import type { UserModule } from "~/types";
 import { MeiliSearchHealth, MeiliSearchIndex, MeiliSearchInterface, MeiliSearchResponse, MeiliSearchStats } from "~/types/meilisearch";
-import {ApiModel, ProseModel } from "tauri-search";
+import { IMeilisearchIndexSettings } from "tauri-search";
 
-export function createIndexes() {
-  console.group("Establishing known search indexes");
-
-ApiModel.query.createIndex().then(() => console.log(`ApiModel index created`));
-ProseModel.query.createIndex().then(() => console.log(`ApiModel index created`));
-ApiModel.query.createIndex().then(() => console.log(`ApiModel index created`));
-}
 
 //#region STORE
 export interface SearchState {
@@ -27,6 +20,9 @@ export interface SearchState {
   /** database stats for MeiliSearch */
   stats?: MeiliSearchStats;
 
+  /** index settings */
+  indexSettings: Record<string, IMeilisearchIndexSettings<any>>;
+
   searchStatus: "ready" | "searching" | "error" | "not-ready";
 
   searchResults: {id: string; _idx: string; [key: string]: unknown}[];
@@ -36,6 +32,7 @@ export const useSearch = defineStore("search", ({
   state: () => ({
     health: "initializing",
     indexes: [],
+    indexSettings: {},
     searchUsing: ["consolidated"],
     stats: undefined,
     searchStatus: "not-ready",

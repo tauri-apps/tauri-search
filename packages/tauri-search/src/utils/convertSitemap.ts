@@ -1,6 +1,6 @@
 import { omit } from "native-dash";
 import { join } from "path";
-import { IDocsSitemap } from "./github/buildDocsSitemap";
+import { IDocsSitemap } from "~/pipelines/refreshSitemap";
 
 export interface IFlatSitemap {
   /** the full "relative path" (aka, dir and filename combined) */

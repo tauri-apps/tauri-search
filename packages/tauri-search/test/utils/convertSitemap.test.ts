@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
 import { flattenSitemap, sitemapDictionary } from "~/utils/convertSitemap";
-import { IDocsSitemap } from "~/utils/github/buildDocsSitemap";
+import { IDocsSitemap } from "~/pipelines/buildDocsSitemap";
 
 let sitemap: IDocsSitemap;
 

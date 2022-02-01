@@ -1,9 +1,8 @@
-import { Endpoints } from "@octokit/types";
 import axios from "axios";
 import { join } from "node:path";
 import { GITHUB_API_BASE } from "~/constants";
 import { GithubContentsReq, GithubContentsResp } from "~/types";
-import { getEnv } from "../getEnv";
+import { getEnv } from "~/utils/getEnv";
 
 const DEFAULT: GithubContentsReq = {
   owner: "tauri-apps",
@@ -76,7 +75,7 @@ function reduceClutter(
 /**
  * Uses Github API to build a sitemap of markdown files for a given repo
  */
-export async function buildDocsSitemap(options: Partial<GithubContentsReq> = DEFAULT) {
+export async function refreshSitemap(options: Partial<GithubContentsReq> = DEFAULT) {
   const o = { ...DEFAULT, ...options };
   const [files, children] = reduceClutter(o.path, (await getDirectory(o)).data);
   const sitemap: IDocsSitemap = {
@@ -89,7 +88,7 @@ export async function buildDocsSitemap(options: Partial<GithubContentsReq> = DEF
     for (const child of children) {
       const p = join(o.path, `/${child}`);
       const mo = { ...o, path: p };
-      waitFor.push(buildDocsSitemap(mo));
+      waitFor.push(refreshSitemap(mo));
     }
     const resolved = await Promise.all(waitFor);
     sitemap.children = resolved;

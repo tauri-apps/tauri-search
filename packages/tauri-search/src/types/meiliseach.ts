@@ -57,7 +57,7 @@ export interface MsSettingsResponse<T extends {}> {
   distinctAttribute: null | (keyof T)[] | ["*"];
 }
 
-export interface MsSettingsUpdate<T extends {}> {
+export interface IMeilisearchIndexSettings<T extends {}> {
   /** List of associated words treated similarly. A word associated to an array of word as synonyms. */
   synonyms?: Record<string, string[]>;
   /** List of words ignored when present in search queries. */
@@ -217,7 +217,9 @@ export interface MeiliSearchQueryApi<TDoc extends {}> {
   search: (text: string) => Promise<MeiliSearchResponse>;
 
   getAllIndexSettings: () => Promise<MsSettingsResponse<TDoc>>;
-  updateIndexSettings: (settings: MsSettingsUpdate<TDoc>) => Promise<MsTaskStatus>;
+  updateIndexSettings: (
+    settings: IMeilisearchIndexSettings<TDoc>
+  ) => Promise<MsTaskStatus>;
 
   resetIndexSettings: () => Promise<MsTaskStatus>;
   updateRankingRules: () => Promise<MsTaskStatus>;

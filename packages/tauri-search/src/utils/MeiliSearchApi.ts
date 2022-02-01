@@ -9,7 +9,7 @@ import {
   MsTaskStatus,
   MsKey,
   MsIndexStatusResponse,
-  MsSettingsUpdate,
+  IMeilisearchIndexSettings,
   MeiliSearchQueryApi,
   ISearchConfig,
   MsAllTasks,
@@ -139,8 +139,11 @@ export function MeiliSearchApi<TDoc extends {}>(
       put<MsAddOrReplace>(`indexes/${idx}/documents`, JSON.stringify(doc), o),
     search: (text: string) => get<MeiliSearchResponse>(`indexes/${idx}/search?q=${text}`),
     getAllIndexSettings: () => get<MsSettingsResponse<TDoc>>(`indexes/${idx}/settings`),
-    updateIndexSettings: (settings: MsSettingsUpdate<TDoc>) =>
-      post<MsTaskStatus, MsSettingsUpdate<TDoc>>(`indexes/${idx}/settings`, settings),
+    updateIndexSettings: (settings: IMeilisearchIndexSettings<TDoc>) =>
+      post<MsTaskStatus, IMeilisearchIndexSettings<TDoc>>(
+        `indexes/${idx}/settings`,
+        settings
+      ),
     resetIndexSettings: () => del<MsTaskStatus>(`indexes/${idx}/settings`),
     updateRankingRules: () => post<MsTaskStatus>(`indexes/${idx}/settings/ranking-rules`),
     updateDistinctAttribute: () =>

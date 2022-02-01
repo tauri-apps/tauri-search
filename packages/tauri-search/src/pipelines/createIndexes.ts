@@ -1,5 +1,5 @@
 import { ProseModel, ApiModel, RepoModel } from "~/models";
-import { MsSettingsUpdate } from "..";
+import { IMeilisearchIndexSettings } from "..";
 
 const models = {
   api: ApiModel,
@@ -22,7 +22,7 @@ export async function createIndexes() {
       // create the index
       console.log(await model.query.createIndex());
       // then update settings
-      const indexSettings: MsSettingsUpdate<any> = {
+      const indexSettings: IMeilisearchIndexSettings<any> = {
         ...(model.index.displayed ? { displayedAttributes: model.index.displayed } : {}),
         ...(model.index.searchable
           ? { searchableAttributes: model.index.searchable }

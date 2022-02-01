@@ -4,7 +4,6 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    'AntDesign:apiTwotone': typeof import('~icons/ant-design/api-twotone')['default']
     'AntDesign:fileMarkdownOutlined': typeof import('~icons/ant-design/file-markdown-outlined')['default']
     'Bx:bxCheckbox': typeof import('~icons/bx/bx-checkbox')['default']
     'Bx:bxCheckboxChecked': typeof import('~icons/bx/bx-checkbox-checked')['default']

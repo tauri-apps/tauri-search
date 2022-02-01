@@ -9,7 +9,7 @@ import {
 import { pushConsolidatedDocs } from "~/pipelines/pushConsolidatedDocs";
 import { communicateTaskStatus } from "~/utils/communicateTaskStatus";
 import { getEnv } from "~/utils/getEnv";
-import { ConsolidatedModel } from "..";
+import { ConsolidatedModel } from "~/models";
 
 (async () => {
   console.log(`- pushing all models into consolidated index`);

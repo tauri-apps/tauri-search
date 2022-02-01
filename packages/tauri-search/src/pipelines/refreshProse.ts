@@ -1,12 +1,12 @@
 import axios from "axios";
 import { existsSync, mkdirSync } from "fs";
-import { readFile, rm, writeFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
 import path, { join } from "node:path";
 import { parseMarkdown } from "~/ast/parseMarkdown";
 import { ProseMapper } from "~/mappers";
 import { IProseModel } from "~/models/ProseModel";
 import { flattenSitemap, sitemapDictionary } from "~/utils/convertSitemap";
-import { buildDocsSitemap, IDocsSitemap } from "~/utils/github/buildDocsSitemap";
+import { IDocsSitemap, refreshSitemap } from "./refreshSitemap";
 
 /* eslint-disable no-console */
 export interface IRefreshProseOptions {
@@ -39,7 +39,6 @@ async function cacheMarkdownAst(file: string, url: string, repo: string, branch:
   const content = (await axios.get(url)).data;
   const ast = await parseMarkdown({ file, content });
   await write(jsonFile, JSON.stringify(ast));
-  console.log(`- wrote markdown AST file: ${jsonFile}`);
   return ast;
 }
 
@@ -62,7 +61,7 @@ export async function refreshProse(
     ? sitemapDictionary(JSON.parse(await readFile(sitemapFile, "utf-8")) as IDocsSitemap)
     : {};
 
-  const newSitemap = await buildDocsSitemap({ repo, ref: branch });
+  const newSitemap = await refreshSitemap({ repo, ref: branch });
   const flatmap = flattenSitemap(newSitemap);
   const documents: IProseModel[] = [];
   const unchangedDocuments: IProseModel[] = [];
@@ -90,7 +89,7 @@ export async function refreshProse(
       }
     } else {
       changed.push(file.filepath);
-      console.log(`- change in "${file.filepath}" detected`);
+      // console.log(`- change in "${file.filepath}" detected`);
       documents.push(
         ProseMapper(
           await cacheMarkdownAst(file.filepath, file.download_url, repo, branch)
@@ -119,16 +118,23 @@ export async function refreshProse(
 
   if (currentSitemap) {
     // look for files which have been removed, since last time
-    const current = flattenSitemap(JSON.parse(await readFile(sitemapFile, "utf-8")));
-    const lookup = sitemapDictionary(newSitemap);
-    const removed = current.filter((c) => !lookup[c.filepath]).map((i) => i.filepath);
-    if (removed.length > 0) {
-      console.log(
-        `- detected ${removed.length} files which no longer exist: ${removed.join(", ")}`
-      );
-      for (const file of removed) {
-        await rm(jsonFileFromMarkdown(file, repo, branch));
-      }
-    }
+    // const current = flattenSitemap(JSON.parse(await readFile(sitemapFile, "utf-8")));
+    // const lookup = sitemapDictionary(newSitemap);
+    // const removed = current.filter((c) => !lookup[c.filepath]).map((i) => i.filepath);
+    // if (removed.length > 0) {
+    //   console.log(
+    //     `- detected ${removed.length} files which no longer exist: ${removed.join(", ")}`
+    //   );
+    //   for (const file of removed) {
+    //     await rm(jsonFileFromMarkdown(file, repo, branch));
+    //   }
+    // }
   }
+
+  const sitemap = `src/generated/sitemap-${repo}-${branch}.json`;
+
+  await writeFile(sitemap, JSON.stringify(currentSitemap), "utf-8");
+  console.log(`- wrote Repo Sitemap to: ${sitemap}`);
+
+  return { sitemap };
 }

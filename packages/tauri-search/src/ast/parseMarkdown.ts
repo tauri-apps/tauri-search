@@ -139,13 +139,13 @@ function simpleParse(f: string, content: string) {
             if (Array.isArray(node.content)) {
               headings[tag].push(node.content[0] as { content: string; type: string });
               if (node.content.length > 1) {
-                console.error(
-                  `A heading tag in "${f}" was found which accumulated ${
-                    node.content.length
-                  } content elements in a single entry; only expected 1: ${node.content
-                    .map((n) => n.type)
-                    .join(", ")}`
-                );
+                // console.error(
+                //   `A heading tag in "${f}" was found which accumulated ${
+                //     node.content.length
+                //   } content elements in a single entry; only expected 1: ${node.content
+                //     .map((n) => n.type)
+                //     .join(", ")}`
+                // );
               }
             } else {
               console.error(

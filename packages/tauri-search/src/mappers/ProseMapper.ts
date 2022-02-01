@@ -15,5 +15,5 @@ export const ProseMapper: ModelMapper<MarkdownAst, IProseModel> = (i) => ({
   subSections: i.h3.map((i) => i.content),
   code: i.programmingLanguages,
   text: i.text,
-  url: `${TAURI_BASE_URL}/docs/${i.filepath}/${i.filename.replace(".md", "")}`,
+  url: `${TAURI_BASE_URL}/${i.filepath}/${i.filename.replace(".md", "")}`,
 });
