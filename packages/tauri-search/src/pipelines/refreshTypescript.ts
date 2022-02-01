@@ -15,7 +15,7 @@ export async function refreshTypescript(repo: string, branch: string) {
       : await parseTypescriptAst();
 
   await writeFile(TS_AST_CACHE, JSON.stringify(ast));
-  let docs: IApiModel[] = [];
+  const docs: IApiModel[] = [];
   for (const i of ast.symbols) {
     docs.push(TypescriptMapper(i));
   }

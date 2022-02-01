@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { getContent } from "~/utils/getContent";
 import { TsDocProject, TypescriptBlock, TypescriptSymbol } from "~/types";
 import { TypescriptKind } from "~/enums";

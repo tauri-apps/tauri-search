@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { ProseModel, ApiModel, RepoModel } from "~/models";
 import { IMeilisearchIndexSettings } from "..";
 

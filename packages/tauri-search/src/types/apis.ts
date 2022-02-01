@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-use-before-define */
 import { Keys, UnionToTuple } from "inferred-types";
 import { Type } from "~/enums";
 

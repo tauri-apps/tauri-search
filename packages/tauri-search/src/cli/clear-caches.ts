@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { clearCaches } from "~/pipelines";
 
 (async () => {

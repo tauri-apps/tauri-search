@@ -1,6 +1,5 @@
 import axios from "axios";
 import { readFile } from "fs/promises";
-import { getRepoDefaultBranch } from "./github/getRepoDefaultBranch";
 import { getRepoFile } from "./github/getRepoFile";
 
 export type FileSource = { file: string; url?: undefined; repo?: undefined };

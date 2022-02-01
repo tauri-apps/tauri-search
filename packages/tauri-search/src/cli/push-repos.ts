@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { existsSync } from "fs";
 import { REPO_DOCS_CACHE } from "~/constants";
 import { pushRepoDocs, refreshRepos } from "~/pipelines";

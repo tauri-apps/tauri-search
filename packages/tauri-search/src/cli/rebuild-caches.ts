@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { rebuildCaches } from "~/pipelines/rebuildCaches";
 
 (async () => {

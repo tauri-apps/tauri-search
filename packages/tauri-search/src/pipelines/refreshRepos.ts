@@ -32,4 +32,6 @@ export async function refreshRepos() {
   }
   await writeFile(REPO_DOCS_CACHE, JSON.stringify(docs), "utf-8");
   console.log(`- repo documents have been written to cache: ${REPO_DOCS_CACHE} `);
+
+  return REPOS;
 }

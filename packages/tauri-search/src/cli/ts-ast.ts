@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+/* eslint-disable no-console */
 // summarizes results from the `parseTypescriptAst()` function and returns to stdout
 
 import { parseTypescriptAst } from "~/ast/parseTypescriptAst";

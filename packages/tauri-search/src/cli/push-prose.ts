@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { existsSync } from "fs";
 import { pushProseDocs } from "~/pipelines/pushProseDocs";
 import { proseDocsCacheFile, refreshProse } from "~/pipelines/refreshProse";

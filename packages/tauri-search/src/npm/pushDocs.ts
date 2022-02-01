@@ -13,14 +13,14 @@ import {
   isConsolidatedDocument,
   isProseDocument,
   isRepoDocument,
-  MsTaskStatus,
+  IMeilisearchTaskStatus,
 } from "~/types";
 
 export async function pushDocs(
   docs: (IApiModel | IProseModel | IRepoModel | IConsolidatedModel)[],
-  options: { repo?: string; branch?: string } = {}
+  _options: { repo?: string; branch?: string } = {}
 ) {
-  const t: Promise<MsTaskStatus>[] = [];
+  const t: Promise<IMeilisearchTaskStatus>[] = [];
   for (const doc of docs) {
     if (isProseDocument(doc)) {
       t.push(ProseModel.query.addOrReplaceDocuments(doc));

@@ -5,7 +5,7 @@ import { IApiModel, IProseModel, IRepoModel } from "~/models";
  */
 export async function getCache(
   index: "api" | "prose" | "repo",
-  options: { repo?: string; branch?: string } = {}
+  _options: { repo?: string; branch?: string } = {}
 ): Promise<(IProseModel | IRepoModel | IApiModel)[]> {
   switch (index) {
     case "prose":

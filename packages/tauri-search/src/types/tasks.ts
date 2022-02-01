@@ -1,4 +1,4 @@
-import { MsTaskStatus } from "./meiliseach";
+import { IMeilisearchTaskStatus } from "./meiliseach";
 
 export interface IMonitoredTask {
   /** the document's primary key */
@@ -6,7 +6,7 @@ export interface IMonitoredTask {
   /** the task ID assigned by Meilisearch */
   taskId: number;
   status?: string;
-  error?: MsTaskStatus["error"];
+  error?: IMeilisearchTaskStatus["error"];
 }
 
 export enum TaskStatus {

@@ -5,5 +5,5 @@ import { config } from "dotenv";
   config();
   const repo = process.env.REPO || "tauri";
   const branch = process.env.BRANCH || "dev";
-  const currentSitemap = await readFile(`src/generated/sitemap-${repo}-${branch}`);
+  await readFile(`src/generated/sitemap-${repo}-${branch}`);
 })();

@@ -1,18 +1,18 @@
 import axios, { AxiosRequestConfig } from "axios";
 import {
-  MeiliSearchHealth,
-  MeiliSearchResponse,
-  MeiliSearchStats,
-  MsVersion,
-  MsAddOrReplace,
-  MsSettingsResponse,
-  MsTaskStatus,
-  MsKey,
+  IMeiliSearchHealth,
+  IMeilisearchSearchResponse,
+  IMeiliSearchStats,
+  IMeilisearchVersion,
+  IMeilisearchAddOrReplace,
+  IMeilisearchSettingsResponse,
+  IMeilisearchTaskStatus,
+  IMeilisearchKey,
   MsIndexStatusResponse,
   IMeilisearchIndexSettings,
-  MeiliSearchQueryApi,
+  IMeiliSearchQueryApi,
   ISearchConfig,
-  MsAllTasks,
+  IMeilisearchAllTasks,
 } from "~/types";
 
 export interface MeiliSearchOptions {
@@ -118,56 +118,63 @@ export function MeiliSearchApi<TDoc extends {}>(
     return call<T>("delete", url, options);
   };
 
-  const endpoints: MeiliSearchQueryApi<TDoc> = {
+  const endpoints: IMeiliSearchQueryApi<TDoc> = {
     // per index
     createIndex: () =>
-      post<MsTaskStatus, { uid: string; primaryKey: string }>(`indexes`, {
+      post<IMeilisearchTaskStatus, { uid: string; primaryKey: string }>(`indexes`, {
         uid: model.name,
         primaryKey: model.index.pk,
       }),
-    getIndexTasks: () => get<MsAllTasks>(`indexes/${idx}/tasks`),
+    getIndexTasks: () => get<IMeilisearchAllTasks>(`indexes/${idx}/tasks`),
     getDocument: (docId: string) => get<TDoc>(`indexes/${idx}/documents/${docId}`),
-    deleteIndex: (indexName?: string) => del<MsTaskStatus>(`indexes/${indexName || idx}`),
+    deleteIndex: (indexName?: string) =>
+      del<IMeilisearchTaskStatus>(`indexes/${indexName || idx}`),
     deleteDocument: (docId: string) =>
-      del<MsTaskStatus>(`indexes/${idx}/documents/${docId}`),
+      del<IMeilisearchTaskStatus>(`indexes/${idx}/documents/${docId}`),
     getDocuments: (o: AxiosRequestConfig = {}) =>
       get<TDoc[]>(`indexes/${idx}/documents`, o),
-    deleteAllDocuments: () => del<MsTaskStatus>(`indexes/${idx}/documents`),
+    deleteAllDocuments: () => del<IMeilisearchTaskStatus>(`indexes/${idx}/documents`),
     addOrReplaceDocuments: (doc: TDoc, o: ApiOptions = {}) =>
-      post<MsAddOrReplace>(`indexes/${idx}/documents`, JSON.stringify(doc), o),
+      post<IMeilisearchAddOrReplace>(`indexes/${idx}/documents`, JSON.stringify(doc), o),
     addOrUpdateDocuments: (doc: TDoc, o: ApiOptions = {}) =>
-      put<MsAddOrReplace>(`indexes/${idx}/documents`, JSON.stringify(doc), o),
-    search: (text: string) => get<MeiliSearchResponse>(`indexes/${idx}/search?q=${text}`),
-    getAllIndexSettings: () => get<MsSettingsResponse<TDoc>>(`indexes/${idx}/settings`),
+      put<IMeilisearchAddOrReplace>(`indexes/${idx}/documents`, JSON.stringify(doc), o),
+    search: (text: string) =>
+      get<IMeilisearchSearchResponse>(`indexes/${idx}/search?q=${text}`),
+    getAllIndexSettings: () =>
+      get<IMeilisearchSettingsResponse<TDoc>>(`indexes/${idx}/settings`),
     updateIndexSettings: (settings: IMeilisearchIndexSettings<TDoc>) =>
-      post<MsTaskStatus, IMeilisearchIndexSettings<TDoc>>(
+      post<IMeilisearchTaskStatus, IMeilisearchIndexSettings<TDoc>>(
         `indexes/${idx}/settings`,
         settings
       ),
-    resetIndexSettings: () => del<MsTaskStatus>(`indexes/${idx}/settings`),
-    updateRankingRules: () => post<MsTaskStatus>(`indexes/${idx}/settings/ranking-rules`),
+    resetIndexSettings: () => del<IMeilisearchTaskStatus>(`indexes/${idx}/settings`),
+    updateRankingRules: () =>
+      post<IMeilisearchTaskStatus>(`indexes/${idx}/settings/ranking-rules`),
     updateDistinctAttribute: () =>
-      post<MsTaskStatus>(`indexes/${idx}/settings/distinct-attribute`),
+      post<IMeilisearchTaskStatus>(`indexes/${idx}/settings/distinct-attribute`),
     updateSearchableAttributes: () =>
-      post<MsTaskStatus>(`indexes/${idx}/settings/searchable-attributes`),
+      post<IMeilisearchTaskStatus>(`indexes/${idx}/settings/searchable-attributes`),
     updateSortableAttributes: () =>
-      post<MsTaskStatus>(`indexes/${idx}/settings/sortable-attributes`),
+      post<IMeilisearchTaskStatus>(`indexes/${idx}/settings/sortable-attributes`),
     updateDisplayedAttributes: () =>
-      post<MsTaskStatus>(`indexes/${idx}/settings/displayed-attributes`),
-    updateSynonyms: () => post<MsTaskStatus>(`indexes/${idx}/settings/synonyms`),
-    updateStopWords: () => post<MsTaskStatus>(`indexes/${idx}/settings/stop-words`),
+      post<IMeilisearchTaskStatus>(`indexes/${idx}/settings/displayed-attributes`),
+    updateSynonyms: () =>
+      post<IMeilisearchTaskStatus>(`indexes/${idx}/settings/synonyms`),
+    updateStopWords: () =>
+      post<IMeilisearchTaskStatus>(`indexes/${idx}/settings/stop-words`),
 
     //  cross-index
 
-    stats: () => get<MeiliSearchStats>(`stats`),
-    health: () => get<MeiliSearchHealth>(`health`),
+    stats: () => get<IMeiliSearchStats>(`stats`),
+    health: () => get<IMeiliSearchHealth>(`health`),
     /** all of the indexes which currently exist in MeiliSearch */
     currentIndexes: () => get<MsIndexStatusResponse[]>("indexes"),
-    getTask: (id: number) => get<MsTaskStatus>(`tasks/${id}`),
-    version: () => get<MsVersion>(`version`),
-    getKeys: () => get<MsKey[]>(`keys`),
-    createKey: (key: MsKey) => post<MsTaskStatus>(`keys`, JSON.stringify(key)),
-    deleteKey: (key: string) => del<MsTaskStatus>(`keys/${key}`),
+    getTask: (id: number) => get<IMeilisearchTaskStatus>(`tasks/${id}`),
+    version: () => get<IMeilisearchVersion>(`version`),
+    getKeys: () => get<IMeilisearchKey[]>(`keys`),
+    createKey: (key: IMeilisearchKey) =>
+      post<IMeilisearchTaskStatus>(`keys`, JSON.stringify(key)),
+    deleteKey: (key: string) => del<IMeilisearchTaskStatus>(`keys/${key}`),
   };
 
   return endpoints;

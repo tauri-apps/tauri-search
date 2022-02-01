@@ -1,6 +1,6 @@
 import { IndexSynonyms, RankingRule, RankingRulesApi } from "~/types/apis";
 import { MeiliSearchApi } from "~/utils/MeiliSearchApi";
-import { MeiliSearchQueryApi } from ".";
+import { IMeiliSearchQueryApi } from ".";
 
 export type MeiliApi = ReturnType<typeof MeiliSearchApi>;
 
@@ -58,7 +58,7 @@ export type ISearchModel<TDoc extends {}> = {
     stopWords?: string[];
     synonyms?: IndexSynonyms;
   };
-  query: MeiliSearchQueryApi<TDoc>;
+  query: IMeiliSearchQueryApi<TDoc>;
   toString(): string;
 };
 

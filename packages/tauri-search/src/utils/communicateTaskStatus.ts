@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { IMonitoredTask, ISearchModel, ITaskStatusOptions, TaskStatus } from "~/types";
 import { monitorTasks } from "./monitorTasks";
 

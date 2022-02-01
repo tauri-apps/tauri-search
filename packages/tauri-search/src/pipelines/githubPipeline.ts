@@ -1,6 +1,6 @@
 import { GithubMapper } from "~/mappers/GithubMapper";
 import { RepoModel } from "~/models/RepoModel";
-import { MsAddOrReplace } from "~/types";
+import { IMeilisearchAddOrReplace } from "~/types";
 import { getRepo } from "~/utils/github/getRepo";
 
 /**
@@ -9,7 +9,7 @@ import { getRepo } from "~/utils/github/getRepo";
  */
 export async function githubPipeline() {
   const model = await RepoModel;
-  const waitFor: Promise<MsAddOrReplace>[] = [];
+  const waitFor: Promise<IMeilisearchAddOrReplace>[] = [];
   for (const repo of REPOS) {
     const resp = await getRepo(repo);
     waitFor.push(model.query.addOrReplaceDoc(GithubMapper(resp)));

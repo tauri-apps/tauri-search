@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { existsSync } from "node:fs";
 import { TS_DOCS_CACHE } from "~/constants";
 import { pushTypescriptDocs } from "~/pipelines/pushTypescriptDocs";

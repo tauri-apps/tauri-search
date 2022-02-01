@@ -15,7 +15,6 @@ import { getEnv } from "~/utils/getEnv";
 const { repo, branch } = getEnv();
 
 describe("link testing of consolidated index", () => {
-  // let docs: IConsolidatedModel[];
   beforeAll(async () => {
     if (!existsSync(TS_DOCS_CACHE)) {
       await refreshTypescript(repo, branch);
