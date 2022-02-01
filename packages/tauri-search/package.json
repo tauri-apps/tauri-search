@@ -23,6 +23,7 @@
     "push-typescript": "node bin/push-typescript.js",
     "push-consolidated": "node bin/push-consolidated.js",
     "restart": "docker compose restart",
+    "build": "run-p build:*",
     "build:cli": "tsup src/cli/*.ts --format=esm,cjs --clean --sourcemap -d bin",
     "build:npm": "tsup src/index.ts --dts --format=esm,cjs  --sourcemap --clean -d dist ",
     "test": "vitest run",

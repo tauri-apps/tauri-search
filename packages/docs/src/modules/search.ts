@@ -25,6 +25,8 @@ export interface SearchState {
 
   searchStatus: "ready" | "searching" | "error" | "not-ready";
 
+  searchQuery: string;
+
   searchResults: {id: string; _idx: string; [key: string]: unknown}[];
 }
 
@@ -35,14 +37,22 @@ export const useSearch = defineStore("search", ({
     indexSettings: {},
     searchUsing: ["consolidated"],
     stats: undefined,
+    searchQuery: "",
     searchStatus: "not-ready",
     searchResults: [],
   }) as SearchState,
   actions: {
-    async search(text: string) {
+    async search(text: string, force: boolean = false) {
       if(text.trim()==="") {
         this.$state.searchResults = [];
+        this.$state.searchQuery = text.trim();
         return;
+      }
+      if(text.trim() === this.searchQuery.trim() && !force) {
+        // no change
+        return;
+      } else {
+        this.searchQuery = text.trim();
       }
       const indexes = this.$state.searchUsing;
       console.group(`searching for: "${text}"`);
@@ -82,9 +92,15 @@ export const useSearch = defineStore("search", ({
     toggleUseOfIndex(idx: string) {
       if(this.$state.searchUsing.includes(idx)) {
         this.$state.searchUsing = this.$state.searchUsing.filter(i => i !== idx);
+        this.search(this.searchQuery, true);
       } else {
         this.$state.searchUsing = [...this.$state.searchUsing, idx];
+        this.search(this.searchQuery, true);
       }
+    },
+    setUseOfIndexes(indexes: string[]) {
+      this.$state.searchUsing = indexes;
+      this.search(this.searchQuery, true);
     },
     statsUpdate(s: MeiliSearchStats) {
       this.$state.stats = s;
@@ -117,6 +133,7 @@ if (import.meta.hot) {
       import.meta.hot)
   );
 }
+
 //#endregion  STORE
 
 //#region SERVICE
@@ -141,7 +158,6 @@ export const install: UserModule = ({ isClient }) => {
       s.$state.searchStatus = !h ? "not-ready": "ready";
 
       if(h === true && !isActive.value) {
-        createIndexes();
         resume();
       };
       if(h === false && isActive.value) pause();

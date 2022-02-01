@@ -40,6 +40,7 @@ importers:
       eslint-plugin-cypress: ^2.12.1
       floating-vue: ^2.0.0-beta.3
       https-localhost: ^4.7.0
+      inferred-types: ^0.18.4
       jsdom: ^19.0.0
       markdown-it-collapsible: ^1.0.0
       markdown-it-link-attributes: ^4.0.0
@@ -73,6 +74,7 @@ importers:
       '@vueuse/head': 0.7.5_vue@3.2.29
       date-fns: 2.28.0
       floating-vue: 2.0.0-beta.3_vue@3.2.29
+      inferred-types: 0.18.4
       nprogress: 0.2.0
       pinia: 2.0.11_typescript@4.5.5+vue@3.2.29
       prism-theme-vars: 0.2.2
