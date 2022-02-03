@@ -4,6 +4,7 @@ import { createModel } from "~/utils/createModel";
 
 export type IConsolidatedModel = IScrapeSelectorTargets & {
   from: "prose" | "api" | "repo";
+  rank: number;
   symbol: string | null;
   language: string | null;
 };
@@ -18,4 +19,5 @@ export const ConsolidatedModel = createModel<IConsolidatedModel>("consolidated",
       javascript: ["ts", "typescript", "js"],
     })
     .filterable("from", "language", "symbol")
+    .sortable("lvl0", "lvl3", "lvl2")
 );

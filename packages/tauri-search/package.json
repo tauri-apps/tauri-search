@@ -16,6 +16,7 @@
     "clean": "rimraf dist/* bin/*",
     "clear-caches": "node bin/clear-caches.js",
     "create-indexes": "node bin/create-indexes.js",
+    "drop-indexes": "node bin/drop-indexes.js",
     "current-indexes": "node bin/current-indexes.js",
     "lint": "eslint src --ext ts,js,tsx,jsx --fix --no-error-on-unmatched-pattern",
     "prune": "docker system prune",

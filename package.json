@@ -4,6 +4,9 @@
   "license": "MIT",
   "author": "Ken Snyder<ken@ken.net>",
   "scripts": {
+    "cli:reset-index-config": "run-s cli:drop-indexes cli:create-indexes cli:push-caches",
+    "cli:drop-indexes": "pnpm -C ./packages/tauri-search run drop-indexes",
+    "cli:create-indexes": "pnpm -C ./packages/tauri-search run create-indexes",
     "cli:push-caches": "pnpm -C ./packages/tauri-search run push-caches",
     "cli:clear-caches": "pnpm -C ./packages/tauri-search run clear-caches",
     "clean": "pnpm run --filter ./packages run clean",

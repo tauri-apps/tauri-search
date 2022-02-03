@@ -20,21 +20,8 @@ export async function createIndexes() {
     const model = models[key as keyof typeof models];
     if (!skipping.includes(model.name)) {
       created.push(key);
-      // create the index
+      // create the index and configure it
       console.log(await model.query.createIndex());
-      // then update settings
-      const indexSettings: IMeilisearchIndexSettings<any> = {
-        ...(model.index.displayed ? { displayedAttributes: model.index.displayed } : {}),
-        ...(model.index.searchable
-          ? { searchableAttributes: model.index.searchable }
-          : {}),
-        ...(model.index.filterable
-          ? { filterableAttributes: model.index.filterable }
-          : {}),
-        ...(model.index.sortable ? { sortableAttributes: model.index.sortable } : {}),
-        ...(model.index.rules ? { rankingRules: model.index.rules } : {}),
-      };
-      await model.query.updateIndexSettings(indexSettings);
     }
   }
 

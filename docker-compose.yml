@@ -19,6 +19,7 @@ services:
     container_name: search
     ports:
       - 7700:7700
+      - 2222:22
     volumes:
       - search_db:/home/db
 

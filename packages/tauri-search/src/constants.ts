@@ -9,15 +9,6 @@ export const TS_DOCS_CACHE = `src/generated/ast/api/ts-documents.json`;
 export const TS_AST_CACHE = `src/generated/ast/api/ts-ast.json`;
 export const RS_DOCS_CACHE = `src/generated/ast/api/rs-documents.json`;
 
-const SERVERS = {
-  local: {
-    url: "http://localhost:7700",
-  },
-  production: {
-    url: "https://search2.tauri.com",
-  },
-};
-
 export const REPOS: `${string}/${string}`[] = [
   "tauri-apps/tauri",
   "tauri-apps/wry",

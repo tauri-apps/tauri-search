@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onStartTyping } from "@vueuse/core";
 import { useSearch } from "~/modules/search";
+import { SERVERS } from "~/constants";
 const el = ref();
 const s = useSearch();
 const searchText = ref(s.$state.searchQuery);
@@ -28,7 +29,8 @@ onStartTyping(() => {
     </h1>
     <div class="grid grid-cols-3 gap-x-4">
       <div class="left">
-        <!--  -->
+        Server:
+        <div v-for="server in SERVERS.map(i => i.name)" :key="server" class="server"></div>
       </div>
 
       <div class="centered">

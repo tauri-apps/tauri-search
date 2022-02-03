@@ -1,6 +1,12 @@
 import { ModelMapper, isRepoDocument, isApiDocument } from "~/types";
 import { IApiModel, IConsolidatedModel, IProseModel, IRepoModel } from "~/models";
 
+export enum IndexRank {
+  prose = 5,
+  repo = 3,
+  api = 2,
+}
+
 export const ConsolidatedMapper: ModelMapper<
   IApiModel | IRepoModel | IProseModel,
   IConsolidatedModel
@@ -42,5 +48,10 @@ export const ConsolidatedMapper: ModelMapper<
     : i.code?.pop() || null,
 
   content: isRepoDocument(i) ? i.text : isApiDocument(i) ? null : i.text,
+  rank: isRepoDocument(i)
+    ? IndexRank.repo
+    : isApiDocument(i)
+    ? IndexRank.api
+    : IndexRank.prose,
   url: i.url,
 });
