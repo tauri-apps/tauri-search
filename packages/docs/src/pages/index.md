@@ -12,6 +12,8 @@ pnpm run start
 
 You are now up and running with the documentation site -- and assuming you have Docker installed -- a local [search server](./meilisearch) which you can interact with.
 
+> Note: the `docker compose` API is new and replaces `docker-compose` ... the API surface is the same though but because this was setup with the new `docker compose` some CLI commands relating to docker may break if you're on the old version (but just manually retype with the dash included)
+
 ### Already installed Deps?
 
 If you've already installed all the deps and want more granular control you can choose from the various script targets or just choose _watch_ to look at docs with active editing capability:
@@ -33,6 +35,24 @@ pnpm run watch
   import { ProseModel } from "tauri-search";
   import type { MeiliSearchResponse } from "tauri-search";
   ```
+>>>
+
+## Secrets and ENV variables
+
+>>> DotENV
+- We use the popular DotEnv **npm** package to allow users to set ENV variables but **not** have them checked into the repository.
+- Simply add a `.env` file to add variables you want to use locally; this can be both secret and non-secret variables
+- In the local _dockerized_ MeiliSearch you will not really need any secrets but if you're rebuilding the document caches then you'll be using the Github API enough (and in parallel) such that providing a Github "personal access token" will be a good idea.
+  - Use the `GH_TOKEN` and `GH_USER` env variables to have the Github API's use your personal access token (versus being an anonymous user)
+- There are also some non-secret ENV variables you may want to adjust:
+  - the `REPO` variable is used to determine which Github respository hosts Markdown/Prose documents
+    - This will default to `tauri` for now if no ENV is detected; this will likely change in the future to `tauri-docs`.
+  - the `BRANCH` variable is used to specify which branch to use; it will use `dev` if not found
+>>>
+>>> The Meilisearch Master Key
+- the dockerized container has no master key set (though you can set it); allowing all operations to be done via the API
+- a _production_ container should always be setup with a Master Key immediately
+- having the master key allows you to access all API endpoints but must be included in the Header as a bearer token
 >>>
 
 ## Models

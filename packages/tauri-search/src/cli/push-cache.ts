@@ -17,6 +17,25 @@ import { getEnv } from "~/utils/getEnv";
 
 (async () => {
   console.log(`- Pushing ALL document caches into local MeiliSearch server`);
+  const idx = (await ApiModel.query.currentIndexes()).map((i) => i.name);
+  if (idx.length > 0) {
+    console.log(
+      `- found the following indexes setup: ${idx.join(
+        ", "
+      )}. They will not be restarted but missing indexes will be added as per the Model configuration.`
+    );
+  }
+
+  [ApiModel, RepoModel, ProseModel, ConsolidatedModel].forEach(async (model) => {
+    if (!idx.includes(model.name)) {
+      console.log(
+        `- creating the "${model.name}" index with the following config: ${JSON.stringify(
+          { ...model.index, stopWords: `${model.index?.stopWords?.length || 0} words` }
+        )}`
+      );
+      await model.query.createIndex();
+    }
+  });
 
   const { repo, branch } = getEnv();
   if (!existsSync(proseDocsCacheFile(repo, branch))) {

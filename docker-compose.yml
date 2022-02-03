@@ -5,7 +5,7 @@ services:
   scraper:
     image: getmeili/docs-scraper:latest
     container_name: scraper
-    command: pipenv run ./docs_scraper config.json -d
+    command: pipenv run ./docs_scraper/config.json -v -d
     depends_on:
       - search
     environment:

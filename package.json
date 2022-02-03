@@ -26,6 +26,8 @@
     "push-prose": "pnpm -C ./packages/tauri-search run push-prose",
     "up": "docker compose up -d",
     "down": "docker compose down",
+    "ps": "docker compose ps",
+    "logs:scraper": "docker logs scraper",
     "into:scraper": "docker exec -it scraper bash",
     "into:search": "docker exec -it search bash",
     "lint": "run-p lint:*",
