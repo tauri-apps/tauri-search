@@ -8,7 +8,7 @@ If you use Vuepress documentation then there is a fully integrated solution from
 
 Unfortunately this implementation -- as well as the VuePress implementation -- can only work on a _single index_ and it expects the documents to be scraped with MeiliSearch's [scraper]() tool which imposes an awkward looking document (arguably this last point may not matter too much).
 
-+++ MeiliSearch Scraper and Searchbar schema
+>>> MeiliSearch Scraper and Searchbar schema
 ```ts
 export type ScrapeSelector =
   | string
@@ -31,8 +31,8 @@ export type ScrapeSelectorTargets = {
 };
 ```
 > NOTE: there are additional fields but these are the core ones
-+++
-+++ To provide flexibility, our parsing/modeling approach supports both
+>>>
+>>> To provide flexibility, our parsing/modeling approach supports both
 ```mermaid
 flowchart TD;
   TS((TS AST)) --map--> ApiModel[ApiModel]
@@ -49,7 +49,7 @@ flowchart TD;
   ProseModel --map--> CrossIndex
   RepoModel --map--> CrossIndex
 ```
-+++
+>>>
 
 ### Single versus Multi Index Solution
 
@@ -70,7 +70,8 @@ flowchart TD;
 pnpm install docs-searchbar.js
 ```
 
-+++ When using the 
+
+>>> When using the built-in toolbar:
 
   Instantiate the component:
 
@@ -112,5 +113,5 @@ pnpm install docs-searchbar.js
     </body>
   </html>
   ```
-- +++ However, to allow for you play with it in this repo we created a simple VueJS wrapper around it
-  - in `src/components/SearchBar.vue` you'll find the component
+>>> 
+

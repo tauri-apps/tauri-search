@@ -22,11 +22,11 @@ onStartTyping(() => {
 </script>
 
 <template>
-  <div class="py-3 w-full h-full">
+  <div class="w-full h-full">
     <h1 class="text-xl mb-4">
       MeiliSearch Playground
     </h1>
-    <div class="grid grid-cols-3 px-4 gap-x-4">
+    <div class="grid grid-cols-3 gap-x-4">
       <div class="left">
         <!--  -->
       </div>

@@ -5,20 +5,20 @@ This section discusses details on how to index the Typescript API Documents and 
 ## Workflow 
 > from **Code** to **Search Index**
 
-- +++ **Origination**
+- >>> **Origination**
   - The `tauri` repo has all of the Typescript code and when a branch is committed it will automatically generate a `ts-docs.json` file based on github actions.
-- +++ **Restructuring**
+- >>> **Restructuring**
   - This file represents a lightweight AST representation of the code, it has everything we need but
-- +++ **Index Modelling**
+- >>> **Index Modelling**
   - The Typescript API will use the `ts-api` index
 
 
 
 ## Guiding Principles
 
-1. +++ **Repo Ownership.** Each Repo must have a clear and focused ownership that makes sense to the team but that can also _intuitively_ make sense to the public
+1. >>> **Repo Ownership.** Each Repo must have a clear and focused ownership that makes sense to the team but that can also _intuitively_ make sense to the public
 
-    - +++ `tauri` Repo
+    - >>> `tauri` Repo
          ```mermaid
         flowchart TD;
     
@@ -41,7 +41,7 @@ This section discusses details on how to index the Typescript API Documents and 
         - It provides AST assets to `tauri-search`
         - It provides MD assets to `tauri-docs`
   
-    - +++ `tauri-docs` Repo
+    - >>> `tauri-docs` Repo
         ```mermaid
         flowchart TD;
         Docs((Tauri Docs)) --> Prose[Prose Markdown]
@@ -88,7 +88,7 @@ This section discusses details on how to index the Typescript API Documents and 
             > Note: we may just allowing filtering by **lines** (easiest) to start but **symbols** might prove to be less fragile to future code changes. In general it is a good idea to keep example code files as small as possible to that in many bases you can simply refernce the file with no filters.
             
 
-    - +++ Sitemap for TS API
+    - >>> Sitemap for TS API
         ```mermaid
         flowchart TD;
 
@@ -115,7 +115,7 @@ This section discusses details on how to index the Typescript API Documents and 
         ```
 
 
-    - +++ `tauri-search` Repo
+    - >>> `tauri-search` Repo
         ```mermaid
         flowchart TD;
 
@@ -160,55 +160,7 @@ This section discusses details on how to index the Typescript API Documents and 
           - this provides a safe place to make any code changes to indexing
           - 
 
-2. +++ **Repo Orchestration.** Each repo interacts with the others in as simple manner is as possible to achieve the overall goals.
+2. >>> **Repo Orchestration.** Each repo interacts with the others in as simple manner is as possible to achieve the overall goals.
    - asdfads
 3. 
  
-## Content Flow
-
-
-
-
-### Plan A
-
-- +++ Initial Flow
-
-
-
-    - clone Tauri-docs, and add a PR with API docs included
-
-    ----
-
-    ```mermaid
-    flowchart LR;
-    Tauri[Tauri Repo] -- publish to prod --> CICD[Github Action trigger CI/CD]
-    CICD -- tests pass --> Prebuild[ Netlify Build ]
-    
-    Prebuild --> MD[Netlify:: TS -> MD]
-    Prebuild --> TS_API[Netlify:: TS -> JSON]
-    Prebuild --> RS_API[Netlify:: Rust -> JSON]
-
-    MD --> A{A}
-    MD --> Docs[Tauri Docs]
-    Docs --> B{B}
-    TS_API --> B{B}
-    RS_API --> B{B}
-    ```
-
-- +++ [A]: Markdown Integration into Tauri Site
-
-    ```mermaid
-    flowchart LR;
-    A{A} --> DoIt
-    ```
-
-- +++ [B]: JSON Indexed by MeiliSearch
-    ```mermaid
-    flowchart LR;
-
-    B{B} -- Netlify postbuild hook --> Fn[Netlify Fn]
-    Fn --> Map[Map AST Nodes to URLs]
-    Map --> Document[Meillisearch API to add/update Document]
-    Map --> Document
-
-    ```

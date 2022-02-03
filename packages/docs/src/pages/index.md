@@ -1,6 +1,6 @@
 # Getting Started
 
-+++ Install Dependencies and Start Docs Site (_looks like you already did_)
+>>> Install Dependencies and Start Docs Site (_looks like you already did_)
 ```bash
 # 1. installs deps for both CLI and Docs
 # 2. starts Docs server (in dev mode with HMR), opens in browser
@@ -20,8 +20,8 @@ If you've already installed all the deps and want more granular control you can 
 # turn on watcher mode for both CLI and Docs
 pnpm run watch
 ```
-+++
-+++ Ways to Consume this library
+>>>
+>>> Ways to Consume this library
 - **Search Development** - if you are updating docs, index definitions, etc. you'll run this in _watch_ mode (aka., `pnpm run start` (first time) or `pnpm run watch`)
 - **Deployment** - When an _upstream_ dependency is updated this repo should be trigged by a Netlify build hook. For instance:
   - `tauri` has a new release to production branch, as a `postbuild` step in Netlify build process, it will call Netlify's API and ask for a rebuild of this repo.
@@ -33,7 +33,7 @@ pnpm run watch
   import { ProseModel } from "tauri-search";
   import type { MeiliSearchResponse } from "tauri-search";
   ```
-+++
+>>>
 
 ## Models
 
@@ -43,8 +43,8 @@ Central to using this library to build and refresh your search indexes is unders
   - the **document structure** that will be used for docs in the index
   - allows for **configuring the index** itself (e.g., stop words, synonyms, etc.)
   - allows you to embed data mappers which map from one document structure to another
-  +++ Take a look at the examples here to get a better bearing:
-    - +++ define the model:
+  - +++ Take a look at the examples here to get a better bearing:
+    - >>> Defining a model:
         ```ts
         /** structure for documents in the Prose index */
         export interface IProse {
@@ -68,7 +68,7 @@ Central to using this library to build and refresh your search indexes is unders
           })
         )
         ```
-    - +++ use the model to call the MeiliSearch API
+    - >>> Using the model to call the MeiliSearch API
       ```ts
       import { Prose } from "./models";
       // create an index
@@ -78,7 +78,7 @@ Central to using this library to build and refresh your search indexes is unders
       // search on index 
       await Prose.api.search("foobar");
       ```
-    - +++ leverage mappers embedded in the model
+    - >>> Mapping data between two known types
       ```ts
       import { Prose } from "./models";
 
@@ -91,6 +91,7 @@ Central to using this library to build and refresh your search indexes is unders
       > note: in the examples we're supposing `data` to be a single Node/Record but
       > you can actually pass in either a single record or a list and it will manage
       > both
+
 
 ## External Resources
 - General Documentation

@@ -9,7 +9,7 @@ In this latter option, we have the [**MeiliSearch Scraper**](https://github.com/
 
 ## Configuration
 
-- +++ The configuration file structurally looks like this:
+- >>> The configuration file structurally looks like this:
   ```ts
     export type ScrapeSelector =
     /** the simple representation is just to put a selector in as a string **/

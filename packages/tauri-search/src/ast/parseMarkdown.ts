@@ -3,7 +3,7 @@
 import { readFile } from "fs/promises";
 // import xxhash from "xxhash-wasm";
 import matter from "gray-matter";
-import smd from "simple-markdown";
+import smd from "simple-markdown-2";
 import { ITauriFrontmatter, MarkdownAst } from "~/types/markdown";
 
 export function isHeading(something: string): something is "h1" | "h2" | "h3" {

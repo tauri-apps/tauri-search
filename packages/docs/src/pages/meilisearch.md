@@ -4,9 +4,9 @@
 
 Pictures are worth 1,000 words (good ones anyway), so let's stop writing prose.
 
-- +++High Level Interaction Diagram
+- >>>High Level Interaction Diagram
   ADD PICTURE
-- +++Content Flow
+- >>>Content Flow
   ADD PICTURE
 
 ## Documents and Indexes
@@ -14,10 +14,10 @@ Pictures are worth 1,000 words (good ones anyway), so let's stop writing prose.
 
 A document (or set of documents) is the intended _result_ of a search operation and each document is represented as a typical key/value document. The only required property is the **Primary Key** but for Tauri we will use "models" for each content-type that we search for.
 
-- +++ About the Primary Key
+- >>> About the Primary Key
   - For Tauri search we always explicitly state the "field" that will be the primary key in a document. This is done during index creation before documents are loaded.
   - If you wanted to you could just load a set of documents and MeiliSearch would _infer_ the primary key for you. But inference is for people who fear commitment ... or at least that's what we think. :)
-- +++ How do we _model_ a content-type?
+- >>> How do we _model_ a content-type?
   - First off a "model" in this case defines three things:
     1. the **structure** of the documents we will write for this content type, 
     2. a **mapping** from the content it will receive as an _input_ to the the desired doc structure
@@ -45,7 +45,7 @@ Where a document is possible answer, an index provides a means for us to efficie
 To build a good index, we must first think about the _types_ of content we will be indexing. This section will give a full overview of this and then we'll move into how this translates into Meilisearch Indexes.
 
 - +++ **API Documents**
-  - +++ RUST indexes
+  - >>> RUST indexes
       - +++ _will create index references to all **RUST symbols** and home page_
         - [Home Page](https://docs.rs/tauri/latest/tauri/) plus sections in home page
         - [Re-exports](https://docs.rs/tauri/latest/tauri/#reexports)
@@ -70,14 +70,14 @@ To build a good index, we must first think about the _types_ of content we will 
         - [`Result`](https://docs.rs/tauri/latest/tauri/type.Result.html)
         - etc.
     - _all indexes will point directly to `docs.rs`_
-  - +++ Typescript indexes
+  - >>> Typescript indexes
       - _we will host the API docs on [Tauri's Website](https://tauri.studio) and all search indexes will point there_
       - indexes will largely mirror what we are doing on the Rust side
 - +++ **Primary / Prose Documentation**
   - _all sections will be authored in English and using Markdown format_
   - _we will need separate indexes for `i18n` content_
   - _All documentation outside of generated API docs will be considered part of this section_
-  - +++ The current site includes these areas:
+  - >>> The current site includes these areas:
     - About
     - Docs section
     - Community
@@ -88,13 +88,13 @@ To build a good index, we must first think about the _types_ of content we will 
 ### General Info
 
 - +++ The following notes are high-level info on indexing in general
-  - +++The `uid`
+  - >>>The `uid`
     - Indexes must have a unique ID -- referred to as `uid`
     - Once the `uid` has been created it may not be changed
     - The `uid` is not the primary_key:
       - the `uid` uniquely identifies the **index**
       - the `primary key` uniquely identifies an incoming record for a given index
-  - +++ Primary Keys
+  - >>> Primary Keys
     - The primary key can be _inferred_ simply by loading documents but in general it's better to explicity set it through the API
       - `POST /indexes`
         ```sh
@@ -124,20 +124,20 @@ For the **Tauri** site it is proposed that we use the following indexes:
   -  
 - +++ Docs
   - this consists of all the Markdown content which ends up on the site:
-    - +++ About
+    - >>> About
       - What is Tauri
       - Security
       - Governance
       - Get the Book
       - Benchmarks
-    - +++ Docs
+    - >>> Docs
       - Getting Started
       - Development
       - Guides
-- +++ Community
-  - Showcase
-  - Partners
-  - (future: Press Releases)
-- +++ Repos
-  - we might as well well add index to Github repos which are related to project
-  - this would include **plugins**
+    - >>> Community
+      - Showcase
+      - Partners
+      - (future: Press Releases)
+    - >>> Repos
+      - we might as well well add index to Github repos which are related to project
+      - this would include **plugins**

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import smd from "simple-markdown";
+import smd from "simple-markdown-2";
 
 // TODO: come back and see if we can monkey patch in improved rules or possibly look for a different parser
 /**

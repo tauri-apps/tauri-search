@@ -20,8 +20,11 @@ const { t } = useI18n();
     </div>
 
     <!-- MAIN CONTENT -->
-    <div class="flex flex-grow max-w-6xl h-auto min-h-full dark:bg-black/25 p-4 rounded-lg w-6xl">
-      <router-view />
+    <div class="flex flex-grow max-w-6xl h-auto min-h-full dark:bg-black/25 rounded-lg w-6xl align-top mb-4 items-start p-12">
+
+      <div class="flex flex-grow-0 ">
+        <router-view />
+      </div>
     </div>
   </main>
 </template>

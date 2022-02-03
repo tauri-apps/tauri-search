@@ -23,18 +23,41 @@ blockquote {
   margin-inline-end: 1rem;
 }
 
+/* remove typography plugin's bullet point */
+.prose ul > li.expandable::before {
+  content: none;
+  /* margin-right: 1.25em; */
+}
+.prose-sm ul > li.expandable::before {
+  content: none;
+}
+
+.prose ul > li.expandable {
+  padding-left: 1px;
+}
+
+.prose ul {
+  padding-inline-start: 20px;
+}
+
+
+details > *:not(summary) {
+	/* padding-left: 1rem; */
+}
+
+
 .prose blockquote p:first-of-type::before {
-  content: ""
+  content: none;
 }
 .prose blockquote p:first-of-type::after {
-  content: ""
+  content: none;
 }
 
 .prose code::before{
-  content: "";
+  content: none;
 }
 .prose code::after{
-  content: "";
+  content: none;
 }
 .prose :not(pre)>code {
   @apply px-0.75 py-0.25 bg-gray-200 dark:bg-gray-600 rounded;

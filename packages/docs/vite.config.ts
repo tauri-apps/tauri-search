@@ -14,7 +14,7 @@ import VueI18n from "@intlify/vite-plugin-vue-i18n";
 import Inspect from "vite-plugin-inspect";
 import Prism from "markdown-it-prism";
 import LinkAttributes from "markdown-it-link-attributes";
-import MdCollapsible from "markdown-it-collapsible";
+import MdExpandable from "markdown-it-expandable";
 
 const markdownWrapperClasses = "prose prose-sm m-auto text-left";
 
@@ -96,7 +96,7 @@ export default defineConfig({
             rel: "noopener",
           },
         });
-        md.use(MdCollapsible);
+        md.use(MdExpandable);
       },
     }),
 
