@@ -5,14 +5,14 @@ services:
   scraper:
     image: getmeili/docs-scraper:latest
     container_name: scraper
-    command: pipenv run ./docs_scraper/config.json -v -d
+    command: "pipenv run docs_scraper config.json -vv -d"
     depends_on:
       - search
     environment:
       - MEILISEARCH_HOST_URL=localhost:7700
       - MEILISEARCH_API_KEY=""
     volumes:
-      - ./scraper:/data.ms
+      - ./scraper:/docs-scraper
 
   search:
     image: getmeili/meilisearch:latest
