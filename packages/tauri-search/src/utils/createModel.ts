@@ -18,6 +18,10 @@ const modelConfigApi = <TDoc extends {}>(update: (s: PartialModel<TDoc>) => void
     TExclude
   > =>
     ({
+      pk(pk: string) {
+        update({ index: { pk } });
+        return api<TExclude | "pk", M>();
+      },
       searchable(...props) {
         if (props?.length > 0) {
           update({ index: { searchable: props } });

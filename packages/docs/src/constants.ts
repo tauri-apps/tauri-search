@@ -6,11 +6,11 @@ export const SERVERS = [
   },
   {
     name: "prod",
-    url: "https://search.tauri.com",
+    url: "https://search.tauri.studio",
     indexes: [""],
   },
   {
     name: "pre-prod",
-    url: "https://search2.tauri.com",
+    url: "https://search2.tauri.studio",
   },
 ];

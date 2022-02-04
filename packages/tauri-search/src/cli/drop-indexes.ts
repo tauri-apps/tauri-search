@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { ApiModel } from "../../dist";
+import { ApiModel } from "~/models";
 
 (async () => {
   const active = (await ApiModel.query.currentIndexes()).map((i) => i.name);

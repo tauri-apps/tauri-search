@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { ProseModel, ApiModel, RepoModel } from "~/models";
-import { IMeilisearchIndexSettings } from "..";
 
 const models = {
   api: ApiModel,
@@ -21,7 +20,7 @@ export async function createIndexes() {
     if (!skipping.includes(model.name)) {
       created.push(key);
       // create the index and configure it
-      console.log(await model.query.createIndex());
+      await model.query.createIndex();
     }
   }
 

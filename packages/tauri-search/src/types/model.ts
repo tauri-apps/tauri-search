@@ -8,6 +8,10 @@ export type Wildcard<T> = (keyof T)[] | ["*"];
 
 export type IndexApi<TDoc, TExclude extends string = never> = Omit<
   {
+    /**
+     * By default the primary key will be `id` but this can be overridden where it makes sense
+     */
+    pk: (pk: string) => IndexApi<TDoc, TExclude | "pk">;
     searchable: (...props: Wildcard<TDoc>) => IndexApi<TDoc, TExclude | "searchable">;
     displayed: (...props: Wildcard<TDoc>) => IndexApi<TDoc, TExclude | "displayed">;
     distinct: (...props: Wildcard<TDoc>) => IndexApi<TDoc, TExclude | "distinct">;

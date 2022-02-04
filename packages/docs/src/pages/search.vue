@@ -6,7 +6,7 @@ const el = ref();
 const s = useSearch();
 const searchText = ref(s.$state.searchQuery);
 const { t } = useI18n();
-
+const serverChosen = ref("local");
 
 debouncedWatch(
   searchText,
@@ -20,6 +20,10 @@ onStartTyping(() => {
   if (!el.value.active) {el.value.focus();};
 });
 
+const changeServer = (_server: {name: string; url: string}) => {
+  // 
+};
+
 </script>
 
 <template>
@@ -28,9 +32,20 @@ onStartTyping(() => {
       MeiliSearch Playground
     </h1>
     <div class="grid grid-cols-3 gap-x-4">
-      <div class="left">
-        Server:
-        <div v-for="server in SERVERS.map(i => i.name)" :key="server" class="server"></div>
+      <div class="left flex flex-grow items-center justify-center">
+        <div class="flex flex-row space-x-2">
+          <div class="mr-2">Server:</div>
+          <div
+            v-for="server in SERVERS"
+            :key="server.name"
+            v-tooltip="{content: server.url}"
+            class="server text-gray-500 font-light"
+            :class="server.name === serverChosen ? `text-gray-800 dark:text-gray-200 border-b-1 cursor-default` : `cursor-pointer`"
+            @click="() => changeServer(server)"
+          >
+            {{server.name}}
+          </div>
+        </div>
       </div>
 
       <div class="centered">

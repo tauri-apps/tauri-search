@@ -11,6 +11,7 @@ export type IConsolidatedModel = IScrapeSelectorTargets & {
 
 export const ConsolidatedModel = createModel<IConsolidatedModel>("consolidated", (c) =>
   c
+    .pk("objectID")
     .stopWords(en)
     .synonyms({
       ts: ["typescript", "javascript", "js"],
@@ -19,5 +20,6 @@ export const ConsolidatedModel = createModel<IConsolidatedModel>("consolidated",
       javascript: ["ts", "typescript", "js"],
     })
     .filterable("from", "language", "symbol")
-    .sortable("lvl0", "lvl3", "lvl2")
+    .searchable("hierarchy_lvl0", "rank", "hierarchy_lvl3", "hierarchy_lvl2", "hierarchy_lvl1", "symbol", "content")
+    .rankingRules((r) => r.words().typo().sort().attribute().proximity().exactness())
 );
