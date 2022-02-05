@@ -48,7 +48,7 @@ import { getEnv } from "~/utils/getEnv";
     `- all ${proseTasks.length} documents were pushed via API; monitoring task status ...`
   );
 
-  await communicateTaskStatus(ProseModel, proseTasks, { timeout: 30000 });
+  await communicateTaskStatus(ProseModel, proseTasks, { timeout: 45000 });
 
   console.log(`- Pushing Repo document cache into MeiliSearch`);
 

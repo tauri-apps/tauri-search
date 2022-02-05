@@ -3,6 +3,7 @@
 import { readFile } from "fs/promises";
 // import xxhash from "xxhash-wasm";
 import matter from "gray-matter";
+import {convert} from "html-to-text";
 import smd from "simple-markdown-2";
 import { ITauriFrontmatter, MarkdownAst } from "~/types/markdown";
 
@@ -61,7 +62,7 @@ function parseContent(f: string, content: string) {
     filepath,
     hash,
     frontmatter: validateFrontmatter(f, frontmatter),
-    text,
+    text: convert(text),
     h1,
     h2,
     h3,

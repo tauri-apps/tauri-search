@@ -38,7 +38,11 @@ export const ConsolidatedMapper: ModelMapper<
     : isApiDocument(i)
     ? null
     : i.code?.join(" ") || null,
-  hierarchy_lvl6: isRepoDocument(i) ? String(i.stars) || null : isApiDocument(i) ? null : null,
+  hierarchy_lvl6: isRepoDocument(i)
+    ? String(i.stars) || null
+    : isApiDocument(i)
+    ? null
+    : null,
   from: isRepoDocument(i) ? "repo" : isApiDocument(i) ? "api" : "prose",
   symbol: isApiDocument(i) ? i.kind : null,
   language: isApiDocument(i)
@@ -46,7 +50,7 @@ export const ConsolidatedMapper: ModelMapper<
     : isRepoDocument(i)
     ? i.language
     : i.code?.pop() || null,
-
+  tags: isRepoDocument(i) ? i.topics || null : isApiDocument(i) ? null : i.tags || null,
   content: isRepoDocument(i) ? i.text : isApiDocument(i) ? i.comment || null : i.text,
   rank: isRepoDocument(i)
     ? IndexRank.repo

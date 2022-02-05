@@ -1,6 +1,6 @@
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig } from 'axios';
+import { RankingRule, Wildcard } from '.';
 import { ApiOptions } from "~/utils/MeiliSearchApi";
-import { RankingRule, Wildcard } from ".";
 
 export interface MsIndexStatusResponse {
   uid: string;
@@ -42,18 +42,18 @@ export type IMeilisearchSearchHit<T extends {}> = {
   id: string;
 } & T;
 
-export interface IMeilisearchSettingsResponse<T extends {}> {
-  displayAttributes: (keyof T)[] | ["*"];
-  searchableAttributes: (keyof T)[] | ["*"];
-  filterAttributes: (keyof T)[] | ["*"];
-  sortableAttributes: (keyof T)[] | ["*"];
-  rankingRules: RankingRule[];
+export interface IMeilisearchSettingsResponse<TDoc extends {}> {
+  displayAttributes: (keyof TDoc)[] | ["*"];
+  searchableAttributes: (keyof TDoc)[] | ["*"];
+  filterAttributes: (keyof TDoc)[] | ["*"];
+  sortableAttributes: (keyof TDoc)[] | ["*"];
+  rankingRules: RankingRule<TDoc>[];
   stopWords: string[];
   synonyms: Record<string, string[]>;
-  distinctAttribute: null | (keyof T)[] | ["*"];
+  distinctAttribute: null | (keyof TDoc)[] | ["*"];
 }
 
-export interface IMeilisearchIndexSettings<T extends {}> {
+export interface IMeilisearchIndexSettings<TDoc extends {}> {
   /** List of associated words treated similarly. A word associated to an array of word as synonyms. */
   synonyms?: Record<string, string[]>;
   /** List of words ignored when present in search queries. */
@@ -63,20 +63,20 @@ export interface IMeilisearchIndexSettings<T extends {}> {
    *
    * The default is: words, typo, proximity, attribute, sort, exactness
    */
-  rankingRules?: RankingRule[];
+  rankingRules?: RankingRule<TDoc>[];
   /** Search returns documents with distinct (different) values of the given field. */
-  distinctAttribute?: null | keyof T;
+  distinctAttribute?: null | keyof TDoc;
   /** Fields in which to search for matching query words sorted by order of importance. */
-  searchableAttributes?: Wildcard<T>;
+  searchableAttributes?: Wildcard<TDoc>;
   /** Fields displayed in the returned documents. */
-  displayedAttributes?: Wildcard<T>;
+  displayedAttributes?: Wildcard<TDoc>;
   /**
    * Attributes to use for facetting and filtering. See
    * [Filtering and Faceted Search](https://docs.meilisearch.com/reference/features/filtering_and_faceted_search.html).
    */
-  filterableAttributes?: Wildcard<T>;
+  filterableAttributes?: Wildcard<TDoc>;
   /** List of attributes to sort on at search. */
-  sortableAttributes?: Wildcard<T>;
+  sortableAttributes?: Wildcard<TDoc>;
 }
 
 export interface IMeiliSearchHealth {

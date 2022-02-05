@@ -62,8 +62,8 @@ const modelConfigApi = <TDoc extends {}>(update: (s: PartialModel<TDoc>) => void
         return api<TExclude | "synonyms">();
       },
 
-      rankingRules(cb: (r: RankingRulesApi) => void) {
-        const updateRules = (r: RankingRule[]) => {
+      rankingRules(cb: (r: RankingRulesApi<TDoc>) => void) {
+        const updateRules = (r: RankingRule<TDoc>[]) => {
           update({ index: { rules: r } });
         };
         const ruleApi = rankingRules(updateRules);

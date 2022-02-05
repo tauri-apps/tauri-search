@@ -74,6 +74,8 @@ function reduceClutter(
 
 /**
  * Uses Github API to build a sitemap of markdown files for a given repo
+ * and will also report on changes since last sitemap if a prior sitemap
+ * existed
  */
 export async function refreshSitemap(options: Partial<GithubContentsReq> = DEFAULT) {
   const o = { ...DEFAULT, ...options };

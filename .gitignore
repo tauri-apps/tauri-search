@@ -10,3 +10,4 @@
 **/*.log
 **/.do-devops.json
 **/*.env
+**/generated/ast/prose/**/docs/**

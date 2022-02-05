@@ -43,7 +43,7 @@ export type IndexApi<TDoc, TExclude extends string = never> = Omit<
      * Refer to [Ranking Rules Documentation](https://docs.meilisearch.com/learn/core_concepts/relevancy.html#ranking-rules) for more info.
      */
     rankingRules: (
-      cb: (r: RankingRulesApi) => void
+      cb: (r: RankingRulesApi<TDoc>) => void
     ) => IndexApi<TDoc, TExclude | "rankingRules">;
   },
   TExclude
@@ -57,7 +57,7 @@ export type ISearchModel<TDoc extends {}> = {
   type: TDoc;
   index: {
     pk: string;
-    rules?: RankingRule[];
+    rules?: RankingRule<TDoc>[];
     displayed?: Wildcard<TDoc>;
     searchable?: Wildcard<TDoc>;
     filterable?: Wildcard<TDoc>;

@@ -17,5 +17,5 @@ import { ProseModel } from "..";
     `- all ${tasks.length} documents were pushed via API; monitoring task status ...`
   );
 
-  await communicateTaskStatus(ProseModel, tasks, { timeout: 30000 });
+  await communicateTaskStatus(ProseModel, tasks, { timeout: 45000 });
 })();

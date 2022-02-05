@@ -19,6 +19,28 @@ import MdExpandable from "markdown-it-expandable";
 const markdownWrapperClasses = "prose prose-sm m-auto text-left";
 
 export default defineConfig({
+  server: {
+    proxy: {
+      "/tauri": {
+        target: "https://tauri.studio",
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/tauri/, "/"),
+      },
+      "/github": {
+        target: "https://github.com",
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/github/, "/"),
+      },
+      "/rust": {
+        target: "https://docs.rs",
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/rust/, "/"),
+      },
+    },
+  },
   resolve: {
     alias: {
       "~/": `${path.resolve(__dirname, "src")}/`,
@@ -142,12 +164,6 @@ export default defineConfig({
       enabled: false,
     }),
   ],
-
-  server: {
-    fs: {
-      strict: true,
-    },
-  },
 
   // https://github.com/antfu/vite-ssg
   ssgOptions: {

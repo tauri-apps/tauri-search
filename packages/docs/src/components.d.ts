@@ -20,6 +20,7 @@ declare module 'vue' {
     'Fluent:databaseSearch24Regular': typeof import('~icons/fluent/database-search24-regular')['default']
     Footer: typeof import('./components/Footer.vue')['default']
     'Iconoir:download': typeof import('~icons/iconoir/download')['default']
+    LinkValidation: typeof import('./components/LinkValidation.vue')['default']
     'Mdi:folderHome': typeof import('~icons/mdi/folder-home')['default']
     'Mdi:github': typeof import('~icons/mdi/github')['default']
     'Mdi:languageRust': typeof import('~icons/mdi/language-rust')['default']

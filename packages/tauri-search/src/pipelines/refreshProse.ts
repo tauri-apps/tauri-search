@@ -136,5 +136,5 @@ export async function refreshProse(
   await writeFile(sitemap, JSON.stringify(currentSitemap), "utf-8");
   console.log(`- wrote Repo Sitemap to: ${sitemap}`);
 
-  return { sitemap };
+  return { };
 }

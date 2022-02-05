@@ -1,22 +1,21 @@
 /* eslint-disable no-console */
 /* eslint-disable no-use-before-define */
-import { Keys, UnionToTuple } from "inferred-types";
+import { Keys } from "inferred-types";
 import { Type } from "~/enums";
 
+export type PropertyRank<TDoc extends {}> = `${Keys<TDoc>}:${"asc" | "desc"}`;
+
 /** represents valid choices for ranking rules */
-export type RankingRule =
+export type RankingRule<TDoc extends {}> =
   | "words"
   | "typo"
   | "proximity"
   | "attribute"
   | "sort"
-  | "exactness";
+  | "exactness"
+  | PropertyRank<TDoc>;
 
-export type T = Record<Keys<UnionToTuple<RankingRule>>, any>;
-export type TT<E extends Keys<UnionToTuple<RankingRule>> = never> = Record<
-  Keys<UnionToTuple<RankingRule>, E>,
-  () => TT
->;
+
 
 /**
  * An API that allows consumers to set a ranking order for Meilisearch Index.
@@ -24,19 +23,19 @@ export type TT<E extends Keys<UnionToTuple<RankingRule>> = never> = Record<
  * ordering.
  *
  * [Ranking Rules Documentation](https://docs.meilisearch.com/learn/core_concepts/relevancy.html#ranking-rules) */
-export type RankingRulesApi<E extends RankingRule = never> = Omit<
+export type RankingRulesApi<TDoc extends {}, E extends RankingRule<TDoc> = never> = Omit<
   {
     /**
      * Results are sorted by increasing number of typos. Returns documents that
      * match query terms with fewer typos first.
      */
-    typo: () => RankingRulesApi<E | "typo">;
+    typo: () => RankingRulesApi<TDoc, E | "typo">;
     /**
      * Results are sorted by increasing distance between matched query terms. Returns
      * documents where query terms occur close together and in the same order as the
      * query string first.
      */
-    proximity: () => RankingRulesApi<E | "proximity">;
+    proximity: () => RankingRulesApi<TDoc, E | "proximity">;
     /**
      * Results are sorted according to the
      * [attribute ranking order](https://docs.meilisearch.com/learn/core_concepts/relevancy.html#attribute-ranking-order).
@@ -46,12 +45,12 @@ export type RankingRulesApi<E extends RankingRule = never> = Omit<
      * of the attribute list will be considered more relevant than documents containing the query
      * words at the end of the attributes.
      */
-    attribute: () => RankingRulesApi<E | "attribute">;
+    attribute: () => RankingRulesApi<TDoc, E | "attribute">;
     /**
      * Results are sorted by the similarity of the matched words with the query words.
      * Returns documents that contain exactly the same terms as the ones queried first.
      */
-    exactness: () => RankingRulesApi<E | "exactness">;
+    exactness: () => RankingRulesApi<TDoc, E | "exactness">;
     /**
      * Results are sorted according to parameters decided at query time. When the sort
      * ranking rule is in a higher position, sorting is exhaustive: results will be less
@@ -59,12 +58,15 @@ export type RankingRulesApi<E extends RankingRule = never> = Omit<
      * lower position, sorting is relevant: results will be very relevant, but might not
      * always follow the order defined by the user.
      */
-    sort: () => RankingRulesApi<E | "sort">;
+    sort: () => RankingRulesApi<TDoc, E | "sort">;
     /**
      * Results are sorted by decreasing number of matched query terms. Returns documents
      * that contain all query terms first.
      */
-    words: () => RankingRulesApi<E | "words">;
+    words: () => RankingRulesApi<TDoc, E | "words">;
+
+    ASC: (prop: keyof TDoc) => RankingRulesApi<TDoc, E>;
+    DESC: (prop: keyof TDoc) => RankingRulesApi<TDoc, E>;
   },
   E
 >;
@@ -78,37 +80,6 @@ export type StopWords = Record<Language, string[]>;
  * alias to one or more synonyms.
  */
 export type IndexSynonyms = Record<string, string[]>;
-
-export type IndexDefnApi = {
-  /**
-   * Specify the order for the various _ranking rules_. The default ranking rules are:
-   *
-   * ```ts
-   * ["words", "typo", "proximity", "attribute", "sort", "exactness"]
-   * ```
-   *
-   * Refer to [Ranking Rules Documentation](https://docs.meilisearch.com/learn/core_concepts/relevancy.html#ranking-rules) for more info.
-   */
-  rankingRules?: (r: RankingRulesApi) => void;
-  /**
-   * Allows multiple words with the same meaning to be paired together to improve search results.
-   *
-   * [Synonyms Documentation](https://docs.meilisearch.com/reference/features/synonyms.html#synonyms)
-   */
-  synonyms?: IndexSynonyms;
-  /**
-     * Because your website might provide content with structured English sentences, we 
-     * recommend adding stop words. Indeed, the search-engine would not be "spoiled" by 
-     * linking words and would focus on the main words of the query, rendering more 
-     * accurate results.
-     * 
-     * Here is the [dedicated page about stop-words](https://docs.meilisearch.com/reference/features/stop_words.html) 
-     * in the official documentation. You can find more complete lists of 
-     * English stop-words [like this one](https://gist.github.com/sebleier/554280).
-
-     */
-  stopWords?: string[];
-};
 
 export type DocumentProperty = {
   type: Type;

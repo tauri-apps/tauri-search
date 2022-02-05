@@ -6,6 +6,7 @@ export type IConsolidatedModel = IScrapeSelectorTargets & {
   from: "prose" | "api" | "repo";
   rank: number;
   symbol: string | null;
+  tags: null | string[];
   language: string | null;
 };
 
@@ -20,6 +21,15 @@ export const ConsolidatedModel = createModel<IConsolidatedModel>("consolidated",
       javascript: ["ts", "typescript", "js"],
     })
     .filterable("from", "language", "symbol")
-    .searchable("hierarchy_lvl0", "rank", "hierarchy_lvl3", "hierarchy_lvl2", "hierarchy_lvl1", "symbol", "content")
-    .rankingRules((r) => r.words().typo().sort().attribute().proximity().exactness())
+    .searchable(
+      "hierarchy_lvl0",
+      "symbol",
+      "tags",
+      "hierarchy_lvl3",
+      "hierarchy_lvl2",
+      "hierarchy_lvl1",
+      "rank",
+      "content"
+    )
+    .rankingRules((r) => r.words().typo().sort().attribute().proximity().ASC("rank").exactness())
 );

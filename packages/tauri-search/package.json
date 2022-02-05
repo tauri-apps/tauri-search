@@ -14,7 +14,7 @@
     "build:cli": "tsup src/cli/*.ts --format=esm,cjs --clean --sourcemap -d bin",
     "build:npm": "tsup src/index.ts --dts --format=esm,cjs  --sourcemap --clean -d dist ",
     "clean": "rimraf dist/* bin/*",
-    "clear-caches": "node bin/clear-caches.js",
+    "clear-caches": "rimraf src/generated/ast && node bin/clear-caches.js",
     "create-indexes": "node bin/create-indexes.js",
     "drop-indexes": "node bin/drop-indexes.js",
     "current-indexes": "node bin/current-indexes.js",
@@ -27,6 +27,7 @@
     "push-typescript": "node bin/push-typescript.js",
     "rebuild-caches": "node bin/rebuild-caches.js",
     "refresh-prose": "node bin/refresh-prose.js",
+    "refresh-sitemap": "node bin/refresh-sitemap.js",
     "refresh-repos": "node bin/refresh-repos.js",
     "refresh-typescript": "node bin/refresh-typescript.js",
     "restart": "docker compose restart",
@@ -40,10 +41,12 @@
     "watch:npm": "tsup src/index.ts --dts --format=esm,cjs  --sourcemap -d dist --watch"
   },
   "dependencies": {
+    "@types/html-to-text": "^8.0.1",
     "axios": "^0.25.0",
     "dotenv": "^14.3.2",
     "fast-glob": "^3.2.11",
     "gray-matter": "^4.0.3",
+    "html-to-text": "^8.1.0",
     "inferred-types": "^0.18.4",
     "native-dash": "^1.21.5",
     "simple-markdown-2": "^0.7.5"

@@ -58,7 +58,7 @@ const changeServer = (_server: {name: string; url: string}) => {
           type="text"
           autocomplete="false"
           spellcheck="false"
-          class="px-auto px-4 py-4 w-350px text-center bg-transparent self-center"
+          class="px-auto px-4 py-4 w-350px text-center bg-transparent self-center dark:focus:placeholder-gray-700 focus:placeholder-gray-300"
           border="~ rounded gray-200 dark:gray-700"
           outline="none active:none"
         >
