@@ -11,3 +11,4 @@
 **/.do-devops.json
 **/*.env
 **/generated/ast/prose/**/docs/**
+**/vite.config.ts.js
