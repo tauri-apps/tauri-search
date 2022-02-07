@@ -1,10 +1,13 @@
+import { SERVERS } from "~/constants";
 import {
   IndexApi,
   ISearchConfig,
   ISearchModel,
   RankingRule,
   RankingRulesApi,
+  Stage,
 } from "~/types";
+import { getEnv } from "./getEnv";
 import { MeiliSearchApi } from "./MeiliSearchApi";
 import { rankingRules } from "./model-api/rankingRules";
 
@@ -79,8 +82,7 @@ const modelConfigApi = <TDoc extends {}>(update: (s: PartialModel<TDoc>) => void
 export const createModel = <TDoc extends Record<string, any>>(
   /** the MeiliSearch index name which this model is servicing */
   name: string,
-  cb?: (api: IndexApi<TDoc>) => void,
-  url: string = "http://localhost:7700"
+  cb?: (api: IndexApi<TDoc>) => void
 ) => {
   const state: ISearchConfig<TDoc> = {
     name,
@@ -99,11 +101,17 @@ export const createModel = <TDoc extends Record<string, any>>(
     cb(modelConfigApi<TDoc>(updateState));
   }
 
-  return {
-    ...state,
-    query: MeiliSearchApi<TDoc>(state, { url }),
-    toString() {
-      return `Model(${name}[${state.index.pk}])`;
-    },
-  } as ISearchModel<TDoc>;
+  return (stage?: Stage) => {
+    const url = stage ? SERVERS[stage]?.url : SERVERS[getEnv().stage]?.url;
+    const search_key = stage
+      ? SERVERS[stage]?.search_key
+      : SERVERS[getEnv().stage]?.search_key;
+    return {
+      ...state,
+      query: MeiliSearchApi<TDoc>(state, { url, search_key }),
+      toString() {
+        return `Model(${name}[${state.index.pk}])`;
+      },
+    } as ISearchModel<TDoc>;
+  };
 };

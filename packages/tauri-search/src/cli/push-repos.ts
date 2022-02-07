@@ -20,6 +20,6 @@ import { RepoModel } from "..";
       `- Completed pushing all ${docs.length} Repo docs to MeiliSearch; monitoring queue status`
     );
 
-    await communicateTaskStatus(RepoModel, tasks);
+    await communicateTaskStatus(RepoModel(), tasks);
   }
 })();

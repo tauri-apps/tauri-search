@@ -30,6 +30,7 @@ declare module 'vue' {
     'Ph:info': typeof import('~icons/ph/info')['default']
     'Ph:linkLight': typeof import('~icons/ph/link-light')['default']
     README: typeof import('./components/README.md')['default']
+    SearchBar: typeof import('./components/SearchBar.vue')['default']
     SearchHit: typeof import('./components/SearchHit.vue')['default']
     SearchIndexes: typeof import('./components/SearchIndexes.vue')['default']
     SearchResults: typeof import('./components/SearchResults.vue')['default']

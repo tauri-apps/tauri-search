@@ -3,7 +3,7 @@ import { ApiModel } from "..";
 
 (async () => {
   try {
-    const result = await ApiModel.query.currentIndexes();
+    const result = await ApiModel().query.currentIndexes();
     console.log(`MeiliSearch currently has the following indexes:\n`);
     for (const r of result) {
       console.log(`  > ${r.name} - created at ${r.createdAt}`);

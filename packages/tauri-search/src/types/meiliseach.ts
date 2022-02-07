@@ -1,5 +1,5 @@
-import { AxiosRequestConfig } from 'axios';
-import { RankingRule, Wildcard } from '.';
+import { AxiosRequestConfig } from "axios";
+import { RankingRule, Wildcard } from ".";
 import { ApiOptions } from "~/utils/MeiliSearchApi";
 
 export interface MsIndexStatusResponse {
@@ -200,7 +200,7 @@ export interface IMeiliSearchQueryApi<TDoc extends {}> {
   addOrReplaceDocuments: (doc: TDoc, o?: ApiOptions) => Promise<IMeilisearchAddOrReplace>;
   addOrUpdateDocuments: (doc: TDoc, o?: ApiOptions) => Promise<IMeilisearchAddOrReplace>;
 
-  search: (text: string) => Promise<IMeilisearchSearchResponse>;
+  search: (text: string, altIndex?: string) => Promise<IMeilisearchSearchResponse>;
 
   getIndexSettings: (override?: string) => Promise<IMeilisearchIndexSettings<TDoc>>;
   updateIndexSettings: (

@@ -15,7 +15,7 @@ const indexName = computed(() => props.idx.name as "api" | "repo" | "prose");
 
 const remove = async () => {
   // just using ApiModel at random, as we can state which index to remove
-  await ApiModel.query.deleteIndex(indexName.value);
+  await ApiModel().query.deleteIndex(indexName.value);
 };
 
 const pushCache = async() =>  {

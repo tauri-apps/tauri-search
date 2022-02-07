@@ -10,16 +10,12 @@ import { IApiModel, TypescriptBlock } from "..";
  * Refreshes the document cache
  */
 export async function refreshTypescript(options: Partial<IEnv> = {}) {
-  const { org, repo, branch } = { ...getEnv(), ...options };
+  const { org, repo, branch, tsAstPath } = { ...getEnv(), ...options };
   const { cacheFile } = await getCache(CacheKind.typescriptDocs, {
     ...getEnv(),
     ...options,
   });
-  const ast = (await getRepoFile(
-    `${org}/${repo}`,
-    "docs/api/js/js-api.json",
-    branch
-  )) as TypescriptBlock;
+  const ast = (await getRepoFile(`${org}/${repo}`, tsAstPath, branch)) as TypescriptBlock;
 
   const simplified = await parseTypescriptAst(ast);
 

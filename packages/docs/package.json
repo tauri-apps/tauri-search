@@ -21,6 +21,7 @@
     "@vueuse/core": "^7.5.5",
     "@vueuse/head": "^0.7.5",
     "date-fns": "^2.28.0",
+    "docs-searchbar.js": "^2.1.0",
     "floating-vue": "^2.0.0-beta.5",
     "inferred-types": "^0.18.4",
     "markdown-it-expandable": "^1.0.0",

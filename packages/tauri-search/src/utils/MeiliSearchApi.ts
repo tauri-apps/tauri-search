@@ -13,9 +13,11 @@ import {
   ISearchConfig,
   IMeilisearchAllTasks,
 } from "~/types";
+import { getEnv } from "./getEnv";
 
 export interface MeiliSearchOptions {
   url?: string;
+  search_key?: string;
 }
 export type PagingOptions = {
   limit?: number;
@@ -30,6 +32,12 @@ export function MeiliSearchApi<TDoc extends {}>(
 ) {
   const baseURL = options.url || "http://localhost:7700";
   const idx = model.name;
+  const { adminKey, searchKey } = getEnv();
+
+  const headers = {
+    "X-Meili-API-Key": options.search_key || adminKey || searchKey || "",
+    "Access-Control-Allow-Origin": "*",
+  };
 
   const call = async <T>(
     method: "get" | "post" | "put" | "delete",
@@ -45,6 +53,7 @@ export function MeiliSearchApi<TDoc extends {}>(
         ...options,
         headers: {
           "Content-Type": options.data ? "application/json" : "application/text",
+          ...headers,
         },
       },
     }).catch((err) => {
@@ -155,8 +164,8 @@ export function MeiliSearchApi<TDoc extends {}>(
       post<IMeilisearchAddOrReplace>(`indexes/${idx}/documents`, JSON.stringify(doc), o),
     addOrUpdateDocuments: (doc: TDoc, o: ApiOptions = {}) =>
       put<IMeilisearchAddOrReplace>(`indexes/${idx}/documents`, JSON.stringify(doc), o),
-    search: (text: string) =>
-      get<IMeilisearchSearchResponse>(`indexes/${idx}/search?q=${text}`),
+    search: (text: string, altIndex?: string) =>
+      get<IMeilisearchSearchResponse>(`indexes/${altIndex || idx}/search?q=${text}`),
     getIndexSettings: (override?: string) =>
       get<IMeilisearchIndexSettings<TDoc>>(`indexes/${override || idx}/settings`),
     updateIndexSettings: (settings: IMeilisearchIndexSettings<TDoc>) =>

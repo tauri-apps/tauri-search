@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { pushProseDocs } from "~/pipelines/pushProseDocs";
+import { pushProseDocs } from "~/pipelines";
 import { communicateTaskStatus } from "~/utils/communicateTaskStatus";
-import { ProseModel } from "..";
+import { ProseModel } from "~/models";
 
 (async () => {
   console.log(`- Pushing "prose" documents to MeiliSearch`);
@@ -10,5 +10,5 @@ import { ProseModel } from "..";
     `- all ${tasks.length} documents were pushed via API; monitoring task status ...`
   );
 
-  await communicateTaskStatus(ProseModel, tasks, { timeout: 75000 });
+  await communicateTaskStatus(ProseModel(), tasks, { timeout: 75000 });
 })();

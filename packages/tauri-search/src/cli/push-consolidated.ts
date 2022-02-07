@@ -12,5 +12,5 @@ import { ConsolidatedModel } from "~/models";
     `- all consolidated documents [${tasks.length}] have been pushed to MeiliSearch queue`
   );
 
-  communicateTaskStatus(ConsolidatedModel, tasks, { timeout: 75000 });
+  communicateTaskStatus(ConsolidatedModel(), tasks, { timeout: 75000 });
 })();

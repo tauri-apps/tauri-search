@@ -13,7 +13,7 @@ export async function pushRepoDocs(options: Partial<IEnv> = {}) {
   const tasks: IMonitoredTask[] = [];
 
   for (const doc of docs) {
-    const res = await RepoModel.query.addOrReplaceDocuments(doc);
+    const res = await RepoModel().query.addOrReplaceDocuments(doc);
     if (res.status !== "enqueued") {
       errors.push(doc);
     } else {

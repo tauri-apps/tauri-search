@@ -21,6 +21,6 @@ import { communicateTaskStatus } from "~/utils/communicateTaskStatus";
     console.log(
       `- Completed pushing all Typescript docs [${tasks.length}] to MeiliSearch. Now monitoring task progress ...`
     );
-    communicateTaskStatus(ApiModel, tasks, { timeout: 65000 });
+    communicateTaskStatus(ApiModel(), tasks, { timeout: 65000 });
   }
 })();

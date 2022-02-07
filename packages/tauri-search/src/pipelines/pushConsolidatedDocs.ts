@@ -24,7 +24,7 @@ export async function pushConsolidatedDocs(options: Partial<IEnv> = {}) {
   const errors: IConsolidatedModel[] = [];
   const tasks: IMonitoredTask[] = [];
   for (const doc of docs) {
-    const res = await ConsolidatedModel.query.addOrReplaceDocuments(doc);
+    const res = await ConsolidatedModel().query.addOrReplaceDocuments(doc);
     if (res.status !== "enqueued") {
       errors.push(doc);
     } else {

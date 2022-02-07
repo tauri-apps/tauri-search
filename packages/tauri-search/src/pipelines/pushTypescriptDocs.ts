@@ -20,7 +20,7 @@ export async function pushTypescriptDocs(options: Partial<IEnv> = {}) {
   const tasks: IMonitoredTask[] = [];
 
   for (const doc of docs) {
-    const res = await ApiModel.query.addOrReplaceDocuments(doc);
+    const res = await ApiModel().query.addOrReplaceDocuments(doc);
     if (res.status !== "enqueued") {
       errors.push(doc);
     } else {
