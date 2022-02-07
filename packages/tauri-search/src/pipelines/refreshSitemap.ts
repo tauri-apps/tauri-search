@@ -53,7 +53,9 @@ function reduceClutter(
       download_url: f.download_url as string,
     }));
 
-  const children = resp.filter((i) => i.type === "dir").map((d) => d.name);
+  const children = resp
+    .filter((i) => i.type === "dir" && !i.name.startsWith(".") && i.name !== "api")
+    .map((d) => d.name);
 
   return [files, children];
 }
@@ -71,9 +73,11 @@ async function getStructure(o: IEnv) {
   if (children.length > 0) {
     const waitFor: Promise<IDocsSitemap>[] = [];
     for (const child of children) {
-      if (child.startsWith("_")) {
+      if (child.startsWith("_" || child.startsWith(".") || child === "api")) {
         // eslint-disable-next-line no-console
-        console.log(`- skipping the "${child}" directory due to leading underscore`);
+        console.log(
+          `- skipping the "${child}" directory due to leading directory character`
+        );
       } else {
         const p = join(o.docsPath, `/${child}`);
         const mo: IEnv = { ...o, docsPath: p };

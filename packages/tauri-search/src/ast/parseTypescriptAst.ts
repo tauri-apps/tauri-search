@@ -70,7 +70,11 @@ export async function parseTypescriptAst(
       project.symbols.push(...parseModule(mod));
     } else {
       console.error(
-        `Detected a "${mod.kindString}" node at the root level; we would expect only Namespace/module definitions at the root level`
+        `- detected a ${mod.kindString} node with a name of "${
+          mod.name
+        }" at the root level; we would expect only Namespace/module definitions at the root level${
+          mod.comment ? `\n\tcomment: ${mod.comment}` : ""
+        }`
       );
     }
   }
