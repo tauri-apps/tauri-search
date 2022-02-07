@@ -53,19 +53,21 @@ function parseModule(mod: TypescriptBlock) {
  * @param source if not specified will use historically factual fixture data, if a URL it will load over network, if a file then will load over file system
  */
 export async function parseTypescriptAst(
-  content: TypescriptBlock
+  content?: TypescriptBlock
 ): Promise<TsDocProject> {
+  const ast = content ? content : (JSON.parse(await fixtureContent()) as TypescriptBlock);
+
   /**
    * The top level "project" isn't probably worth putting into the index,
    * but instead we'll start at the modules level.
    */
   const project: TsDocProject = {
-    project: content.name,
-    comment: content.comment,
+    project: ast.name,
+    comment: ast.comment,
     symbols: [],
   };
 
-  for (const mod of content.children || []) {
+  for (const mod of ast.children || []) {
     if (mod.kindString === "Namespace") {
       project.symbols.push(...parseModule(mod));
     } else {

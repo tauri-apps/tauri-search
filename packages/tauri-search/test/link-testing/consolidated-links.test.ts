@@ -1,4 +1,3 @@
-import { existsSync } from "fs";
 import { readFile } from "fs/promises";
 import { LinkExists, linkExists, LinkMissing } from "../tools/linkExists";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -12,27 +11,20 @@ import {
   refreshTypescript,
 } from "~/pipelines";
 import { getEnv } from "~/utils/getEnv";
+import { CacheKind, getCache } from "~/utils/getCache";
 const { repo, branch } = getEnv();
 
 describe("link testing of consolidated index", () => {
   beforeAll(async () => {
-    if (!existsSync(TS_DOCS_CACHE)) {
-      await refreshTypescript(repo, branch);
-    }
-    if (!existsSync(REPO_DOCS_CACHE)) {
-      await refreshRepos();
-    }
-    if (!existsSync(proseDocsCacheFile(repo, branch))) {
-      await refreshProse(repo, branch);
-    }
+    await refreshTypescript({ branch: "feat/generate-js-ast" });
+    await refreshRepos();
+    await refreshProse();
   });
 
   it("test links originating from prose", async () => {
-    const docs = (
-      JSON.parse(
-        await readFile(proseDocsCacheFile(repo, branch), "utf-8")
-      ) as IProseModel[]
-    ).map((i) => ConsolidatedMapper(i));
+    const docs = (await getCache(CacheKind.proseDocs)).cache.map((i) =>
+      ConsolidatedMapper(i)
+    );
     const links: Promise<LinkExists | LinkMissing>[] = [];
     for (const doc of docs) {
       links.push(linkExists(doc.url));
@@ -47,9 +39,9 @@ describe("link testing of consolidated index", () => {
     ).toBeTruthy();
   });
   it("test links originating from Typescript API", async () => {
-    const docs = (JSON.parse(await readFile(TS_DOCS_CACHE, "utf-8")) as IApiModel[]).map(
-      (i) => ConsolidatedMapper(i)
-    );
+    const docs = (
+      await getCache(CacheKind.typescriptDocs, { branch: "feat/generate-js-ast" })
+    ).cache.map((i) => ConsolidatedMapper(i));
     const links: Promise<LinkExists | LinkMissing>[] = [];
     for (const doc of docs) {
       links.push(linkExists(doc.url));
@@ -65,9 +57,9 @@ describe("link testing of consolidated index", () => {
   });
   it.todo("test links originating from Rust API", async () => {});
   it("test links originating from repos", async () => {
-    const docs = (
-      JSON.parse(await readFile(REPO_DOCS_CACHE, "utf-8")) as IRepoModel[]
-    ).map((i) => ConsolidatedMapper(i));
+    const docs = (await getCache(CacheKind.repoDocs)).cache.map((i) =>
+      ConsolidatedMapper(i)
+    );
     const links: Promise<LinkExists | LinkMissing>[] = [];
     for (const doc of docs) {
       links.push(linkExists(doc.url));
