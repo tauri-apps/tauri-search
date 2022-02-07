@@ -1,25 +1,31 @@
-import { config } from "dotenv";
-import { writeFile } from "fs/promises";
 import { parseTypescriptAst } from "~/ast/parseTypescriptAst";
-import { TS_AST_CACHE, TS_DOCS_CACHE } from "~/constants";
 import { TypescriptMapper } from "~/mappers";
-import { IApiModel } from "..";
+import { CacheKind, getCache } from "~/utils/getCache";
+import { getEnv, IEnv } from "~/utils/getEnv";
+import { getRepoFile } from "~/utils/github/getRepoFile";
+import { writeCacheFile } from "~/utils/writeCacheFile";
+import { IApiModel, TypescriptBlock } from "..";
 
-export async function refreshTypescript(repo: string, branch: string) {
-  const prod = { repo, branch, filepath: "ts-api.json" };
-  config();
+/**
+ * Refreshes the document cache
+ */
+export async function refreshTypescript(options: Partial<IEnv> = {}) {
+  const { org, repo, branch } = { ...getEnv(), ...options };
+  const { cacheFile } = await getCache(CacheKind.typescriptDocs, {
+    ...getEnv(),
+    ...options,
+  });
+  const ast = (await getRepoFile(
+    `${org}/${repo}`,
+    "docs/api/js/js-api.json",
+    branch
+  )) as TypescriptBlock;
 
-  const ast =
-    process.env.NODE_ENV === "production"
-      ? await parseTypescriptAst(prod)
-      : await parseTypescriptAst();
+  const simplified = await parseTypescriptAst(ast);
 
-  await writeFile(TS_AST_CACHE, JSON.stringify(ast));
-  const docs: IApiModel[] = [];
-  for (const i of ast.symbols) {
-    docs.push(TypescriptMapper(i));
-  }
-  await writeFile(TS_DOCS_CACHE, JSON.stringify(docs));
+  const docs: IApiModel[] = simplified.symbols.map((i) => TypescriptMapper(i));
 
-  return docs;
+  await writeCacheFile(cacheFile, docs);
+
+  return { docs, cacheFile, repo: `${org}/${repo}@${branch}` };
 }

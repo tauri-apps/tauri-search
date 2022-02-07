@@ -2,7 +2,7 @@
 import { refreshRepos } from "~/pipelines/refreshRepos";
 
 (async () => {
-  console.log(`- writing Repo docs to cache`);
-  const repos = await refreshRepos();
-  console.log(`- all ${repos.length} repos have been updated`);
+  console.log(`- refresh Repo document cache`);
+  const { docs, cacheFile } = await refreshRepos();
+  console.log(`- all ${docs.length} repos have been updated and saved to: ${cacheFile}`);
 })();

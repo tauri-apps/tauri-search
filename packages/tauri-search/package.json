@@ -20,6 +20,8 @@
     "current-indexes": "node bin/current-indexes.js",
     "lint": "eslint src --ext ts,js,tsx,jsx --fix --no-error-on-unmatched-pattern",
     "prune": "docker system prune",
+    "delta-update": "run-s rebuild-caches ",
+    "full-update": "run-s drop-indexes clear-caches rebuild-caches create-indexes push-consolidated push-prose push-repos push-typescript",
     "push-caches": "node bin/push-cache.js",
     "push-consolidated": "node bin/push-consolidated.js",
     "push-prose": "node bin/push-prose.js",

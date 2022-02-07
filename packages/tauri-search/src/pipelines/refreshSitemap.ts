@@ -1,15 +1,10 @@
-import axios from "axios";
-import { join } from "node:path";
-import { GITHUB_API_BASE } from "~/constants";
-import { GithubContentsReq, GithubContentsResp } from "~/types";
-import { getEnv } from "~/utils/getEnv";
-
-const DEFAULT: GithubContentsReq = {
-  owner: "tauri-apps",
-  path: "docs",
-  repo: "tauri",
-  ref: "dev",
-};
+import { join } from "path";
+import { GithubContentsResp } from "~/types";
+import { flattenSitemap, IFlatSitemap, sitemapDictionary } from "~/utils/convertSitemap";
+import { CacheKind, getCache } from "~/utils/getCache";
+import { getEnv, IEnv } from "~/utils/getEnv";
+import { getDirectory } from "~/utils/github/getDirectory";
+import { writeCacheFile } from "~/utils/writeCacheFile";
 
 export interface IDocsSitemapFile {
   name: string;
@@ -24,33 +19,24 @@ export interface IDocsSitemap {
   children: IDocsSitemap[];
 }
 
-async function getDirectory(o: GithubContentsReq) {
-  const { github_token, github_user } = getEnv();
+/**
+ * A type utiility which adds delta-context to a recently created sitemap
+ */
+export type Sitemap<T extends IDocsSitemap> = {
+  hasDeltaInfo: boolean;
+  cacheFile: string;
+  sitemap: T;
+  count: number;
+  changes: {
+    added: string[];
+    changed: string[];
+    removed: string[];
+  };
+};
 
-  const url = `${GITHUB_API_BASE}/repos/${o.owner}/${o.repo}/contents/${o.path}?ref=${o.ref}`;
-  try {
-    const res = await axios.get<GithubContentsResp>(url, {
-      httpAgent: "Tauri Search",
-      ...(github_token && github_user
-        ? { auth: { username: github_user, password: github_token } }
-        : {}),
-    });
-    if (res.status < 299) {
-      return res;
-    } else {
-      throw new Error(
-        `The attempt to call Github's "contents" API failed [${res.status}, ${url}]: ${res.statusText}`
-      );
-    }
-  } catch (err) {
-    throw new Error(
-      `The attempt to call Github's "contents" API failed [${url}]: ${
-        (err as Error).message
-      }`
-    );
-  }
-}
-
+/**
+ * reduces the Github output to just core properties
+ */
 function reduceClutter(
   dir: string,
   resp: GithubContentsResp
@@ -72,29 +58,94 @@ function reduceClutter(
   return [files, children];
 }
 
-/**
- * Uses Github API to build a sitemap of markdown files for a given repo
- * and will also report on changes since last sitemap if a prior sitemap
- * existed
- */
-export async function refreshSitemap(options: Partial<GithubContentsReq> = DEFAULT) {
-  const o = { ...DEFAULT, ...options };
-  const [files, children] = reduceClutter(o.path, (await getDirectory(o)).data);
+async function getStructure(o: IEnv) {
+  // RECURSE INTO REPO STARTING at PATH
+  const [files, children] = reduceClutter(o.docsPath, (await getDirectory(o)).data);
+
   const sitemap: IDocsSitemap = {
-    dir: o.path,
+    dir: o.docsPath,
     files,
     children: [],
   };
+
   if (children.length > 0) {
     const waitFor: Promise<IDocsSitemap>[] = [];
     for (const child of children) {
-      const p = join(o.path, `/${child}`);
-      const mo = { ...o, path: p };
-      waitFor.push(refreshSitemap(mo));
+      if (child.startsWith("_")) {
+        // eslint-disable-next-line no-console
+        console.log(`- skipping the "${child}" directory due to leading underscore`);
+      } else {
+        const p = join(o.docsPath, `/${child}`);
+        const mo: IEnv = { ...o, docsPath: p };
+        waitFor.push(getStructure(mo));
+      }
     }
     const resolved = await Promise.all(waitFor);
     sitemap.children = resolved;
   }
 
   return sitemap;
+}
+
+/**
+ * Uses Github API to build a sitemap of markdown files for a given repo.
+ *
+ * Note: if a sitemap already exists, it will compare the hash values from
+ * the cached sitemap and return `added`, `removed`, and `changed` arrays
+ * to help downstream consumers only update what is necessary.
+ */
+export async function refreshSitemap(
+  options: Partial<IEnv> = {}
+): Promise<Sitemap<IDocsSitemap>> {
+  const o = { ...getEnv(), ...options };
+  const sitemap = await getStructure(o);
+  /** flattened version just created sitemap */
+  const flatSitemap = flattenSitemap(sitemap) as IFlatSitemap[];
+
+  const { cacheFile, cache } = await getCache(CacheKind.sitemap);
+
+  const existingSitemap = sitemapDictionary(cache);
+  const existingFlatmap = flattenSitemap(cache);
+
+  // DELTAs
+  const changed: string[] = [];
+  const added: string[] = [];
+  const removed: string[] = [];
+
+  if (existingSitemap) {
+    for (const doc of flatSitemap) {
+      if (
+        existingSitemap[doc.filepath as any]?.sha &&
+        existingSitemap[doc.filepath as any]?.sha !== doc?.sha
+      ) {
+        changed.push(doc.filepath);
+      } else if (
+        !existingSitemap[doc.filepath as any]?.filepath &&
+        doc?.sha !== existingSitemap[doc.filepath as any]?.sha
+      ) {
+        added.push(doc.filepath);
+      }
+    }
+  }
+
+  if (existingFlatmap) {
+    const newSitemap = sitemapDictionary(sitemap);
+
+    for (const doc of existingFlatmap) {
+      if (!newSitemap[doc.filepath as any]) {
+        removed.push(doc.filepath);
+      }
+    }
+  }
+
+  // write new sitemap
+  await writeCacheFile(cacheFile, sitemap);
+
+  return {
+    sitemap,
+    hasDeltaInfo: existingFlatmap ? true : false,
+    changes: { added, changed, removed },
+    count: flatSitemap?.length || 0,
+    cacheFile: cacheFile,
+  };
 }

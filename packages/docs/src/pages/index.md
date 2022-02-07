@@ -37,29 +37,49 @@ pnpm run watch
   ```
 >>>
 
-## Secrets and ENV variables
+## Secrets, ENV variables, and Environments
 
 >>> DotENV
 - We use the popular DotEnv **npm** package to allow users to set ENV variables but **not** have them checked into the repository.
 - Simply add a `.env` file to add variables you want to use locally; this can be both secret and non-secret variables
-- In the local _dockerized_ MeiliSearch you will not really need any secrets but if you're rebuilding the document caches then you'll be using the Github API enough (and in parallel) such that providing a Github "personal access token" will be a good idea.
-  - Use the `GH_TOKEN` and `GH_USER` env variables to have the Github API's use your personal access token (versus being an anonymous user)
-- There are also some non-secret ENV variables you may want to adjust:
-  - the `REPO` variable is used to determine which Github respository hosts Markdown/Prose documents
-    - This will default to `tauri` for now if no ENV is detected; this will likely change in the future to `tauri-docs`.
-  - the `BRANCH` variable is used to specify which branch to use; it will use `dev` if not found
 >>>
->>> The Meilisearch Master Key
-- the dockerized container has no master key set (though you can set it); allowing all operations to be done via the API
-- a _production_ container should always be setup with a Master Key immediately
-- having the master key allows you to access all API endpoints but must be included in the Header as a bearer token
++++ ENV Variables
+- >>> `GH_TOKEN` and `GH_USER`
+    - Use the `GH_TOKEN` and `GH_USER` env variables to have the Github API's use your personal access token (versus being an anonymous user)
+    - If you're using the API anonymously it will quickly use the quota up but once authorized the calls are effectively nothing compared to an authorized API quota
+- >>> `REPO`, `BRANCH`, and `DOCS_PATH`
+    - the `REPO` variable is used to determine which **Github** repo hosts the Markdown/Prose documents
+    - the `BRANCH` variable is used to specify which branch to use
+    - the `DOC_PATH` variable indicates where in the repo's directory structure should be 
+- >>> `FORCE`
+    - by default CLI commands will attempt to leverage file caches as much as is possible but if you set the FORCE property to `true` then no caches will be used
+- >>> `MASTER_KEY`, `ADMIN_KEY`, and `SEARCH_KEY`
+    - >>> the `MASTER_KEY` should be setup immediately on all production environments as a one time task
+        - There is only a single Master Key and unlike other keys, it is not setup via the API but rather using Meilisearch's setup script. 
+        - While the Master Key can be passed into the API as bearer token for any endpoint in the API, it probably should only be used to setup other keys
+    - +++Production keys:
+       - >>> the `ADMIN_KEY` allows for most operations (outside of key management)
+          -  you'll need to have this set to push documents or manage indexes on both `staging` and `production` environments
+          -  when using the CLI commands to create changes on Meilisearch you'll need to ensure that not only `ADMIN_KEY` is set but that `NODE_ENV` is set to "staging" or "production"
+      - >>> the `SEARCH_KEY` only gives access to searching
+        -  it gives rights to search but nothing else and while it may block some nefarious traffic it is not considered a "secret"
+        -  setting this ENV variable isn't really very useful in this repo as the local Meilisearch doesn't require any keys and you'll need more power to push new documents to a production environment
+        -  note the variables below as a more useful alternative
+
+  > **Note:** the interactive playground provides a view into searches but also some ability to modify the local server instance via the API. Regardless of what the `NODE_ENV` is set to it will keep it's focus on the local environment, however, if you set the `VITE_SEARCH_STAGING` or `VITE_SEARCH_PRODUCTION` variables to a search key for those environments then it will allow switching searches to this different environment.
++++
+
+>>> Server Environments
+- **LOCAL** - the default environment which both CLI commands and Playground operate on are the dockerized local server running on `http://localhost:7700`.
+- **STAGING** - when `NODE_ENV` is set to "staging" the CLI will interact with this env but the Playground will still default to the local environment. Assuming you've provided an `ADMIN_KEY`, however, the Playground will offer some interaction with this env
+- **PRODUCTION** - this is the server which has all official search docs/indexes and services the Tauri website. Behaviorly it acts the same as STAGING.
 >>>
 
 ## Models
 
 Central to using this library to build and refresh your search indexes is understanding the concept of `Model`.
 - A Model has a `1:1` relationship with search indexes (or at least _potential_ indexes)
-- A Model is intended to represent:
+- >>> A Model is intended to represent:
   - the **document structure** that will be used for docs in the index
   - allows for **configuring the index** itself (e.g., stop words, synonyms, etc.)
   - allows you to embed data mappers which map from one document structure to another
@@ -114,11 +134,11 @@ Central to using this library to build and refresh your search indexes is unders
 
 
 ## External Resources
-- General Documentation
+- >>> Documentation
   - <span class="bg-green-500 rounded px-2 py-1 text-white">GET</span> - [MeiliSearch Website Docs](https://docs.meilisearch.com/learn/what_is_meilisearch/)
-- API Docs
   - <span class="bg-green-500 rounded px-2 py-1 text-white">GET</span> - [Open API for MeiliSearch](https://bump.sh/doc/meilisearch)
   - <span class="bg-green-500 rounded px-2 py-1 text-white">GET</span> - [API Docs from MeiliSearch Website](https://docs.meilisearch.com/reference/api/)
   - <span class="bg-green-500 rounded px-2 py-1 text-white">GET</span> - [Postman Collection of MeiliSearch API](https://docs.meilisearch.com/postman/meilisearch-collection.json)
 - Interactive
   - <span class="bg-green-500 rounded px-2 py-1 text-white">GET</span> - [MeiliSearch Dashboard](http://localhost:7700/)
+

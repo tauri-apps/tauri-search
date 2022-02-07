@@ -3,7 +3,7 @@ import { getContent } from "~/utils/getContent";
 import { TsDocProject, TypescriptBlock, TypescriptSymbol } from "~/types";
 import { TypescriptKind } from "~/enums";
 
-const fetchContent = getContent({ file: "test/fixtures/tsdoc.json" });
+const fixtureContent = getContent({ file: "test/fixtures/tsdoc.json" });
 
 function parseModule(mod: TypescriptBlock) {
   const modDefn: TypescriptSymbol = {
@@ -53,9 +53,8 @@ function parseModule(mod: TypescriptBlock) {
  * @param source if not specified will use historically factual fixture data, if a URL it will load over network, if a file then will load over file system
  */
 export async function parseTypescriptAst(
-  source?: Parameters<typeof fetchContent>[0]
+  content: TypescriptBlock
 ): Promise<TsDocProject> {
-  const content = JSON.parse(await fetchContent(source)) as TypescriptBlock;
   /**
    * The top level "project" isn't probably worth putting into the index,
    * but instead we'll start at the modules level.

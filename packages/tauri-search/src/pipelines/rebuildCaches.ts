@@ -1,14 +1,16 @@
-import { getEnv } from "~/utils/getEnv";
 import { refreshProse, refreshRepos, refreshTypescript } from ".";
-import { refreshSitemap } from "./refreshSitemap";
 
 export async function rebuildCaches() {
-  const { repo, branch } = getEnv();
-
-  await refreshSitemap();
+  let prose: [string, number] = ["", 0];
+  let repos: [string, number] = ["", 0];
+  let typescript: [string, number] = ["", 0];
   await Promise.all([
-    refreshProse(repo, branch),
-    refreshRepos(),
-    refreshTypescript(repo, branch),
+    refreshProse().then((c) => (prose = [c.cacheFile as string, c.docs?.length || 0])),
+    refreshRepos().then((c) => (repos = [c.cacheFile as string, c.docs?.length || 0])),
+    refreshTypescript({ branch: "feat/generate-js-ast" }).then(
+      (c) => (typescript = [c.cacheFile as string, c.docs?.length || 0])
+    ),
   ]);
+
+  return { prose, repos, typescript };
 }

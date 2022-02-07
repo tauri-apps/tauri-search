@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 import { getRepo } from "~/utils/github/getRepo";
 import { getRepoReadme } from "~/utils/github/getRepoReadme";
-import { REPOS, REPO_DOCS_CACHE } from "~/constants";
+import { REPOS } from "~/constants";
 import { GithubMapper } from "~/mappers";
 import { GithubRepoResp } from "~/types";
 import { IRepoModel } from "~/models";
-import { writeFile } from "fs/promises";
+import { CacheKind, getCache } from "~/utils/getCache";
+import { writeCacheFile } from "~/utils/writeCacheFile";
 
 /**
  * Responsible for iterating through each of the designated repos
@@ -13,6 +14,8 @@ import { writeFile } from "fs/promises";
  * indexes.
  */
 export async function refreshRepos() {
+  const { cacheFile } = await getCache(CacheKind.repoDocs);
+
   const repoPromise: Promise<GithubRepoResp>[] = [];
   const readmePromise: Promise<[string, string | undefined]>[] = [];
   for (const repo of REPOS) {
@@ -25,13 +28,11 @@ export async function refreshRepos() {
   }, {} as Record<string, string | undefined>);
 
   const repos = await Promise.all(repoPromise);
-  console.log(`- all repo's meta info has been retrieved from Github API`);
   const docs: IRepoModel[] = [];
   for (const r of repos) {
     docs.push(GithubMapper({ ...r, text: readmes[r.full_name] }));
   }
-  await writeFile(REPO_DOCS_CACHE, JSON.stringify(docs), "utf-8");
-  console.log(`- repo documents have been written to cache: ${REPO_DOCS_CACHE} `);
+  await writeCacheFile(cacheFile, docs);
 
-  return REPOS;
+  return { cacheFile, docs };
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { readFile } from "fs/promises";
 import { IDocsSitemap } from "~/pipelines";
 import { IApiModel, IProseModel, IRepoModel } from "..";
@@ -8,50 +9,91 @@ export enum CacheKind {
   proseDocs = "Prose/Markdown docs",
   repoDocs = "Repo docs",
   typescriptDocs = "Typescript API docs",
-  rustDocs = "Rust API docs"
+  rustDocs = "Rust API docs",
 }
 
 export interface GetCacheOptions {
-  repo?:string;
+  repo?: string;
   branch?: string;
 }
 
-export async function getCache<K extends CacheKind>(kind: K, options: GetCacheOptions = {}) {
-  const {repo, branch} = {...getEnv(),  ...options};
-  let content;
+export async function getCache<K extends CacheKind>(
+  kind: K,
+  options: GetCacheOptions = {}
+) {
+  const { repo, branch } = { ...getEnv(), ...options };
+  let cache;
+  let cacheFile;
 
-  try {
-    switch(kind) {
-      case CacheKind.sitemap:
-        content =  await readFile(`src/generated/sitemap-${repo}-${branch}.json`, "utf-8").then(c => JSON.parse(c) as IDocsSitemap);
-        break;
+  switch (kind) {
+    case CacheKind.sitemap:
+      cacheFile = `src/generated/sitemap-${repo}-${branch}.json`;
+      try {
+        cache = await readFile(cacheFile, "utf-8").then(
+          (c) => JSON.parse(c) as IDocsSitemap
+        );
+      } catch (err) {
+        cache = undefined;
+        console.warn(`- no cache file found at: ${cacheFile}`);
+      }
+      break;
 
-      case CacheKind.proseDocs:
-        content =  await readFile(`src/generated/prose/${repo}_${branch}/documents.json`, "utf-8").then(c => JSON.parse(c) as IProseModel[]);
-        break;
+    case CacheKind.proseDocs:
+      cacheFile = `src/generated/prose/${repo}_${branch}/documents.json`;
+      try {
+        cache = await readFile(cacheFile, "utf-8").then(
+          (c) => JSON.parse(c) as IProseModel[]
+        );
+      } catch (err) {
+        console.warn(`- no Prose cache file found at: ${cacheFile}`);
+        cache = [];
+      }
+      break;
 
-      case CacheKind.repoDocs:
-        content =  await readFile(`src/generated/repos/documents.json`, "utf-8").then(c => JSON.parse(c) as IRepoModel[]);
-        break;
+    case CacheKind.repoDocs:
+      cacheFile = `src/generated/repos/documents.json`;
+      try {
+        cache = await readFile(cacheFile, "utf-8").then(
+          (c) => JSON.parse(c) as IRepoModel[]
+        );
+      } catch (err) {
+        console.warn(`- no Repo cache file found at: ${cacheFile}`);
+        cache = [];
+      }
+      break;
 
-      case CacheKind.typescriptDocs:
-        content =  await readFile(`src/generated/api/${repo}_${branch}/ts-documents.json`, "utf-8").then(c => JSON.parse(c) as IApiModel[]);
-        break;
+    case CacheKind.typescriptDocs:
+      cacheFile = `src/generated/api/${repo}_${branch}/ts-documents.json`;
+      try {
+        cache = await readFile(cacheFile, "utf-8").then(
+          (c) => JSON.parse(c) as IApiModel[]
+        );
+      } catch (err) {
+        console.warn(`- no Typescript docs cach found at: ${cacheFile}`);
+        cache = [];
+      }
+      break;
 
-      case CacheKind.rustDocs:
-        content =  await readFile(`src/generated/api/${repo}_${branch}/rs-documents.json`, "utf-8").then(c => JSON.parse(c) as IApiModel[]);
-        break;
-  
-      default:
-        content = undefined;
-    }
+    case CacheKind.rustDocs:
+      cacheFile = `src/generated/api/${repo}_${branch}/rs-documents.json`;
+      cache = await readFile(cacheFile, "utf-8").then(
+        (c) => JSON.parse(c) as IApiModel[]
+      );
+      break;
 
-    return content as K extends CacheKind.sitemap ? IDocsSitemap | undefined : K extends CacheKind.proseDocs | undefined? IProseModel[] : K extends CacheKind.repoDocs ? IRepoModel[]| undefined : K extends CacheKind.typescriptDocs | undefined ? IApiModel[] : undefined;
-  } catch (e) {
-    console.warn(e);
-    
-    // throw new Error(`Problem loading "${kind}" generated cache file: ${(e as Error).message}`);
-    return undefined;
+    default:
+      cache = undefined;
   }
 
+  type Content = K extends CacheKind.sitemap
+    ? IDocsSitemap | undefined
+    : K extends CacheKind.proseDocs | undefined
+    ? IProseModel[]
+    : K extends CacheKind.repoDocs
+    ? IRepoModel[]
+    : K extends CacheKind.typescriptDocs | undefined
+    ? IApiModel[]
+    : undefined;
+
+  return { cache, cacheFile } as { cache: Content; cacheFile: string };
 }

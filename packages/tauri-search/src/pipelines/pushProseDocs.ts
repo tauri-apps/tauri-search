@@ -1,14 +1,15 @@
-import { readFile } from "fs/promises";
-import { IProseModel, ProseModel } from "~/models/ProseModel";
+import { ProseModel } from "~/models/ProseModel";
+import { CacheKind, getCache } from "~/utils/getCache";
+import { getEnv, IEnv } from "~/utils/getEnv";
 import { IMonitoredTask } from "..";
-import { proseDocsCacheFile } from "./refreshProse";
 
 /**
  * Pushes the cached prose documents into the MeiliSearch "prose" index
  */
-export async function pushProseDocs(repo: string, branch: string) {
-  const filename = proseDocsCacheFile(repo, branch);
-  const cache = JSON.parse(await readFile(filename, "utf-8")) as IProseModel[];
+export async function pushProseDocs(options: Partial<IEnv> = {}) {
+  const o = { ...getEnv(), ...options };
+  const { cache } = await getCache(CacheKind.proseDocs, o);
+
   const tasks: IMonitoredTask[] = [];
 
   for (const doc of cache) {

@@ -15,13 +15,14 @@ export type ISitemapDictionary = Record<string, Omit<IFlatSitemap, "filepath">>;
 /**
  * Flattens the hierarchical structure of a sitemap into an easily iterable array
  */
-export function flattenSitemap<S extends IDocsSitemap | undefined>(sm: S): S extends IDocsSitemap ? IFlatSitemap[] : undefined {
+export function flattenSitemap<S extends IDocsSitemap | undefined>(
+  sm: S
+): S extends IDocsSitemap ? IFlatSitemap[] : undefined {
   let flat: IFlatSitemap[] = [];
-  if(!sm) {
+  if (!sm) {
     return undefined as S extends IDocsSitemap ? IFlatSitemap[] : undefined;
   } else {
-
-    for (const f of sm.files) {
+    for (const f of sm?.files || []) {
       const filepath = join(sm.dir, f.name);
       flat.push({ filepath, sha: f.sha, size: f.size, download_url: f.download_url });
     }
@@ -30,14 +31,16 @@ export function flattenSitemap<S extends IDocsSitemap | undefined>(sm: S): S ext
         flat = flat.concat(...flattenSitemap(child));
       }
     }
-
   }
   return flat as S extends IDocsSitemap ? IFlatSitemap[] : undefined;
 }
 
 export function sitemapDictionary<S extends IDocsSitemap | undefined>(sm: S) {
-
-  return (sm ? flattenSitemap(sm as IDocsSitemap).reduce((acc, i) => {
-    return { ...acc, [i.filepath]: { ...omit(i, "filepath") } };
-  }, {} as ISitemapDictionary) : undefined) as S extends IDocsSitemap ? IFlatSitemap[] : undefined;
+  return (
+    sm
+      ? flattenSitemap(sm as IDocsSitemap).reduce((acc, i) => {
+          return { ...acc, [i.filepath]: { ...omit(i, "filepath") } };
+        }, {} as ISitemapDictionary)
+      : undefined
+  ) as S extends IDocsSitemap ? IFlatSitemap[] : undefined;
 }

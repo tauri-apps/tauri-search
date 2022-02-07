@@ -1,65 +1,44 @@
 /* eslint-disable no-console */
-
-
 import { refreshSitemap } from "~/pipelines/refreshSitemap";
-import { flattenSitemap, sitemapDictionary } from "~/utils/convertSitemap";
-import { CacheKind, getCache } from "~/utils/getCache";
 import { getEnv } from "~/utils/getEnv";
-import { writeGeneratedFile } from "~/utils/writeGeneratedFile";
 
 (async () => {
-  const { repo, branch} = getEnv();
-  const filename = `src/generated/sitemap-${repo}-${branch}.json`;
-  const existingSitemap = sitemapDictionary(await getCache(CacheKind.sitemap));
-  const existingFlatmap = flattenSitemap(await getCache(CacheKind.sitemap));
+  console.log(`- refreshing sitemap for prose content`);
 
-  console.log(`- refreshing prose sitemap for ${repo}@${branch}${existingSitemap ? `; using existing sitemap for deltas [${existingFlatmap?.length} docs]` : ""}`);
+  const o = getEnv();
+  const r = await refreshSitemap(o);
 
-  const sitemap = await refreshSitemap({ ref: branch, repo });
-  const contents = flattenSitemap( sitemap);
-  const changed: string[] = [];
-  const added: string[] = [];
-  const removed: string[] = [];
-
-  if(existingSitemap) {
-    for (const doc of contents) {
-
-      if(existingSitemap[doc.filepath as any].sha && existingSitemap[doc.filepath as any].sha !== doc.sha) {
-        changed.push(doc.filepath);
-      } else if (!existingSitemap[doc.filepath as any]?.filepath && doc.sha !== existingSitemap[doc.filepath as any]?.sha ) {
-        added.push(doc.filepath);
-      }
+  console.log(`- updated sitemap has ${r.count} documents`);
+  if (r.hasDeltaInfo) {
+    if (r.changes?.added?.length > 0) {
+      console.log(
+        `- ${
+          r.changes.added.length
+        } files r.changes.added since last check: ${r.changes.added.join(", ")}`
+      );
     }
-  }
-  if(existingFlatmap) {
-    for (const doc of existingFlatmap) {
-      if(!contents[doc.filepath as any]) {
-        removed.push(doc.filepath);
-      }
+    if (r.changes.changed.length > 0) {
+      console.log(
+        `- ${
+          r.changes.changed.length
+        } files changed since last check: ${r.changes.changed.join(", ")}`
+      );
     }
-  }
-
-  console.log(`- updated sitemap has ${contents.length} documents`);
-  if(existingSitemap) {
-    if(added.length > 0) {
-      console.log(`- ${added.length} files added since last check: `);
+    if (r.changes.removed.length > 0) {
+      console.log(
+        `- ${
+          r.changes.removed.length
+        } files removed since last check: ${r.changes.removed.join(", ")}`
+      );
     }
-    if(changed.length > 0) {
-      console.log(`- ${changed.length} files changed since last check: ${changed.join(", ")}`);
-    }
-    if(removed.length > 0) {
-      console.log(`- ${removed.length} files added since last check: ${removed.join(", ")}`);
-    }
-    if([added, changed,removed].every(i => i.length === 0)) {
+    if (
+      [r.changes.added, r.changes.changed, r.changes.removed].every((i) => i.length === 0)
+    ) {
       console.log(`- no files changed since the last check`);
     }
+  } else {
+    console.log(`- no prior cache info so no delta analysis was done`);
   }
-  
-  await writeGeneratedFile(
-    filename,
-    JSON.stringify(sitemap)
-  );
 
-  console.log(`- files saved to: ${filename}`);
-  
+  console.log(`- cache file now resides at: ${r.cacheFile}`);
 })();

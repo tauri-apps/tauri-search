@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
-import { ProseModel, ApiModel, RepoModel } from "~/models";
+import { ProseModel, ApiModel, RepoModel, ConsolidatedModel } from "~/models";
 
 const models = {
   api: ApiModel,
   repo: RepoModel,
   prose: ProseModel,
-  // consolidated: ConsolidatedModel,
+  consolidated: ConsolidatedModel,
 };
 
 /**

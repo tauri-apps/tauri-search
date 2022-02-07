@@ -1,17 +1,11 @@
 /* eslint-disable no-console */
-import { existsSync } from "fs";
-import { REPO_DOCS_CACHE } from "~/constants";
-import { pushRepoDocs, refreshRepos } from "~/pipelines";
+import { pushRepoDocs } from "~/pipelines";
 import { communicateTaskStatus } from "~/utils/communicateTaskStatus";
 import { RepoModel } from "..";
 
 (async () => {
   console.log(`- Pushing Repo document cache into MeiliSearch`);
 
-  if (!existsSync(REPO_DOCS_CACHE)) {
-    console.log("- No cache for Repo documents found, so refreshing cache first");
-    await refreshRepos();
-  }
   const { docs, errors, tasks } = await pushRepoDocs();
   console.log();
   if (errors.length > 0) {

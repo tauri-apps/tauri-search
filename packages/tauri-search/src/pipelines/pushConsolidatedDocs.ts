@@ -1,40 +1,34 @@
-import { readFile } from "fs/promises";
-import { REPO_DOCS_CACHE, TS_DOCS_CACHE } from "~/constants";
-import { ConsolidatedMapper, IConsolidatedModel } from "~/mappers/ConsolidatedMapper";
-import {
-  ConsolidatedModel,
-  IApiModel,
-  IMonitoredTask,
-  IProseModel,
-  IRepoModel,
-} from "..";
-import { proseDocsCacheFile } from "./refreshProse";
+import { ConsolidatedMapper } from "~/mappers/ConsolidatedMapper";
+import { CacheKind, getCache } from "~/utils/getCache";
+import { getEnv, IEnv } from "~/utils/getEnv";
+import { ConsolidatedModel, IConsolidatedModel } from "~/models";
+import { IMonitoredTask } from "~/types";
 
-export async function pushConsolidatedDocs(repo: string, branch: string) {
-  // gather documents
-  const ts: IConsolidatedModel[] = (
-    JSON.parse(await readFile(TS_DOCS_CACHE, "utf-8")) as IApiModel[]
-  ).map((c) => ConsolidatedMapper(c));
-  // TODO: add in Rust API docs
-  const prose: IConsolidatedModel[] = (
-    JSON.parse(await readFile(proseDocsCacheFile(repo, branch), "utf-8")) as IProseModel[]
-  ).map((i) => ConsolidatedMapper(i));
-  const repos: IConsolidatedModel[] = (
-    JSON.parse(await readFile(REPO_DOCS_CACHE, "utf-8")) as IRepoModel[]
-  ).map((i) => ConsolidatedMapper(i));
+export async function pushConsolidatedDocs(options: Partial<IEnv> = {}) {
+  const o = { ...getEnv(), ...options };
+
+  const docs: IConsolidatedModel[] = [
+    ...(await getCache(CacheKind.typescriptDocs, {
+      ...o,
+      branch: "feat/generate-js-ast",
+    }).then((c) => c.cache.map((c) => ConsolidatedMapper(c)))),
+    ...(await getCache(CacheKind.proseDocs, o).then((c) =>
+      c.cache.map((c) => ConsolidatedMapper(c))
+    )),
+    ...(await getCache(CacheKind.repoDocs, o).then((c) =>
+      c.cache.map((c) => ConsolidatedMapper(c))
+    )),
+  ];
 
   // push into MeiliSearch task queue
   const errors: IConsolidatedModel[] = [];
   const tasks: IMonitoredTask[] = [];
-  const docs = [...ts, ...prose, ...repos];
   for (const doc of docs) {
     const res = await ConsolidatedModel.query.addOrReplaceDocuments(doc);
     if (res.status !== "enqueued") {
-      process.stdout.write("x");
       errors.push(doc);
     } else {
-      process.stdout.write(".");
-      tasks.push({ docId: doc.docId, taskId: res.uid });
+      tasks.push({ docId: doc.objectID, taskId: res.uid });
     }
   }
   return { docs, tasks, errors };

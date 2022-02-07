@@ -26,6 +26,7 @@ importers:
       critters: ^0.0.16
       cross-env: ^7.0.3
       date-fns: ^2.28.0
+      dotenv: ^14.3.2
       eslint: ^8.8.0
       eslint-plugin-cypress: ^2.12.1
       floating-vue: ^2.0.0-beta.5
@@ -85,6 +86,7 @@ importers:
       '@vue/test-utils': 2.0.0-rc.18_vue@3.2.29
       critters: 0.0.16
       cross-env: 7.0.3
+      dotenv: 14.3.2
       eslint: 8.8.0
       eslint-plugin-cypress: 2.12.1_eslint@8.8.0
       https-localhost: 4.7.0
@@ -3077,7 +3079,6 @@ packages:
   /dotenv/14.3.2:
     resolution: {integrity: sha512-vwEppIphpFdvaMCaHfCEv9IgwcxMljMw2TnAQBB4VWPvzXQLTb82jwmdOKzlEVUL3gNFT4l4TPKO+Bn+sqcrVQ==}
     engines: {node: '>=12'}
-    dev: false
 
   /ee-first/1.1.1:
     resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}

@@ -3,9 +3,10 @@ import { refreshProse } from "~/pipelines/refreshProse";
 import { getEnv } from "~/utils/getEnv";
 
 (async () => {
-  const { repo, branch, force } = getEnv();
+  const { repo, branch } = getEnv();
   console.log(`- refreshing all prose from ${repo}@${branch}`);
-  
-  await refreshProse(repo, branch, { force });
-  console.log(`- completed updates of prose [${repo}@${branch}] `);
+
+  const { docs, cacheFile } = await refreshProse();
+
+  console.log(`- prose documents [${docs?.length}] saved to cache file: ${cacheFile}`);
 })();
