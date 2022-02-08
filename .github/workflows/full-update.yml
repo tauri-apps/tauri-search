@@ -36,6 +36,8 @@ jobs:
       NODE_ENV: ${{github.event.inputs.stage}}
       PRODUCTION_ADMIN_KEY: ${{secrets.PRODUCTION_ADMIN_KEY}}
       STAGING_ADMIN_KEY: ${{secrets.STAGING_ADMIN_KEY}}
+      GH_TOKEN: ${{secrets.GH_TOKEN}}
+      GH_USER: ${{secrets.GH_USER}}
 
     steps:
     - uses: actions/checkout@v2
