@@ -3,21 +3,19 @@
 # SPDX-License-Identifier: MIT
 
 name: Test
-description: run linter and unit tests on all packages
 
 on:
   workflow_dispatch:
 
 jobs:
   testing:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Build
-      uses: ./atomic/build
+    - name: Prep Env
+      uses: ./prep
     - name: Lint
-      uses: ./atomic/lint
+      run: pnpm run lint
     - name: unit tests
       run: pnpm run test
         
