@@ -15,6 +15,8 @@
     "start:tauri-search": "pnpm -C ./packages/tauri-search run watch",
     "start:docs": "pnpm -C ./packages/docs run watch",
     "full-update": "pnpm -C ./packages/tauri-search run full-update",
+    "full-update:staging": "NODE_ENV=staging pnpm -C ./packages/tauri-search run full-update",
+    "full-update:production": "NODE_ENV=production pnpm -C ./packages/tauri-search run full-update",
     "delta-update": "pnpm -C ./packages/tauri-search run delta-update",
     "build": "run-p build:*",
     "build:cli": "pnpm -C ./packages/tauri-search run build:cli",
