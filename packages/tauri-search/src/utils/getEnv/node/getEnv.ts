@@ -1,6 +1,8 @@
 import { config } from "dotenv";
 import { IEnv, Stage } from "~/types";
 
+const env = (process.env.NODE_ENV || "local").toLowerCase() as Stage;
+
 export function getEnv(): IEnv {
   config();
   return {
@@ -11,8 +13,8 @@ export function getEnv(): IEnv {
     docsPath: process.env.DOCS_PATH || "docs",
     tsAstPath: process.env.TS_AST_PATH || "docs/api/js/js-api.json",
 
-    adminKey: process.env.ADMIN_KEY || undefined,
-    searchKey: process.env.SEARCH_KEY || undefined,
+    adminKey: process.env[`${env.toUpperCase()}_ADMIN_KEY`] || undefined,
+    searchKey: process.env[`${env.toUpperCase()}_SEARCH_KEY`] || undefined,
 
     github_token: process.env.GH_TOKEN || process.env.GITHUB_TOKEN || undefined,
     github_user: process.env.GH_USER || undefined,

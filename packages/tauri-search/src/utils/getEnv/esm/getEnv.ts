@@ -1,6 +1,7 @@
 import { IEnv, Stage } from "~/types";
 
 export function getEnv(): IEnv {
+  const env = (process.env.NODE_ENV || "local").toLowerCase() as Stage;
   return {
     org: (import.meta?.env?.ORG as string) || "tauri-apps",
     repo: (import.meta?.env?.REPO as string) || "tauri-docs",
@@ -9,14 +10,12 @@ export function getEnv(): IEnv {
     docsPath: (import.meta?.env?.DOCS_PATH as string) || "docs",
     tsAstPath: (import.meta?.env?.TS_AST_PATH as string) || "docs/api/js/js-api.json",
 
-    adminKey:
-      (import.meta?.env?.ADMIN_KEY as string) ||
-      (import.meta?.env?.VITE_ADMIN_KEY as string) ||
-      undefined,
-    searchKey:
-      (import.meta?.env?.SEARCH_KEY as string) ||
-      (import.meta?.env?.VITE_SEARCH_KEY as string) ||
-      undefined,
+    adminKey: (import.meta?.env[`${env.toUpperCase()}_ADMIN_KEY`] ||
+      import.meta?.env[`VITE_${env.toUpperCase()}_ADMIN_KEY`] ||
+      undefined) as string | undefined,
+    searchKey: (import.meta?.env[`${env.toUpperCase()}_SEARCH_KEY`] ||
+      import.meta?.env[`VITE_${env.toUpperCase()}_SEARCH_KEY`] ||
+      undefined) as string | undefined,
 
     github_token:
       (import.meta?.env?.GH_TOKEN as string | undefined) ||
