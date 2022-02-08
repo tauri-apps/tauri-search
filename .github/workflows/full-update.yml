@@ -20,6 +20,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Prep Env
-      uses: ./prep/action
+      uses: ./.github/actions/prep
     - name: Full Update to Staging
       run: pnpm run "full-update:${{github.event.inputs.stage}}"
