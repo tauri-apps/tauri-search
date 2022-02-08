@@ -12,9 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
     - name: Prep Env
       uses: ./prep
     - name: Lint
       run: pnpm run lint
-    - name: unit tests
+    - name: Unit Test
       run: pnpm run test
