@@ -32,6 +32,11 @@ jobs:
   full-update:
     runs-on: ubuntu-latest
 
+    env:
+      NODE_ENV: ${{github.event.inputs.stage}}
+      PRODUCTION_ADMIN_KEY: ${{github.secrets.PRODUCTION_ADMIN_KEY}}
+      STAGING_ADMIN_KEY: ${{github.secrets.STAGING_ADMIN_KEY}}
+
     steps:
     - uses: actions/checkout@v2
     - name: Prep Env
