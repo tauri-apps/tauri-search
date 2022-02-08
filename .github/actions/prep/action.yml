@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-License-Identifier: MIT
 
-name: 'Prepare Environment'
-description: 'installs pnpm, installs all deps in each package'
+name: Prepare Environment
+description: installs pnpm, installs all deps in each package
 
 runs:
   using: "composite"
@@ -13,15 +13,14 @@ runs:
     uses: actions/setup-node@v2
     with:
       node-version: 16
-  - name: Cache pnpm modules
-    shell: bash
-    uses: pnpm/action-setup@v2
-    with:
-      version: 6
-      path: ~/.pnpm-store
-      key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-      restore-keys: |
-        ${{ runner.os }}-
+  # - name: Cache pnpm modules
+  #   shell: bash
+  #   uses: pnpm/action-setup@v2
+  #   with:
+  #     version: 6
+  #     path: ~/.pnpm-store
+  #     key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+  #     restore-keys: ${{ runner.os }}-
   - name: Install pnpm dependencies
     uses: pnpm/action-setup@v2
     with:
