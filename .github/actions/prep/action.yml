@@ -15,16 +15,19 @@ runs:
       node-version: 16
       cache: 'npm'
       cache-dependency-path: 'pnpm-lock.yml'
-  - name: Install PNPM and Dependencies
+  - name: Install PNPM and Monorepo Dependencies
     shell: bash
     run: |
       npm i -g pnpm
       pnpm install --ignore-scripts
-      cd packages/tauri-search
-      pnpm install --ignore-scripts
-      cd ../docs
-      pnpm install --ignore-scripts
-      cd ..
+  - name: Install tauri-search dependencies
+    shell: bash
+    working-directory: packages/tauri-repo
+    run: pnpm install --ignore-scripts
+  # - name: Install doc dependencies
+  #   shell: bash
+  #   working-directory: packages/docs
+  #   run: pnpm install --ignore-scripts
   - name: Build CLI and NPM exports
     shell: bash
     run: pnpm run build
