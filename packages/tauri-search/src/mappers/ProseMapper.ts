@@ -9,8 +9,8 @@ import { sanitizeDocId } from "~/utils/sanitizeDocId";
 export const ProseMapper: ModelMapper<MarkdownAst, IProseModel> = (i) => ({
   id: sanitizeDocId(`prose_${i.filepath}_${i.filename}`),
   title:
-    typeof i.frontmatter.title === "object" && "content" in i.frontmatter.title
-      ? i.frontmatter.title?.content
+    typeof i.frontmatter?.title === "object" && "content" in i.frontmatter?.title
+      ? i.frontmatter?.title?.content
       : i.frontmatter.title || i.h1.shift() || "UNKNOWN",
   tags: i.frontmatter.tags as string[],
   category: i.frontmatter.section as string,

@@ -12,3 +12,4 @@
 **/*.env
 **/generated/ast/prose/**/docs/**
 **/vite.config.ts.js
+**/.env*
