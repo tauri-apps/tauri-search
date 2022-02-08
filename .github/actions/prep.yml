@@ -8,8 +8,7 @@ description: 'installs pnpm, installs all deps in each package'
 runs:
   using: "composite"
   steps:
-  - name: Checkout
-    uses: actions/checkout@v2
+  - uses: actions/checkout@v2
   - name: Setup Node
     uses: setup-node@v2
     with:
