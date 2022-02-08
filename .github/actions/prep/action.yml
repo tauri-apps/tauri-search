@@ -15,15 +15,17 @@ runs:
       node-version: 16
   - name: Cache pnpm modules
     shell: bash
-    uses: pnpm/action-setup@master
+    uses: pnpm/action-setup@v2
     with:
+      version: 6
       path: ~/.pnpm-store
       key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
       restore-keys: |
         ${{ runner.os }}-
   - name: Install pnpm dependencies
-    uses: pnpm/action-setup@master
+    uses: pnpm/action-setup@v2
     with:
+      version: 6
       run_install: true
       recursive: true
   - name: Build CLI and NPM exports
