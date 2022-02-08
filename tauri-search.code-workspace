@@ -15,6 +15,12 @@
   ],
   "settings": {
     "monorepoWorkspace.includeRoot": true,
-    "i18n-ally.keystyle": "nested"
+    "i18n-ally.keystyle": "nested",
+    "yaml.schemas": {
+      "https://json.schemastore.org/github-action.json": [
+        "file:///Volumes/Coding/playground/t/tauri-search/.github/workflows/atomic/build.yml",
+        "file:///Volumes/Coding/playground/t/tauri-search/.github/workflows/atomic/lint.yaml"
+      ]
+    }
   }
 }
