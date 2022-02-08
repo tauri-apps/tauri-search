@@ -13,21 +13,19 @@ runs:
     uses: actions/setup-node@v2
     with:
       node-version: 16
-      cache: 'npm'
-      cache-dependency-path: 'pnpm-lock.yml'
-  - name: Install PNPM and Monorepo Dependencies
+  - name: Cache pnpm modules
     shell: bash
-    run: |
-      npm i -g pnpm
-      pnpm install --ignore-scripts
-  - name: Install tauri-search dependencies
-    shell: bash
-    working-directory: packages/tauri-repo
-    run: pnpm install --ignore-scripts
-  # - name: Install doc dependencies
-  #   shell: bash
-  #   working-directory: packages/docs
-  #   run: pnpm install --ignore-scripts
+    uses: pnpm/action-setup@master
+    with:
+      path: ~/.pnpm-store
+      key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+      restore-keys: |
+        ${{ runner.os }}-
+  - name: Install pnpm dependencies
+    uses: pnpm/action-setup@master
+    with:
+      run_install: true
+      recursive: true
   - name: Build CLI and NPM exports
     shell: bash
     run: pnpm run build
