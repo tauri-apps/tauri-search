@@ -13,6 +13,6 @@ jobs:
 
     steps:
     - name: Prep Env
-      uses: ./prep
+      uses: ./prep/action
     - name: Full Update to Staging
       run: pnpm run full-update:staging
