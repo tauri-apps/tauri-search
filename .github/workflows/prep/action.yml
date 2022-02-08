@@ -25,5 +25,5 @@ runs:
       cd ..
   - name: Build CLI and NPM exports
     run: pnpm run build
-  - name: Env Prepped
+  - name: Environment Prepped
     run: echo Node, pnpm, and all deps are installed!
