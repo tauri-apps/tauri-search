@@ -12,22 +12,28 @@ export const ConsolidatedMapper: ModelMapper<
   IConsolidatedModel
 > = (i): IConsolidatedModel => ({
   objectID: i.id,
-  hierarchy_lvl0: isRepoDocument(i) ? i.name : isApiDocument(i) ? i.name : i.title,
+  hierarchy_lvl0: isRepoDocument(i)
+    ? i.name
+    : isApiDocument(i)
+    ? i.name || null
+    : i.title,
   hierarchy_lvl1: isRepoDocument(i)
+    ? i.topics?.join(" ") || null
+    : isApiDocument(i)
+    ? i.module || null
+    : i.tags?.join(" ") || null,
+  hierarchy_lvl2: isRepoDocument(i)
+    ? i.kind === "unknown"
+      ? null
+      : i.kind || null
+    : isApiDocument(i)
+    ? i.language
+    : i.sections?.join(" ") || null,
+  hierarchy_lvl3: isRepoDocument(i)
     ? i.description || null
     : isApiDocument(i)
     ? i.module
     : i.tags?.join(" ") || null,
-  hierarchy_lvl2: isRepoDocument(i)
-    ? i.kind || null
-    : isApiDocument(i)
-    ? null
-    : i.sections?.join(" ") || null,
-  hierarchy_lvl3: isRepoDocument(i)
-    ? i.topics?.join(" ") || null
-    : isApiDocument(i)
-    ? i.language || null
-    : i.subSections?.join(" ") || null,
   hierarchy_lvl4: isRepoDocument(i)
     ? i.language || null
     : isApiDocument(i)
@@ -51,7 +57,13 @@ export const ConsolidatedMapper: ModelMapper<
     ? i.language
     : i.code?.pop() || null,
   tags: isRepoDocument(i) ? i.topics || null : isApiDocument(i) ? null : i.tags || null,
-  content: isRepoDocument(i) ? i.text : isApiDocument(i) ? i.comment || null : i.text,
+  content: isRepoDocument(i)
+    ? i.topics?.join(" ") || null
+    : isApiDocument(i)
+    ? i.declaration || null
+    : i.subSections?.join(" ") || null,
+
+  text: isApiDocument(i) ? i.comment || null : i.text || null,
   rank: isRepoDocument(i)
     ? IndexRank.repo
     : isApiDocument(i)

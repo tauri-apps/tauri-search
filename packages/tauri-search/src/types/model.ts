@@ -73,3 +73,7 @@ export type ISearchModel<TDoc extends {}> = {
 };
 
 export type ISearchConfig<TDoc extends {}> = Omit<ISearchModel<TDoc>, "query">;
+
+export type PartialModel<T extends {}> = Omit<Partial<ISearchModel<T>>, "index"> & {
+  index: Partial<ISearchModel<T>["index"]>;
+};

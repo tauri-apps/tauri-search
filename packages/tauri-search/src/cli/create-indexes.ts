@@ -1,9 +1,13 @@
 /* eslint-disable no-console */
 import { createIndexes } from "~/pipelines/createIndexes";
+import { getEnv } from "~/utils/getEnv/node/getEnv";
 
 (async () => {
   try {
-    const { skipping, created } = await createIndexes();
+    const options = getEnv();
+    console.log(`- creating Meilisearch indexes [${options.stage}]`);
+
+    const { skipping, created } = await createIndexes(options);
     if (skipping.length > 0) {
       console.log(
         `- the following indexes -- ${skipping.join(

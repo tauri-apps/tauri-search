@@ -1,8 +1,8 @@
 import { join } from "path";
-import { GithubContentsResp } from "~/types";
+import { GithubContentsResp, IEnv } from "~/types";
 import { flattenSitemap, IFlatSitemap, sitemapDictionary } from "~/utils/convertSitemap";
 import { CacheKind, getCache } from "~/utils/getCache";
-import { getEnv, IEnv } from "~/utils/getEnv";
+import { getEnv } from "~/utils/getEnv/esm/getEnv";
 import { getDirectory } from "~/utils/github/getDirectory";
 import { writeCacheFile } from "~/utils/writeCacheFile";
 

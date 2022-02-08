@@ -1,7 +1,7 @@
 import axios from "axios";
 import { GITHUB_API_BASE } from "~/constants";
 import { GithubRepoResp } from "~/types";
-import { getEnv } from "../getEnv";
+import { getEnv } from "../getEnv/node/getEnv";
 
 export async function getRepo(repo: `${string}/${string}`): Promise<GithubRepoResp> {
   const url = `${GITHUB_API_BASE}/repos/${repo}`;

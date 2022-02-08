@@ -10,14 +10,14 @@ import {
   MsIndexStatusResponse,
   IMeilisearchIndexSettings,
   IMeiliSearchQueryApi,
-  ISearchConfig,
   IMeilisearchAllTasks,
+  ISearchConfig,
 } from "~/types";
-import { getEnv } from "./getEnv";
 
 export interface MeiliSearchOptions {
   url?: string;
   search_key?: string;
+  admin_key?: string;
 }
 export type PagingOptions = {
   limit?: number;
@@ -28,16 +28,11 @@ export type ApiOptions = Omit<AxiosRequestConfig, "method">;
 
 export function MeiliSearchApi<TDoc extends {}>(
   model: ISearchConfig<TDoc>,
-  options: MeiliSearchOptions = {}
+  searchOptions: MeiliSearchOptions = {}
 ) {
-  const baseURL = options.url || "http://localhost:7700";
+  const baseURL = searchOptions.url || "http://localhost:7700";
   const idx = model.name;
-  const { adminKey, searchKey } = getEnv();
-
-  const headers = {
-    "X-Meili-API-Key": options.search_key || adminKey || searchKey || "",
-    "Access-Control-Allow-Origin": "*",
-  };
+  // const { adminKey, searchKey } = getEnv();
 
   const call = async <T>(
     method: "get" | "post" | "put" | "delete",
@@ -45,16 +40,24 @@ export function MeiliSearchApi<TDoc extends {}>(
     options: AxiosRequestConfig = {}
   ): Promise<T> => {
     const fullUrl = `${baseURL}/${url.startsWith("/") ? url.slice(1) : url}`;
+    const token = searchOptions.admin_key || searchOptions.search_key || "";
+    const headers: Record<string, any> = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
+    };
+    if (token && token.length > 0) {
+      headers["X-Meili-API-Key"] = token;
+      headers["Authorization"] = `Bearer ${token}`;
+    }
 
     const res = await axios({
       method,
       url: fullUrl,
       ...{
-        ...options,
         headers: {
-          "Content-Type": options.data ? "application/json" : "application/text",
           ...headers,
         },
+        ...options,
       },
     }).catch((err) => {
       if (axios.isAxiosError(err)) {

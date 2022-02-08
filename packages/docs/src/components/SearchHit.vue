@@ -79,9 +79,9 @@ const searchable =s.indexSettings[doc.value._idx as any].searchableAttributes as
 
       <!-- PROSE -->
       <div v-if="doc.from === 'prose'" class="flex flex-row flex-grow space-x-2 place-items-center items-center">
-        <teenyicons:text-document-solid  class="flex" />
+        <teenyicons:text-document-solid  class="flex flex-shrink-0" />
         <div class="title font-semibold flex-shrink-0">{{doc.hierarchy_lvl0}}</div>
-        <div class="title font-light truncate text-gray-500 flex flex-grow">{{doc.hierarchy_lvl1}}</div>
+        <div class="title font-light truncate text-gray-500 flex flex-grow">{{doc.hierarchy_lvl1 || doc.content}}</div>
         <link-validation :url="(doc.url as string)" />
       </div>
 

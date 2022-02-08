@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { refreshSitemap } from "~/pipelines/refreshSitemap";
-import { getEnv } from "~/utils/getEnv";
+import { getEnv } from "~/utils/getEnv/node/getEnv";
 
 (async () => {
   console.log(`- refreshing sitemap for prose content`);

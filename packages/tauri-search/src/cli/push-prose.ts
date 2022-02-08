@@ -2,13 +2,18 @@
 import { pushProseDocs } from "~/pipelines";
 import { communicateTaskStatus } from "~/utils/communicateTaskStatus";
 import { ProseModel } from "~/models";
+import { getEnv } from "~/utils/getEnv/node/getEnv";
 
 (async () => {
-  console.log(`- Pushing "prose" documents to MeiliSearch`);
-  const tasks = await pushProseDocs();
+  const o = getEnv();
+  console.log(`- Pushing "prose" documents to MeiliSearch [${o.stage}]`);
+
+  const tasks = await pushProseDocs(o);
   console.log(
     `- all ${tasks.length} documents were pushed via API; monitoring task status ...`
   );
 
-  await communicateTaskStatus(ProseModel(), tasks, { timeout: 75000 });
+  await communicateTaskStatus(ProseModel(o.stage, { admin_key: o.adminKey }), tasks, {
+    timeout: 75000,
+  });
 })();

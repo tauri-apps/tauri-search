@@ -15,4 +15,4 @@ declare module "*.vue" {
   export default component;
 }
 
-declare module "docs-searchbar.js";
+declare module "meili-searchbar";

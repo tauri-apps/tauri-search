@@ -8,6 +8,7 @@ export type IConsolidatedModel = IScrapeSelectorTargets & {
   symbol: string | null;
   tags: null | string[];
   language: string | null;
+  text: string | null;
 };
 
 export const ConsolidatedModel = createModel<IConsolidatedModel>("consolidated", (c) =>
@@ -22,14 +23,16 @@ export const ConsolidatedModel = createModel<IConsolidatedModel>("consolidated",
     })
     .filterable("from", "language", "symbol")
     .searchable(
+      "content",
       "hierarchy_lvl0",
+      "hierarchy_lvl1",
       "symbol",
       "tags",
-      "hierarchy_lvl3",
-      "hierarchy_lvl2",
-      "hierarchy_lvl1",
       "rank",
-      "content"
+      "hierarchy_lvl3",
+      "hierarchy_lvl2"
     )
-    .rankingRules((r) => r.words().typo().sort().attribute().proximity().ASC("rank").exactness())
+    .rankingRules((r) =>
+      r.words().typo().sort().attribute().proximity().ASC("rank").exactness()
+    )
 );

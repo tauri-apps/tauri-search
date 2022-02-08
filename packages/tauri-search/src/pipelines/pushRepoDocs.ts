@@ -1,7 +1,7 @@
 import { IRepoModel, RepoModel } from "~/models";
 import { CacheKind, getCache } from "~/utils/getCache";
-import { getEnv, IEnv } from "~/utils/getEnv";
-import { IMonitoredTask } from "..";
+import { getEnv } from "~/utils/getEnv/esm/getEnv";
+import { IMonitoredTask, IEnv } from "~/types";
 
 /**
  * Pushes the cached REPO documents into the MeiliSearch "repo" index
@@ -13,7 +13,9 @@ export async function pushRepoDocs(options: Partial<IEnv> = {}) {
   const tasks: IMonitoredTask[] = [];
 
   for (const doc of docs) {
-    const res = await RepoModel().query.addOrReplaceDocuments(doc);
+    const res = await RepoModel(o.stage, {
+      admin_key: o.adminKey,
+    }).query.addOrReplaceDocuments(doc);
     if (res.status !== "enqueued") {
       errors.push(doc);
     } else {

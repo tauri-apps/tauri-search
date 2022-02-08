@@ -2,7 +2,7 @@
 import { readFile } from "fs/promises";
 import { IDocsSitemap } from "~/pipelines";
 import { IApiModel, IProseModel, IRepoModel } from "..";
-import { getEnv } from "./getEnv";
+import { getEnv } from "./getEnv/node/getEnv";
 
 export enum CacheKind {
   sitemap = "Sitemap of Markdown files",

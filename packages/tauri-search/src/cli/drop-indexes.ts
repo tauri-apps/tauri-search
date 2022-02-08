@@ -1,10 +1,15 @@
 /* eslint-disable no-console */
 import { ApiModel } from "~/models";
+import { getEnv } from "~/utils/getEnv/node/getEnv";
 
 (async () => {
-  const active = (await ApiModel().query.currentIndexes()).map((i) => i.name);
+  const o = getEnv();
+
+  const active = (
+    await ApiModel(o.stage, { admin_key: o.adminKey }).query.currentIndexes()
+  ).map((i) => i.name);
   console.log(`- clearing all active indexes: ${active.join(", ")}`);
   for (const idx of active) {
-    await ApiModel().query.deleteIndex(idx);
+    await ApiModel(o.stage, { admin_key: o.adminKey }).query.deleteIndex(idx);
   }
 })();

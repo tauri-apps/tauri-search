@@ -66,5 +66,6 @@ onStartTyping(() => {
         <search-results :query="searchText" />
       </div>
     </div>
+
   </div>
 </template>

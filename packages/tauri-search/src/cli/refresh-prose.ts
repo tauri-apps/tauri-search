@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { refreshProse } from "~/pipelines/refreshProse";
-import { getEnv } from "~/utils/getEnv";
+import { getEnv } from "~/utils/getEnv/node/getEnv";
 
 (async () => {
   const { repo, branch } = getEnv();

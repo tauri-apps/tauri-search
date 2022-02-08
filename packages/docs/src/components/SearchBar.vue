@@ -1,17 +1,21 @@
 <script setup lang="ts">
-  import docsSearchBar from "docs-searchbar.js";
+  // import docsSearchBar from "meili-searchbar";
 
-  docsSearchBar({
-    hostUrl: "http://localhost:7700",
-    apiKey: "",
-    indexUid: "docs",
-    inputSelector: "#search-bar-input",
+  onBeforeMount(() => {
+    // docsSearchBar({
+    //   hostUrl: "http://localhost:7700",
+    //   apiKey: "",
+    //   indexUid: "docs",
+    //   inputSelector: "#search-bar-input",
+    // });
+    // console.log(docsSearchBar);
   });
+
 </script>
 
 
 <template>
   <div>
-    <input id="search-bar-input" type="text">
+    <input id="search-bar-input" type="search">
   </div>
 </template>

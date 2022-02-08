@@ -3,7 +3,7 @@
 import { readFile } from "fs/promises";
 // import xxhash from "xxhash-wasm";
 import matter from "gray-matter";
-import {convert} from "html-to-text";
+import { convert } from "html-to-text";
 import smd from "simple-markdown-2";
 import { ITauriFrontmatter, MarkdownAst } from "~/types/markdown";
 

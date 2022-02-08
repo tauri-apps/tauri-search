@@ -2,6 +2,9 @@ import path from "path";
 import { defineConfig, UserConfig } from "vite";
 import inspect from "vite-plugin-inspect";
 import dts from "vite-plugin-dts";
+import { config } from "dotenv";
+
+config();
 
 export default defineConfig({
   resolve: {
