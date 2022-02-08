@@ -13,11 +13,11 @@ on:
         default: "staging"
 
 jobs:
-  testing:
+  full-update:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@master
     - name: Prep Env
       uses: ./.github/actions/prep
     - name: Full Update to Staging
