@@ -12,14 +12,21 @@ on:
         required: true
         default: "staging"
       docsPath:
-        description: the path to the base of the Markdown content in the repo; the default is probably ok
+        description: path to the base of the Markdown content
         required: false
         default: "docs"
       tsAst:
         description: path to TSDocs JSON in repo
         required: false
         default: "docs/api/js/js-api.json"
-
+      docsRepo:
+        description: the repo which owns markdown content
+        required: false
+        default: "tauri-apps"
+      docsBranch:
+        description: the branch to use for markdown content
+        required: false
+        default: "dev"
 
 jobs:
   full-update:

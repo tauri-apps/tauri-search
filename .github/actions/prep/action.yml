@@ -26,7 +26,7 @@ runs:
     with:
       version: 6
       run_install: true
-      recursive: true
+      # recursive: true
   - name: Build CLI and NPM exports
     shell: bash
     run: pnpm run build
