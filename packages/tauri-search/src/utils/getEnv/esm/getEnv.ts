@@ -10,10 +10,11 @@ export function getEnv(): IEnv {
     docsPath: (import.meta?.env?.DOCS_PATH as string) || "docs",
     tsAstPath: (import.meta?.env?.TS_AST_PATH as string) || "docs/api/js/js-api.json",
 
-    adminKey: (import.meta?.env[`${env.toUpperCase()}_ADMIN_KEY`] ||
+    adminKey: ((import.meta?.env && import.meta?.env[`${env.toUpperCase()}_ADMIN_KEY`]) ||
       import.meta?.env[`VITE_${env.toUpperCase()}_ADMIN_KEY`] ||
       undefined) as string | undefined,
-    searchKey: (import.meta?.env[`${env.toUpperCase()}_SEARCH_KEY`] ||
+    searchKey: ((import.meta?.env &&
+      import.meta?.env[`${env.toUpperCase()}_SEARCH_KEY`]) ||
       import.meta?.env[`VITE_${env.toUpperCase()}_SEARCH_KEY`] ||
       undefined) as string | undefined,
 
