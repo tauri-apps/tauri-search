@@ -38,7 +38,6 @@ importers:
       markdown-it-expandable: ^1.0.2
       markdown-it-link-attributes: ^4.0.0
       markdown-it-prism: ^2.2.2
-      meili-searchbar: ^2.1.0
       nprogress: ^0.2.0
       pinia: ^2.0.11
       prism-theme-vars: ^0.2.2
@@ -69,7 +68,6 @@ importers:
       floating-vue: 2.0.0-beta.5_vue@3.2.30
       inferred-types: 0.18.4
       markdown-it-expandable: 1.0.2_markdown-it@12.3.2
-      meili-searchbar: 2.1.0
       nprogress: 0.2.0
       pinia: 2.0.11_typescript@4.5.5+vue@3.2.30
       prism-theme-vars: 0.2.2
@@ -5174,17 +5172,6 @@ packages:
     resolution: {integrity: sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=}
     engines: {node: '>= 0.6'}
     dev: true
-
-  /meili-searchbar/2.1.0:
-    resolution: {integrity: sha512-QCsk7d2dYirOvzKlCklDVOUuvNrPspFY6zUzEyJRds+FlDVpktOE+caPqPdITkq5Wj0z4ggTKvwOLLAwDfMQzw==}
-    dependencies:
-      autocomplete.js: 0.38.1
-      meilisearch: 0.24.0
-      to-factory: 1.0.0
-      zepto: 1.2.0
-    transitivePeerDependencies:
-      - encoding
-    dev: false
 
   /meilisearch/0.24.0:
     resolution: {integrity: sha512-qME1dsHZePBQi8qFdhbilcFzaL+oZJgUuls+FZ23hHpdhJI+iMFSmjjcfsxq5hdg2qczbCXv7yAo3Sh8xgfkgA==}

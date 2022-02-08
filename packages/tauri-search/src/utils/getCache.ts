@@ -69,7 +69,7 @@ export async function getCache<K extends CacheKind>(
           (c) => JSON.parse(c) as IApiModel[]
         );
       } catch (err) {
-        console.warn(`- no Typescript docs cach found at: ${cacheFile}`);
+        console.warn(`- no Typescript docs cache found at: ${cacheFile}`);
         cache = [];
       }
       break;
