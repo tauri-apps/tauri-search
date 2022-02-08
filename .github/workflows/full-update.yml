@@ -15,7 +15,7 @@ on:
         description: path to the base of the Markdown content
         required: false
         default: "docs"
-      tsAst:
+      tsAstPath:
         description: path to TSDocs JSON in repo
         required: false
         default: "docs/api/js/js-api.json"
@@ -38,6 +38,10 @@ jobs:
       STAGING_ADMIN_KEY: ${{secrets.STAGING_ADMIN_KEY}}
       GH_TOKEN: ${{secrets.GH_TOKEN}}
       GH_USER: ${{secrets.GH_USER}}
+      DOCS_PATH: ${{github.event.docsPath}}
+      TS_AST_PATH: ${{github.event.tsAstPath}}
+      REPO: ${{github.event.docsRep}
+      BRANCH: ${{github.event.docsBranch}
 
     steps:
     - uses: actions/checkout@v2
