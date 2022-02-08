@@ -5,10 +5,10 @@ const props = defineProps({
   idx: {type: String as PropType<"api" | "prose" | "repo" | "consolidated">, required: true}
 });
 const models = {
-  api: ApiModel,
-  prose: ProseModel,
-  repo: RepoModel,
-  consolidated: ConsolidatedModel
+  api: ApiModel(),
+  prose: ProseModel(),
+  repo: RepoModel(),
+  consolidated: ConsolidatedModel()
 };
 
 async function addIndex() {

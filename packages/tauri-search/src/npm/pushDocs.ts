@@ -23,13 +23,13 @@ export async function pushDocs(
   const t: Promise<IMeilisearchTaskStatus>[] = [];
   for (const doc of docs) {
     if (isProseDocument(doc)) {
-      t.push(ProseModel.query.addOrReplaceDocuments(doc));
+      t.push(ProseModel().query.addOrReplaceDocuments(doc));
     } else if (isRepoDocument(doc)) {
-      t.push(RepoModel.query.addOrReplaceDocuments(doc));
+      t.push(RepoModel().query.addOrReplaceDocuments(doc));
     } else if (isApiDocument(doc)) {
-      t.push(ApiModel.query.addOrReplaceDocuments(doc));
+      t.push(ApiModel().query.addOrReplaceDocuments(doc));
     } else if (isConsolidatedDocument(doc)) {
-      t.push(ConsolidatedModel.query.addOrReplaceDocuments(doc));
+      t.push(ConsolidatedModel().query.addOrReplaceDocuments(doc));
     }
   }
   const tasks = await Promise.all(t);

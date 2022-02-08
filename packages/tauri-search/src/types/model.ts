@@ -2,6 +2,8 @@ import { IndexSynonyms, RankingRule, RankingRulesApi } from "~/types/apis";
 import { MeiliSearchApi } from "~/utils/MeiliSearchApi";
 import { IMeiliSearchQueryApi } from ".";
 
+export type Stage = "production" | "staging" | "local";
+
 export type MeiliApi = ReturnType<typeof MeiliSearchApi>;
 
 export type Wildcard<T> = (keyof T)[] | ["*"];
@@ -71,3 +73,7 @@ export type ISearchModel<TDoc extends {}> = {
 };
 
 export type ISearchConfig<TDoc extends {}> = Omit<ISearchModel<TDoc>, "query">;
+
+export type PartialModel<T extends {}> = Omit<Partial<ISearchModel<T>>, "index"> & {
+  index: Partial<ISearchModel<T>["index"]>;
+};

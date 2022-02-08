@@ -1,8 +1,8 @@
 import { ApiModel, IApiModel } from "~/models";
-import { IMonitoredTask } from "~/types";
+import { IMonitoredTask, IEnv } from "~/types";
 import { CacheKind, getCache } from "~/utils/getCache";
-import { getEnv, IEnv } from "~/utils/getEnv";
-import { refreshTypescript } from ".";
+import { getEnv } from "~/utils/getEnv/esm/getEnv";
+import { refreshTypescript } from "./refreshTypescript";
 
 /**
  * Iterates over each Typescript module and all of the
@@ -20,7 +20,9 @@ export async function pushTypescriptDocs(options: Partial<IEnv> = {}) {
   const tasks: IMonitoredTask[] = [];
 
   for (const doc of docs) {
-    const res = await ApiModel.query.addOrReplaceDocuments(doc);
+    const res = await ApiModel(o.stage, {
+      admin_key: o.adminKey,
+    }).query.addOrReplaceDocuments(doc);
     if (res.status !== "enqueued") {
       errors.push(doc);
     } else {

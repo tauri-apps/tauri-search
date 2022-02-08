@@ -1,5 +1,6 @@
 # MeiliSearch Search Bar
 
+
 ![docssearch bar](./docs-searchbar.png)
 
 ## First Considerations

@@ -4,9 +4,10 @@ import { join } from "node:path";
 import { parseMarkdown } from "~/ast/parseMarkdown";
 import { ProseMapper } from "~/mappers";
 import { IProseModel } from "~/models/ProseModel";
+import { IEnv } from "~/types";
 import { flattenSitemap } from "~/utils/convertSitemap";
 import { CacheKind, getCache } from "~/utils/getCache";
-import { getEnv, IEnv } from "~/utils/getEnv";
+import { getEnv } from "~/utils/getEnv/esm/getEnv";
 import { writeCacheFile } from "~/utils/writeCacheFile";
 import { refreshSitemap } from "./refreshSitemap";
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { GITHUB_API_BASE } from "~/constants";
 import { GithubContentsResp } from "~/types";
-import { getEnv } from "../getEnv";
+import { getEnv } from "../getEnv/node/getEnv";
 
 /** returns the markdown text in the README.md file in the root of a repo */
 export async function getRepoReadme(

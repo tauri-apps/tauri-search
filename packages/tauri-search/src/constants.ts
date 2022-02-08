@@ -1,3 +1,5 @@
+import { Stage } from "~/types";
+
 export const TAURI_BASE_URL = `https://tauri.studio`;
 export const TAURI_JS_DOCS_URL = `${TAURI_BASE_URL}/docs/api/js`;
 
@@ -8,6 +10,12 @@ export const REPO_DOCS_CACHE = `src/generated/ast/repo/documents.json`;
 export const TS_DOCS_CACHE = `src/generated/ast/api/ts-documents.json`;
 export const TS_AST_CACHE = `src/generated/ast/api/ts-ast.json`;
 export const RS_DOCS_CACHE = `src/generated/ast/api/rs-documents.json`;
+
+export const SERVERS: Record<Stage, { url: string; search_key: string }> = {
+  local: { url: "http://localhost:7700", search_key: "" },
+  staging: { url: "https://search2.tauri.studio", search_key: "" },
+  production: { url: "https://search.tauri.studio", search_key: "" },
+};
 
 export const REPOS: `${string}/${string}`[] = [
   "tauri-apps/tauri",

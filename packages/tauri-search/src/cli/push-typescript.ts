@@ -2,10 +2,15 @@
 import { ApiModel } from "~/models";
 import { pushTypescriptDocs } from "~/pipelines/pushTypescriptDocs";
 import { communicateTaskStatus } from "~/utils/communicateTaskStatus";
+import { getEnv } from "~/utils/getEnv/node/getEnv";
 
 (async () => {
-  console.log(`- pushing Typescript API documents to Meilisearch`);
-  const { errors, tasks } = await pushTypescriptDocs({ branch: "feat/generate-js-ast" });
+  const o = getEnv();
+  console.log(`- pushing Typescript API documents to Meilisearch [${o.stage}]`);
+  const { errors, tasks } = await pushTypescriptDocs({
+    ...o,
+    branch: "feat/generate-js-ast",
+  });
   console.log();
 
   if (errors.length > 0) {
@@ -21,6 +26,8 @@ import { communicateTaskStatus } from "~/utils/communicateTaskStatus";
     console.log(
       `- Completed pushing all Typescript docs [${tasks.length}] to MeiliSearch. Now monitoring task progress ...`
     );
-    communicateTaskStatus(ApiModel, tasks, { timeout: 65000 });
+    communicateTaskStatus(ApiModel(o.stage, { admin_key: o.adminKey }), tasks, {
+      timeout: 65000,
+    });
   }
 })();

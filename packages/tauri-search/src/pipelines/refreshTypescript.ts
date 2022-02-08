@@ -1,25 +1,22 @@
 import { parseTypescriptAst } from "~/ast/parseTypescriptAst";
 import { TypescriptMapper } from "~/mappers";
 import { CacheKind, getCache } from "~/utils/getCache";
-import { getEnv, IEnv } from "~/utils/getEnv";
+import { getEnv } from "~/utils/getEnv/esm/getEnv";
 import { getRepoFile } from "~/utils/github/getRepoFile";
 import { writeCacheFile } from "~/utils/writeCacheFile";
-import { IApiModel, TypescriptBlock } from "..";
+import { TypescriptBlock, IEnv } from "~/types";
+import { IApiModel } from "~/models";
 
 /**
  * Refreshes the document cache
  */
 export async function refreshTypescript(options: Partial<IEnv> = {}) {
-  const { org, repo, branch } = { ...getEnv(), ...options };
+  const { org, repo, branch, tsAstPath } = { ...getEnv(), ...options };
   const { cacheFile } = await getCache(CacheKind.typescriptDocs, {
     ...getEnv(),
     ...options,
   });
-  const ast = (await getRepoFile(
-    `${org}/${repo}`,
-    "docs/api/js/js-api.json",
-    branch
-  )) as TypescriptBlock;
+  const ast = (await getRepoFile(`${org}/${repo}`, tsAstPath, branch)) as TypescriptBlock;
 
   const simplified = await parseTypescriptAst(ast);
 

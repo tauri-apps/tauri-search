@@ -2,15 +2,17 @@
 /* eslint-disable no-use-before-define */
 import { acceptHMRUpdate, defineStore } from "pinia";
 import type { UserModule } from "~/types";
-import type {
+import {
   IMeiliSearchHealth,
   IMeilisearchIndex,
   IMeilisearchInterface,
   IMeilisearchSearchResponse,
   IMeiliSearchStats,
   IMeilisearchIndexSettings,
+  ConsolidatedModel,
 } from "tauri-search";
 import { ApiModel } from "tauri-search";
+import { SERVERS } from "~/constants";
 
 //#region STORE
 export interface SearchState {
@@ -34,6 +36,8 @@ export interface SearchState {
   searchQuery: string;
 
   searchResults: { id: string; _idx: string; [key: string]: unknown }[];
+
+  prodResults: { id: string; _idx: string; [key: string]: unknown }[];
 }
 
 export const useSearch = defineStore("search", {
@@ -47,6 +51,7 @@ export const useSearch = defineStore("search", {
       searchQuery: "",
       searchStatus: "not-ready",
       searchResults: [],
+      prodResults: []
     } as SearchState),
   actions: {
     async search(text: string, force: boolean = false) {
@@ -67,6 +72,7 @@ export const useSearch = defineStore("search", {
       console.time("search");
       this.$state.searchStatus = "searching";
 
+      // local search
       const waitFor: Promise<any>[] = [];
       for (const idx of indexes) {
         const addIndex = (
@@ -92,12 +98,31 @@ export const useSearch = defineStore("search", {
       console.groupEnd();
       this.$state.searchResults = hits;
 
+      // prod search
+      const waitForProd: Promise<any>[] = [];
+      for (const idx of SERVERS.production.indexes) {
+        const addIndex = (
+          result: IMeilisearchSearchResponse
+        ): IMeilisearchSearchResponse => ({
+          ...result,
+          hits: result.hits.map((i) => ({ ...i, _idx: idx })),
+        });
+
+        const model = ConsolidatedModel("production");
+
+        waitForProd.push(
+          model.query.search(text, SERVERS.production.indexes[0]).then(r => addIndex(r))
+        );
+      }
+
+      this.$state.prodResults = await Promise.all(waitForProd);
+
       return results;
     },
     /** updates settings for all active indexes */
     async updateIndexSettings() {
       for (const idx of this.indexes.map((i) => i.name)) {
-        const result = (await ApiModel.query.getIndexSettings(
+        const result = (await ApiModel().query.getIndexSettings(
           idx
         )) as IMeilisearchIndexSettings<any>;
 
@@ -196,7 +221,7 @@ export const install: UserModule = ({ isClient }) => {
 };
 
 async function get<T extends {}, U extends {} = never>(url: string, cb?: (r: T) => U) {
-  const res = await fetch(url);
+  const res = await fetch(url, {headers: { "Access-Control-Allow-Origin" : "*"}});
   if (res.ok) {
     const result = res.json();
 
@@ -211,12 +236,28 @@ async function get<T extends {}, U extends {} = never>(url: string, cb?: (r: T) 
   }
 }
 
-function api(base: string = "http://localhost:7700") {
+async function post<T extends {}, U extends {} = never>(url: string, body: string,  cb?: (r: T) => U) {
+  const res = await fetch(url, { method: "post", body, headers: { "Access-Control-Allow-Origin" : "*", "Content-Type": "application/json"}});
+  if (res.ok) {
+    const result = res.json();
+
+    return (
+      cb ? (result.then((r) => cb(r)) as Promise<U>) : (result as Promise<T>)
+    ) as never extends U ? Promise<T> : Promise<U>;
+  } else {
+    console.groupCollapsed(`Error with API`);
+    console.info(`Request: GET ${url}`);
+    console.warn(`Error [${res.status}]: ${res.statusText}`);
+    console.groupEnd();
+  }
+}
+
+function api(baseUrl: string = "http://localhost:7700") {
   return {
-    search: (idx: string, text: string) => `${base}/indexes/${idx}/search?q=${text}`,
-    stats: `${base}/stats`,
-    health: `${base}/health`,
-    indexes: `${base}/indexes`,
+    search: (idx: string, text: string) => `${baseUrl}/indexes/${idx}/search?q=${text}`,
+    stats: `${baseUrl}/stats`,
+    health: `${baseUrl}/health`,
+    indexes: `${baseUrl}/indexes`,
   };
 }
 

@@ -20,6 +20,9 @@ services:
     ports:
       - 7700:7700
       - 2222:22
+    restart: unless-stopped
+    security_opt:
+      - no-new-priveledges:true
     volumes:
       - search_db:/home/db
 

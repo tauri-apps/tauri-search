@@ -1,86 +1,13 @@
-import {
-  IndexApi,
-  ISearchConfig,
-  ISearchModel,
-  RankingRule,
-  RankingRulesApi,
-} from "~/types";
-import { MeiliSearchApi } from "./MeiliSearchApi";
-import { rankingRules } from "./model-api/rankingRules";
-
-export type PartialModel<T extends {}> = Omit<Partial<ISearchModel<T>>, "index"> & {
-  index: Partial<ISearchModel<T>["index"]>;
-};
-
-const modelConfigApi = <TDoc extends {}>(update: (s: PartialModel<TDoc>) => void) => {
-  const api = <TExclude extends string = never, M extends string = never>(): IndexApi<
-    TDoc,
-    TExclude
-  > =>
-    ({
-      pk(pk: string) {
-        update({ index: { pk } });
-        return api<TExclude | "pk", M>();
-      },
-      searchable(...props) {
-        if (props?.length > 0) {
-          update({ index: { searchable: props } });
-        }
-        return api<TExclude | "searchable", M>();
-      },
-      displayed(...props) {
-        if (props?.length > 0) {
-          update({ index: { displayed: props } });
-        }
-        return api<TExclude | "displayed", M>();
-      },
-      distinct(...props) {
-        if (props?.length > 0) {
-          update({ index: { distinct: props } });
-        }
-        return api<TExclude | "distinct", M>();
-      },
-      filterable(...props) {
-        if (props?.length > 0) {
-          update({ index: { filterable: props } });
-        }
-        return api<TExclude | "filterable", M>();
-      },
-      sortable(...props) {
-        if (props?.length > 0) {
-          update({ index: { sortable: props } });
-        }
-        return api<TExclude | "searchable", M>();
-      },
-      stopWords(words) {
-        update({ index: { stopWords: words } });
-        return api<TExclude | "stopWords">();
-      },
-
-      synonyms(synonyms) {
-        update({ index: { synonyms } });
-        return api<TExclude | "synonyms">();
-      },
-
-      rankingRules(cb: (r: RankingRulesApi<TDoc>) => void) {
-        const updateRules = (r: RankingRule<TDoc>[]) => {
-          update({ index: { rules: r } });
-        };
-        const ruleApi = rankingRules(updateRules);
-        cb(ruleApi);
-
-        return api<TExclude | "rankingRules">();
-      },
-    } as IndexApi<TDoc, TExclude>);
-
-  return api();
-};
+import { SERVERS } from "~/constants";
+import { IndexApi, ISearchConfig, ISearchModel, PartialModel, Stage } from "~/types";
+import { getEnv } from "./getEnv/esm/getEnv";
+import { MeiliSearchApi, MeiliSearchOptions } from "./MeiliSearchApi";
+import { modelConfigApi } from "./model-api/modelConfigApi";
 
 export const createModel = <TDoc extends Record<string, any>>(
   /** the MeiliSearch index name which this model is servicing */
   name: string,
-  cb?: (api: IndexApi<TDoc>) => void,
-  url: string = "http://localhost:7700"
+  cb?: (api: IndexApi<TDoc>) => void
 ) => {
   const state: ISearchConfig<TDoc> = {
     name,
@@ -99,11 +26,18 @@ export const createModel = <TDoc extends Record<string, any>>(
     cb(modelConfigApi<TDoc>(updateState));
   }
 
-  return {
-    ...state,
-    query: MeiliSearchApi<TDoc>(state, { url }),
-    toString() {
-      return `Model(${name}[${state.index.pk}])`;
-    },
-  } as ISearchModel<TDoc>;
+  return (stage?: Stage, options: MeiliSearchOptions = {}) => {
+    const { adminKey, searchKey, stage: s } = stage ? { ...getEnv(), stage } : getEnv();
+
+    const url = SERVERS[s]?.url;
+    const search_key = SERVERS[s]?.search_key || searchKey;
+    const admin_key: string | undefined = adminKey || options.admin_key || "";
+    return {
+      ...state,
+      query: MeiliSearchApi<TDoc>(state, { url, search_key, admin_key, ...options }),
+      toString() {
+        return `Model(${name}[${state.index.pk}])`;
+      },
+    } as ISearchModel<TDoc>;
+  };
 };

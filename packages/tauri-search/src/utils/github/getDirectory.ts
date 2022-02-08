@@ -1,6 +1,6 @@
 import { GITHUB_API_BASE } from "~/constants";
-import { getEnv, IEnv } from "../getEnv";
-import {GithubContentsResp } from "~/types";
+import { getEnv, IEnv } from "../getEnv/node/getEnv";
+import { GithubContentsResp } from "~/types";
 import axios from "axios";
 
 /**
@@ -9,7 +9,7 @@ import axios from "axios";
 export async function getDirectory(o: IEnv) {
   const { github_token, github_user } = getEnv();
   const url = `${GITHUB_API_BASE}/repos/${o.org}/${o.repo}/contents/${o.docsPath}?ref=${o.branch}`;
-  
+
   try {
     const res = await axios.get<GithubContentsResp>(url, {
       httpAgent: "Tauri Search",
