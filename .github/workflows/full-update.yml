@@ -6,13 +6,20 @@ name: Full Update
 
 on:
   workflow_dispatch:
+    inputs:
+      stage:
+        description: choose between "staging" and "production"
+        required: true
+        default: "staging"
 
 jobs:
   testing:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: Prep Env
       uses: ./prep/action
     - name: Full Update to Staging
-      run: pnpm run full-update:staging
+      run: pnpm run "full-update:${{github.event.inputs.stage}}"
