@@ -8,17 +8,26 @@ on:
   workflow_dispatch:
     inputs:
       stage:
-        description: choose between "staging" and "production"
+        description: choose "staging" or "production"
         required: true
         default: "staging"
+      docsPath:
+        description: the path to the base of the Markdown content in the repo; the default is probably ok
+        required: false
+        default: "docs"
+      tsAst:
+        description: path to TSDocs JSON in repo
+        required: false
+        default: "docs/api/js/js-api.json"
+
 
 jobs:
   full-update:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - name: Prep Env
       uses: ./.github/actions/prep
-    - name: Full Update to Staging
+    - name: Full Update to Meilisearch
       run: pnpm run "full-update:${{github.event.inputs.stage}}"
