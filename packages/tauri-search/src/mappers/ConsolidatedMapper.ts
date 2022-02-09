@@ -70,11 +70,11 @@ export const ConsolidatedMapper: ModelMapper<
     : isApiDocument(i)
     ? IndexRank.api
     : IndexRank.prose,
-  hierarchy_radio_lvl0: null,
-  hierarchy_radio_lvl1: null,
-  hierarchy_radio_lvl2: null,
-  hierarchy_radio_lvl3: null,
-  hierarchy_radio_lvl4: null,
-  hierarchy_radio_lvl5: null,
+  // hierarchy_radio_lvl0: null,
+  // hierarchy_radio_lvl1: null,
+  // hierarchy_radio_lvl2: null,
+  // hierarchy_radio_lvl3: null,
+  // hierarchy_radio_lvl4: null,
+  // hierarchy_radio_lvl5: null,
   url: i.url,
 });
