@@ -13,8 +13,7 @@ describe.only("typescriptParser() - AST to List", () => {
     const { org, repo } = getEnv();
     const content = (await getRepoFile(
       `${org}/${repo}`,
-      "docs/api/js/js-api.json",
-      "feat/generate-js-ast"
+      "docs/api/js/js-api.json"
     )) as TypescriptBlock;
     prj = await parseTypescriptAst(content);
   });

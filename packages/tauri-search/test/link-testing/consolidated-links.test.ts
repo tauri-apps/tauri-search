@@ -1,22 +1,13 @@
-import { readFile } from "fs/promises";
 import { LinkExists, linkExists, LinkMissing } from "../tools/linkExists";
 import { beforeAll, describe, expect, it } from "vitest";
-import { REPO_DOCS_CACHE, TS_DOCS_CACHE } from "~/constants";
 import { ConsolidatedMapper } from "~/mappers/ConsolidatedMapper";
-import { IApiModel, IProseModel, IRepoModel } from "~/models";
-import {
-  proseDocsCacheFile,
-  refreshProse,
-  refreshRepos,
-  refreshTypescript,
-} from "~/pipelines";
-import { getEnv } from "~/utils/getEnv";
+import { refreshProse, refreshRepos, refreshTypescript } from "~/pipelines";
+
 import { CacheKind, getCache } from "~/utils/getCache";
-const { repo, branch } = getEnv();
 
 describe("link testing of consolidated index", () => {
   beforeAll(async () => {
-    await refreshTypescript({ branch: "feat/generate-js-ast" });
+    await refreshTypescript();
     await refreshRepos();
     await refreshProse();
   });
@@ -39,9 +30,9 @@ describe("link testing of consolidated index", () => {
     ).toBeTruthy();
   });
   it("test links originating from Typescript API", async () => {
-    const docs = (
-      await getCache(CacheKind.typescriptDocs, { branch: "feat/generate-js-ast" })
-    ).cache.map((i) => ConsolidatedMapper(i));
+    const docs = (await getCache(CacheKind.typescriptDocs)).cache.map((i) =>
+      ConsolidatedMapper(i)
+    );
     const links: Promise<LinkExists | LinkMissing>[] = [];
     for (const doc of docs) {
       links.push(linkExists(doc.url));

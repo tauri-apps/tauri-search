@@ -9,7 +9,6 @@ import { getEnv } from "~/utils/getEnv/node/getEnv";
   console.log(`- pushing Typescript API documents to Meilisearch [${o.stage}]`);
   const { errors, tasks } = await pushTypescriptDocs({
     ...o,
-    branch: "feat/generate-js-ast",
   });
   console.log();
 

@@ -7,7 +7,7 @@ export async function rebuildCaches() {
   await Promise.all([
     refreshProse().then((c) => (prose = [c.cacheFile as string, c.docs?.length || 0])),
     refreshRepos().then((c) => (repos = [c.cacheFile as string, c.docs?.length || 0])),
-    refreshTypescript({ branch: "feat/generate-js-ast" }).then(
+    refreshTypescript().then(
       (c) => (typescript = [c.cacheFile as string, c.docs?.length || 0])
     ),
   ]);

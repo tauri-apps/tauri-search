@@ -3,6 +3,7 @@ import { IScrapeSelectorTargets } from "~/types";
 import { createModel } from "~/utils/createModel";
 
 export type IConsolidatedModel = IScrapeSelectorTargets & {
+  anchor: string;
   from: "prose" | "api" | "repo";
   rank: number;
   symbol: string | null;
@@ -23,9 +24,9 @@ export const ConsolidatedModel = createModel<IConsolidatedModel>("consolidated",
     })
     .filterable("from", "language", "symbol")
     .searchable(
-      "content",
       "hierarchy_lvl0",
       "hierarchy_lvl1",
+      "content",
       "symbol",
       "tags",
       "rank",

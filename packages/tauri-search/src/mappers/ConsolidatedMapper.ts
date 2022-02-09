@@ -12,6 +12,7 @@ export const ConsolidatedMapper: ModelMapper<
   IConsolidatedModel
 > = (i): IConsolidatedModel => ({
   objectID: i.id,
+  anchor: i.id,
   hierarchy_lvl0: isRepoDocument(i)
     ? i.name
     : isApiDocument(i)

@@ -10,7 +10,6 @@ export async function pushConsolidatedDocs(options: Partial<IEnv> = {}) {
   const docs: IConsolidatedModel[] = [
     ...(await getCache(CacheKind.typescriptDocs, {
       ...o,
-      branch: "feat/generate-js-ast",
     }).then((c) => c.cache.map((c) => ConsolidatedMapper(c)))),
     ...(await getCache(CacheKind.proseDocs, o).then((c) =>
       c.cache.map((c) => ConsolidatedMapper(c))
