@@ -22,7 +22,7 @@ services:
       - 2222:22
     restart: unless-stopped
     security_opt:
-      - no-new-priviledges:true
+      - no-new-privileges:true
     volumes:
       - search_db:/home/db
 

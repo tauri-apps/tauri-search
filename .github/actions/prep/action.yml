@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 name: Prepare Environment
-description: installs pnpm, installs all deps in each package
+description: installs pnpm, all npm deps, and builds CLI and NPM exports
 
 runs:
   using: "composite"
@@ -13,6 +13,7 @@ runs:
     uses: actions/setup-node@v2
     with:
       node-version: 16
+
   # - name: Cache pnpm modules
   #   shell: bash
   #   uses: pnpm/action-setup@v2
