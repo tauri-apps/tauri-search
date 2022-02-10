@@ -51,7 +51,7 @@ importers:
       vite-plugin-md: ^0.11.8
       vite-plugin-pages: ^0.20.2
       vite-plugin-pwa: ^0.11.13
-      vite-plugin-vue-layouts: ^0.5.0
+      vite-plugin-vue-layouts: ^0.6.0
       vite-plugin-windicss: ^1.7.0
       vite-ssg: ^0.17.10
       vitest: ^0.3.0
@@ -105,7 +105,7 @@ importers:
       vite-plugin-md: 0.11.8_vite@2.8.0
       vite-plugin-pages: 0.20.2_74c57c6669a9652c267f522b0d6c9a3b
       vite-plugin-pwa: 0.11.13_vite@2.8.0
-      vite-plugin-vue-layouts: 0.5.0_96c99e3b7a55d9fa64f74317a359b00e
+      vite-plugin-vue-layouts: 0.6.0_96c99e3b7a55d9fa64f74317a359b00e
       vite-plugin-windicss: 1.7.0_vite@2.8.0
       vite-ssg: 0.17.10_dd02a634c6d9f894c7a4243a6abbc11a
       vitest: 0.3.0_jsdom@19.0.0
@@ -2564,7 +2564,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001310
-      electron-to-chromium: 1.4.67
+      electron-to-chromium: 1.4.68
       escalade: 3.1.1
       node-releases: 2.0.2
       picocolors: 1.0.0
@@ -3126,8 +3126,8 @@ packages:
       jake: 10.8.2
     dev: true
 
-  /electron-to-chromium/1.4.67:
-    resolution: {integrity: sha512-A6a2jEPLueEDfb7kvh7/E94RKKnIb01qL+4I7RFxtajmo+G9F5Ei7HgY5PRbQ4RDrh6DGDW66P0hD5XI2nRAcg==}
+  /electron-to-chromium/1.4.68:
+    resolution: {integrity: sha512-cId+QwWrV8R1UawO6b9BR1hnkJ4EJPCPAr4h315vliHUtVUJDk39Sg1PMNnaWKfj5x+93ssjeJ9LKL6r8LaMiA==}
     dev: true
 
   /emmet/2.3.5:
@@ -6986,8 +6986,8 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-vue-layouts/0.5.0_96c99e3b7a55d9fa64f74317a359b00e:
-    resolution: {integrity: sha512-KN03GMSGNrWxeHJo5OO9fvdZh44PfievNAoLeMbf20UQPBBO6kpIMVTYB6sFPMWmiTbqZmq3we4z/ocJkxAEiA==}
+  /vite-plugin-vue-layouts/0.6.0_96c99e3b7a55d9fa64f74317a359b00e:
+    resolution: {integrity: sha512-7QX7o/NpCfs+hyXphwYfmPqAEQ6qd4uXsvI0VsovjGT2eCoEE5dMdP6L+uqqNWY4uqv7oCvtinecZmbzZv/9Rg==}
     peerDependencies:
       vite: ^2.5.0
       vue: ^2.6.12 || ^3.2.4

@@ -11,7 +11,9 @@ export type IConsolidatedModel = Omit<
   | "hierarchy_radio_lvl4"
   | "hierarchy_radio_lvl5"
 > & {
-  anchor: string;
+  anchor_l2: string[] | null;
+  anchor_l3: string[] | null;
+  area?: string;
   from: "prose" | "api" | "repo";
   rank: number;
   symbol: string | null;
@@ -32,14 +34,17 @@ export const ConsolidatedModel = createModel<IConsolidatedModel>("consolidated",
     })
     .filterable("from", "language", "symbol")
     .searchable(
+      "area",
       "hierarchy_lvl0",
       "hierarchy_lvl1",
-      "content",
+      "anchor_l2",
       "symbol",
-      "tags",
       "rank",
+      "tags",
+      "content",
+      "hierarchy_lvl2",
       "hierarchy_lvl3",
-      "hierarchy_lvl2"
+      "anchor_l3"
     )
     .rankingRules((r) =>
       r.words().typo().sort().attribute().proximity().ASC("rank").exactness()

@@ -1,4 +1,4 @@
-import { ModelMapper, isRepoDocument, isApiDocument } from "~/types";
+import { ModelMapper, isRepoDocument, isApiDocument, isProseDocument } from "~/types";
 import { IApiModel, IConsolidatedModel, IProseModel, IRepoModel } from "~/models";
 
 export enum IndexRank {
@@ -12,7 +12,15 @@ export const ConsolidatedMapper: ModelMapper<
   IConsolidatedModel
 > = (i): IConsolidatedModel => ({
   objectID: i.id,
-  anchor: i.id,
+  anchor_l2: isProseDocument(i) ? i.headings || null : null,
+  anchor_l3: isProseDocument(i) ? i.subHeadings || null : null,
+  area: isProseDocument(i)
+    ? i.area
+    : isRepoDocument(i)
+    ? i.kind
+    : isApiDocument(i)
+    ? i.module
+    : "",
   hierarchy_lvl0: isRepoDocument(i)
     ? i.name
     : isApiDocument(i)
@@ -29,7 +37,7 @@ export const ConsolidatedMapper: ModelMapper<
       : i.kind || null
     : isApiDocument(i)
     ? i.language
-    : i.sections?.join(" ") || null,
+    : i.headings?.join(" ") || null,
   hierarchy_lvl3: isRepoDocument(i)
     ? i.description || null
     : isApiDocument(i)
@@ -39,17 +47,17 @@ export const ConsolidatedMapper: ModelMapper<
     ? i.language || null
     : isApiDocument(i)
     ? null
-    : i.category || null,
+    : i.section || null,
   hierarchy_lvl5: isRepoDocument(i)
     ? i.license || null
     : isApiDocument(i)
     ? null
-    : i.code?.join(" ") || null,
+    : i.area || null,
   hierarchy_lvl6: isRepoDocument(i)
     ? String(i.stars) || null
     : isApiDocument(i)
     ? null
-    : null,
+    : i.code?.join(" ") || null,
   from: isRepoDocument(i) ? "repo" : isApiDocument(i) ? "api" : "prose",
   symbol: isApiDocument(i) ? i.kind : null,
   language: isApiDocument(i)
@@ -62,7 +70,7 @@ export const ConsolidatedMapper: ModelMapper<
     ? i.topics?.join(" ") || null
     : isApiDocument(i)
     ? i.declaration || null
-    : i.subSections?.join(" ") || null,
+    : i.subHeadings?.join(" ") || null,
 
   text: isApiDocument(i) ? i.comment || null : i.text || null,
   rank: isRepoDocument(i)
