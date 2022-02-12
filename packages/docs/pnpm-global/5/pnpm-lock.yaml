@@ -2,6 +2,3 @@ lockfileVersion: 5.3
 
 specifiers:
   meili-searchbar: ^2.1.0
-
-dependencies:
-  meili-searchbar: link:../../../../../../../../../Users/ken/pnpm-global/5/node_modules/meili-searchbar
