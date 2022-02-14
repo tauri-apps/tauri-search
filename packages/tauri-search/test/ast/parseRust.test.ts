@@ -25,5 +25,7 @@ describe("parseRustAst()", () => {
     // crate_version is a semver string
     expect(typeof ast.crate_version).toEqual("string");
     expect(ast.crate_version.split(".")).toHaveLength(3);
+
+    
   });
 });
