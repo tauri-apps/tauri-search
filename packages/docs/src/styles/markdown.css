@@ -1,0 +1,125 @@
+/* https://github.com/antfu/prism-theme-vars */
+@import 'prism-theme-vars/base.css';
+
+.prose {
+  --prism-font-family: 'Input Mono', monospace;
+  @apply w-4xl max-w-4xl;
+}
+
+blockquote {
+  @apply dark:text-gray-400 text-gray-600;
+}
+
+.prose img {
+  width: 100%;
+}
+
+.prose h2 {
+  @apply text-2xl;
+}
+
+.prose blockquote {
+  margin-inline-start: 0.75rem;
+  margin-inline-end: 1rem;
+}
+
+/* remove typography plugin's bullet point */
+.prose ul > li.expandable::before {
+  content: none;
+  /* margin-right: 1.25em; */
+}
+.prose-sm ul > li.expandable::before {
+  content: none;
+}
+
+.prose ul > li.expandable {
+  padding-left: 1px;
+}
+
+.prose ul {
+  padding-inline-start: 20px;
+}
+
+
+details > *:not(summary) {
+	/* padding-left: 1rem; */
+}
+
+
+.prose blockquote p:first-of-type::before {
+  content: none;
+}
+.prose blockquote p:first-of-type::after {
+  content: none;
+}
+
+.prose code::before{
+  content: none;
+}
+.prose code::after{
+  content: none;
+}
+.prose :not(pre)>code {
+  @apply px-0.75 py-0.25 bg-gray-200 dark:bg-gray-600 rounded;
+}
+
+a code {
+  @apply dark:bg-blue-600/25 hover:dark:bg-blue-700 dark:text-gray-300 px-0.5 py-0.25 rounded;
+}
+
+.prose a {
+    @apply no-underline cursor-pointer text-blue-800 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500;
+}
+
+summary {
+  @apply cursor-pointer hover:bg-light-500/10 px-1.5 rounded -ml-1.5;
+}
+
+
+html:not(.dark) .prose {
+  --prism-foreground: #393a34;
+  --prism-background: #fbfbfb;
+  --prism-comment: #a0ada0;
+  --prism-string: #b56959;
+  --prism-literal: #2f8a89;
+  --prism-number: #296aa3;
+  --prism-keyword: #1c6b48;
+  --prism-function: #6c7834;
+  --prism-boolean: #1c6b48;
+  --prism-constant: #a65e2b;
+  --prism-deleted: #a14f55;
+  --prism-class: #2993a3;
+  --prism-builtin: #ab5959;
+  --prism-property: #b58451;
+  --prism-namespace: #b05a78;
+  --prism-punctuation: #8e8f8b;
+  --prism-decorator: #bd8f8f;
+  --prism-regex: #ab5e3f;
+  --prism-json-property: #698c96;
+}
+
+html.dark .prose {
+  --prism-foreground: #d4cfbf;
+  --prism-background: #151515;
+  --prism-comment: #758575;
+  --prism-string: #d48372;
+  --prism-literal: #429988;
+  --prism-keyword: #4d9375;
+  --prism-boolean: #1c6b48;
+  --prism-number: #6394bf;
+  --prism-variable: #c2b36e;
+  --prism-function: #a1b567;
+  --prism-deleted: #a14f55;
+  --prism-class: #54b1bf;
+  --prism-builtin: #e0a569;
+  --prism-property: #dd8e6e;
+  --prism-namespace: #db889a;
+  --prism-punctuation: #858585;
+  --prism-decorator: #bd8f8f;
+  --prism-regex: #ab5e3f;
+  --prism-json-property: #6b8b9e;
+  --prism-line-number: #888888;
+  --prism-line-number-gutter: #eeeeee;
+  --prism-line-highlight-background: #444444;
+  --prism-selection-background: #444444;
+}

@@ -2,23 +2,27 @@ services:
   # We are not using the scraper for anything currently but keeping it here
   # for now in case we decide to
 
-  # scraper:
-  #   image: getmeili/docs-scraper:latest
-  #   container_name: scraper
-  #   command: pipenv run ./docs_scraper config.json -d
-  #   depends_on:
-  #     - search
-  #   environment:
-  #     - MEILISEARCH_HOST_URL=localhost:7700
-  #     - MEILISEARCH_API_KEY=""
-  #   volumes:
-  #     - ./scraper:/data.ms
+  scraper:
+    image: getmeili/docs-scraper:latest
+    container_name: scraper
+    command: "pipenv run docs_scraper config.json -vv -d"
+    depends_on:
+      - search
+    environment:
+      - MEILISEARCH_HOST_URL=localhost:7700
+      - MEILISEARCH_API_KEY=""
+    volumes:
+      - ./scraper:/docs-scraper
 
   search:
     image: getmeili/meilisearch:latest
     container_name: search
     ports:
       - 7700:7700
+      - 2222:22
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - search_db:/home/db
 

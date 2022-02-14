@@ -1,15 +1,26 @@
 {
   "folders": [
     {
-      "name": "✨ tauri-search",
+      "name": "✨ root",
       "path": "."
     },
     {
-      "name": "📚 docs",
-      "path": "./docs"
+      "name": "📦 tauri-search",
+      "path": "packages/tauri-search"
+    },
+    {
+      "name": "📚 Docs",
+      "path": "packages/docs"
     }
   ],
   "settings": {
-    "monorepoWorkspace.includeRoot": true
+    "monorepoWorkspace.includeRoot": true,
+    "i18n-ally.keystyle": "nested",
+    "yaml.schemas": {
+      "https://json.schemastore.org/github-action.json": [
+        "file:///Volumes/Coding/playground/t/tauri-search/.github/workflows/atomic/build.yml",
+        "file:///Volumes/Coding/playground/t/tauri-search/.github/workflows/atomic/lint.yaml"
+      ]
+    }
   }
 }

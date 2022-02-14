@@ -1,0 +1,36 @@
+# Copyright 2019-2022 Tauri Programme within The Commons Conservancy
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
+
+name: Prepare Environment
+description: installs pnpm, all npm deps, and builds CLI and NPM exports
+
+runs:
+  using: "composite"
+  steps:
+  - uses: actions/checkout@v2
+  - name: Setup Node
+    uses: actions/setup-node@v2
+    with:
+      node-version: 16
+
+  # - name: Cache pnpm modules
+  #   shell: bash
+  #   uses: pnpm/action-setup@v2
+  #   with:
+  #     version: 6
+  #     path: ~/.pnpm-store
+  #     key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+  #     restore-keys: ${{ runner.os }}-
+  - name: Install pnpm dependencies
+    uses: pnpm/action-setup@v2
+    with:
+      version: 6
+      run_install: true
+      # recursive: true
+  - name: Build CLI and NPM exports
+    shell: bash
+    run: pnpm run build
+  - name: Environment Prepped
+    shell: bash
+    run: echo Node, pnpm, and all deps are installed!

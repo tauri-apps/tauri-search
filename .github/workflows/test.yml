@@ -1,0 +1,29 @@
+# Copyright 2019-2022 Tauri Programme within The Commons Conservancy
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
+
+name: Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  search-server:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Start Docker contained Search Server
+
+  testing:
+    runs-on: ubuntu-latest
+    
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Prep Env
+      uses: ./prep
+    - name: Lint
+      run: pnpm run lint
+    - name: Unit Test
+      run: pnpm run test
