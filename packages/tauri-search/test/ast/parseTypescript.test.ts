@@ -4,7 +4,7 @@ import { TypescriptKind } from "~/enums";
 import type { Expect, Equal } from "@type-challenges/utils";
 import { TsDocProject, TypescriptBlock, TypescriptSymbol } from "~/types";
 import { getRepoFile } from "~/utils/github/getRepoFile";
-import { getEnv } from "~/utils/getEnv";
+import { getEnv } from "~/utils/getEnv/esm/getEnv";
 
 let prj: TsDocProject;
 

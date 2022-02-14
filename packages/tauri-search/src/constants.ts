@@ -2,13 +2,12 @@ import { Stage } from "~/types";
 
 export const TAURI_BASE_URL = `https://tauri.studio`;
 export const TAURI_JS_DOCS_URL = `${TAURI_BASE_URL}/docs/api/js`;
-
 export const GITHUB_API_BASE = `https://api.github.com`;
-
 export const REPO_DOCS_CACHE = `src/generated/ast/repo/documents.json`;
 
 export const TS_DOCS_CACHE = `src/generated/ast/api/ts-documents.json`;
 export const TS_AST_CACHE = `src/generated/ast/api/ts-ast.json`;
+export const RUST_AST_FIXTURE = `test/fixtures/rust-ast.json`;
 export const RS_DOCS_CACHE = `src/generated/ast/api/rs-documents.json`;
 
 export const SERVERS: Record<Stage, { url: string; search_key: string }> = {

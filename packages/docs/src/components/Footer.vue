@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { isDark, toggleDark } from "~/composables";
+import { SearchBar } from "meili-searchbar";
 
 const { t, availableLocales, locale } = useI18n();
+
+const config = {
+    hostUrl: "http://localhost:7700",
+    apiKey: undefined,
+    index: "consolidated",
+    primaryKey: "objectID",
+    debug: true,
+  };
 
 const toggleLocales = () => {
   // change to some real logic
@@ -123,6 +132,12 @@ const toggleLocales = () => {
         Switch Language for Heading Content
       </template>
     </v-tooltip>
+
+    <div class="px-4 text-gray-200/50 dark:text-gray-300/50 text-light ">
+      |
+    </div>
+
+    <search-bar :config="config" class="w-64 max-w-64" />
   </nav>
 </template>
 

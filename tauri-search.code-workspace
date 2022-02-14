@@ -11,6 +11,10 @@
     {
       "name": "📚 Docs",
       "path": "packages/docs"
+    },
+    {
+      "name": "🦀 scraper",
+      "path": "packages/scraper"
     }
   ],
   "settings": {
