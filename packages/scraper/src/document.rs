@@ -1,55 +1,116 @@
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    fmt::{self, Display, Formatter},
+};
 
-use anyhow::Result;
+use anyhow::{anyhow, Error, Result};
 use scraper::{ElementRef, Html, Selector};
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
+use tokio_stream::StreamExt;
+
+use crate::elements;
 
 /// A `Selection` captures the key characteristics of a part of the DOM tree that
 /// is intersection of an HTML document (`Html`) and a selector (`Selector`).
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Selection {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
-    pub class: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub class: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub style: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// The `href` property, if present on the selected element
     pub href: Option<String>,
-    pub text: String,
-    pub html: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// The `src` property, if present on the selected element
+    pub src: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// The plain text within the selected DOM element
+    pub text: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// The innerHTML of the selected DOM element
+    pub html: Option<String>,
+
+    /// While not a heavily used prop in the body of HTML it is very
+    /// common to have this -- paired with "name" -- in the meta properties
+    /// of a page.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub content: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rel: Option<String>,
+    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    pub type_: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub disabled: Option<bool>,
+
+    /// other -- less used props -- can still be stored
+    /// but they will be stored as a JSON hash value in
+    /// this `other` property to avoid too many props.
+    #[serde(skip_serializing_if = "HashMap::is_empty")]
+    pub other: HashMap<String, Value>,
 }
 
-impl From<ElementRef<'_>> for Selection {
-    fn from(el: ElementRef) -> Self {
-        Self {
-            id: match el.value().attr("id") {
-                Some(v) => Some(v.to_string()),
-                None => None,
-            },
-            class: el.value().classes().into_iter().collect(),
-            href: match el.value().attr("href") {
-                Some(v) => Some(v.to_string()),
-                None => None,
-            },
-            text: el.text().collect(),
-            html: el.inner_html(),
+impl Selection {
+    fn new() -> Self {
+        Selection {
+            id: None,
+            class: None,
+            style: None,
+            name: None,
+            href: None,
+            text: None,
+            html: None,
+            content: None,
+            rel: None,
+            src: None,
+            type_: None,
+            disabled: None,
+
+            other: HashMap::new(),
         }
     }
 }
 
-#[derive(Debug, Clone)]
+impl From<ElementRef<'_>> for Selection {
+    fn from(el: ElementRef) -> Self {
+        let mut selection = Selection::new();
+        selection.id = elements::id(&el);
+        selection.class = elements::class(&el);
+        selection.style = elements::style(&el);
+        selection.text = elements::text(&el);
+        selection.html = elements::html(&el);
+        selection.href = elements::href(&el);
+        selection.name = elements::name(&el);
+        selection.content = elements::content(&el);
+        selection.rel = elements::rel(&el);
+        selection.src = elements::src(&el);
+        selection.type_ = elements::type_(&el);
+
+        selection
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
 pub struct Document {
     /// The URL where the html document can be found
     pub url: String,
     pub data: Option<String>,
 }
 
-pub struct LoadedDocument {
-    /// The URL where the html document can be found
-    pub url: String,
-    /// the raw string data recieved over the network
-    pub data: String,
-}
-
 impl Document {
-    pub fn new(url: String) -> Document {
-        Document { url, data: None }
+    pub fn new(url: &str) -> Document {
+        Document {
+            url: url.to_string(),
+            data: None,
+        }
     }
 
     /// Loads the HTTP page over the network and saves as a string
@@ -67,6 +128,14 @@ impl Document {
     }
 }
 
+#[derive(Debug, Clone, Serialize)]
+pub struct LoadedDocument {
+    /// The URL where the html document can be found
+    pub url: String,
+    /// the raw string data recieved over the network
+    pub data: String,
+}
+
 impl LoadedDocument {
     /// Parses into a `ParsedDoc` and then adds selectors intended to suit the `docs.rs` site.
     pub fn to_rust_doc(self) -> ParsedDoc {
@@ -82,6 +151,16 @@ impl LoadedDocument {
     }
 }
 
+#[derive(Debug)]
+pub enum SelectorKind {
+    /** a selector with a single DOM element as result */
+    Item(Selector),
+    /** a selector with a _list_ of DOM elements as a result */
+    List(Selector),
+}
+
+#[derive(Debug, Serialize)]
+#[serde(untagged)]
 pub enum SelectionKind {
     /** a selector with a single DOM element as result */
     Item(Selection),
@@ -89,19 +168,33 @@ pub enum SelectionKind {
     List(Vec<Selection>),
 }
 
+/// A recursive structure which provides the `url` and all top level
+/// selectors on a given page as `data` and then optionally recurses
+/// into child elements and provides the same structure.
+#[derive(Debug, Serialize)]
 pub struct ParseResults {
     pub url: String,
     pub data: HashMap<String, SelectionKind>,
     pub children: Vec<ParseResults>,
 }
 
+impl Display for ParseResults {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", serde_json::to_string(&self))
+    }
+}
+
 /// A `Document` which has been loaded from the network and parsed
-/// into a DOM tree.
+/// into a DOM tree. You can add "selectors" which will be lazily
+/// evaluated when calling `get(selector)` or when exporting as
+/// a JSON payload.
 pub struct ParsedDoc {
     pub url: String,
     pub html: Html,
-    pub selectors: HashMap<String, Selection>,
-    pub list_selectors: HashMap<String, Vec<Selection>>,
+    /// a hash of selectors which will be lazily evaluated when
+    /// converting to a JSON output or when calling `get(selector)`
+    /// to extract a particular selector.
+    pub selectors: HashMap<String, SelectorKind>,
 }
 
 impl ParsedDoc {
@@ -110,17 +203,31 @@ impl ParsedDoc {
             url,
             html,
             selectors: HashMap::new(),
-            list_selectors: HashMap::new(),
         }
     }
-    /// Add a selector for an item where the expectation is there is only one
-    /// (or at least _at most_ one)
-    pub fn add_selector(mut self, name: &str, selector: &str) -> Self {
-        let selector = Selector::parse(selector)?;
-        let selector = self.html.select(&selector).next().unwrap();
+    /// Adds some useful but generic selectors which includes:
+    ///
+    /// - `title`
+    /// - `images`
+    /// - `links`
+    /// - `scripts`
+    /// - `styles`
+    /// - `meta`
+    pub fn add_generic_selectors(self) -> Self {
+        self.add_selector_all("links", "[href]")
+            .add_selector("title", "title")
+            .add_selector_all("images", "img")
+            .add_selector_all("scripts", "script")
+            .add_selector_all("styles", "[rel=\'stylesheet\']")
+            .add_selector_all("meta", "meta")
+    }
 
+    /// Add a selector for an item where the expectation is there is only one
+    /// (or more specifically _at most_ one)
+    pub fn add_selector(mut self, name: &str, selector: &str) -> Self {
+        let selector = Selector::parse(selector).unwrap();
         self.selectors
-            .insert(name.to_string(), Selection::from(selector));
+            .insert(name.to_string(), SelectorKind::Item(selector));
 
         self
     }
@@ -128,66 +235,115 @@ impl ParsedDoc {
     /// Add a selector which is expect to bring a _list_ of results
     pub fn add_selector_all(mut self, name: &str, selector: &str) -> Self {
         let selector = Selector::parse(selector).unwrap();
-        let selector = self
-            .html
-            .select(&selector)
-            .map(|m| Selection::from(m))
-            .collect();
-
-        self.list_selectors.insert(name.to_string(), selector);
+        self.selectors
+            .insert(name.to_string(), SelectorKind::List(selector));
 
         self
     }
 
-    pub fn get_selector(&self, name: &str) -> &Selection {
-        self.selectors.get(name).unwrap()
+    /// Gets the results of a specified selector being applied on the HTML document.
+    ///
+    /// **Note:** this selector must have been previously configured or this will result
+    /// in error.
+    pub fn get(&self, name: &str) -> Result<SelectionKind, Error> {
+        match self.selectors.get(name) {
+            Some(SelectorKind::Item(v)) => Ok(SelectionKind::Item(Selection::from(
+                self.html.select(&v).next().unwrap(),
+            ))),
+            Some(SelectorKind::List(v)) => Ok(
+                //
+                SelectionKind::List(
+                    self.html
+                        .select(&v)
+                        .map(move |m| Selection::from(m))
+                        .collect(),
+                ),
+            ),
+            _ => {
+                return Err(anyhow!(
+                    "could not find the '{}' selector",
+                    name.to_string()
+                ))
+            }
+        }
     }
 
-    pub fn get_selector_all(&self, name: &str) -> &Vec<Selection> {
-        self.list_selectors.get(name).unwrap()
-    }
-
+    /// returns a list of URL's which represent "child URLs" which
+    /// could be worth recursively scraping as well
     pub fn children_urls(&self) -> Vec<String> {
         let mut children = Vec::new();
 
-        for selector in self.list_selectors.keys() {
-            for selections in self.list_selectors.get(selector) {
-                for i in selections {
-                    match &i.href {
-                        Some(v) => children.push(v.to_string()),
-                        _ => (),
-                    }
+        for (_, selector) in &self.selectors {
+            match selector {
+                SelectorKind::List(v) => {
+                    self.html
+                        .select(&v)
+                        .for_each(|c| match Selection::from(c).href {
+                            Some(v) => children.push([self.url.clone(), v].join("/")),
+                            None => (),
+                        });
                 }
+                _ => (),
             }
         }
 
         children
     }
 
-    /// Returns a tree of results starting with the given URL and
-    /// then following into the children nodes.
-    async fn results_graph(&self) -> ParseResults {
+    /// Streams in child HTML pages and parses them into `ParsedDoc`
+    /// structs.
+    pub async fn get_children(&self) -> Result<Vec<ParseResults>> {
+        let urls = self.children_urls();
+        let mut children: Vec<ParseResults> = vec![];
+        let mut stream = tokio_stream::iter(urls);
+
+        while let Some(v) = stream.next().await {
+            let child = Document::new(&v)
+                .load_document()
+                .await
+                .unwrap()
+                .to_rust_doc();
+
+            children.push(child.results());
+        }
+
+        Ok(children)
+    }
+
+    /// Returns all selectors on the current page without recursing
+    /// into child pages.
+    pub fn results(&self) -> ParseResults {
         let mut data: HashMap<String, SelectionKind> = HashMap::new();
 
-        self.selectors.iter().for_each(|(k, v)| {
-            data //
-                .insert(k.to_string(), SelectionKind::Item(v.clone()));
-        });
-
-        self.list_selectors.iter().for_each(|(k, v)| {
-            data.insert(k.to_string(), SelectionKind::List(v.clone()));
-        });
-
-        // let children: Vec<dyn Future<Document>> = doc.children_urls()
-        //     .iter()
-        //     .map(|u|  load_rust_doc(u)).collect();
-        // let children = join!(children).await;
+        self.selectors
+            .iter()
+            .for_each(|(name, _)| match self.get(name) {
+                Ok(v) => {
+                    data.insert(name.to_string(), v);
+                }
+                Err(e) => {
+                    anyhow!(
+                        "Problem inserting the results for the selector '{}'. Error message was {}",
+                        name,
+                        e
+                    );
+                }
+            });
 
         ParseResults {
             url: self.url.to_string(),
             data,
             children: vec![],
         }
+    }
+
+    /// Returns a tree of `ParseResults` starting with the given URL and
+    /// then following into the children nodes (one level deep).
+    pub async fn results_graph(&self) -> Result<ParseResults> {
+        let mut current_page = self.results();
+        current_page.children = self.get_children().await?;
+
+        Ok(current_page)
     }
 }
 
