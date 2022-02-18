@@ -183,7 +183,7 @@ pub enum SelectorKind {
 #[serde(untagged)]
 pub enum SelectionKind {
     /** a selector with a single DOM element as result */
-    Item(Selection),
+    Item(Box<Selection>),
     /** a selector with a _list_ of DOM elements as a result */
     List(Vec<Selection>),
 }
@@ -332,25 +332,19 @@ impl ParsedDoc {
         self
     }
 
-    /// Gets the _results_ of a specific selector.
-    ///
-    /// **Note:** this selector must have been previously configured or this will result
-    /// in error.
+    /// Gets the results of a _specific_ selector.
     pub fn get(&self, name: &str) -> Result<Option<SelectionKind>, Error> {
         match self.selectors.get(name) {
-            Some(SelectorKind::Item(v)) => match self.html.select(&v).next() {
-                Some(v) => Ok(Some(SelectionKind::Item(Selection::from(v)))),
-                _ => Ok(None),
-            },
-            Some(SelectorKind::List(v)) => Ok(
-                //
-                Some(SelectionKind::List(
-                    self.html
-                        .select(&v)
-                        .map(move |m| Selection::from(m))
-                        .collect(),
-                )),
-            ),
+            Some(SelectorKind::Item(v)) => {
+                if let Some(el) = self.html.select(v).next() {
+                    Ok(Some(SelectionKind::Item(Box::new(Selection::from(el)))))
+                } else {
+                    Ok(None)
+                }
+            }
+            Some(SelectorKind::List(v)) => Ok(Some(SelectionKind::List(
+                self.html.select(v).map(Selection::from).collect(),
+            ))),
             _ => {
                 return Err(anyhow!(
                     "could not find the '{}' selector",
@@ -370,44 +364,33 @@ impl ParsedDoc {
         let mut children = Vec::new();
 
         for (name, selector) in &self.selectors {
-            let found = self //
+            if let Some((_, scope)) = self //
                 .child_selectors
                 .iter()
-                .find(|(s, _)| s == name);
-
-            match found {
-                // Found in child_selectors
-                Some((_, scope)) => match selector {
+                .find(|(s, _)| s == name)
+            {
+                match selector {
                     SelectorKind::List(v) => {
                         // iterate through all elements
-                        self.html.select(&v).for_each(|c| {
-                            let href = match Selection::from(c).href {
-                                Some(v) => validate_child_href(&v, scope, &self.url),
-                                None => None,
-                            };
-
-                            match href {
-                                None => {}
-                                Some(v) => children.push(v),
+                        self.html.select(v).for_each(|c| {
+                            if let Some(href) = Selection::from(c).href {
+                                if let Some(href) = validate_child_href(&href, scope, &self.url) {
+                                    children.push(href);
+                                }
                             }
                         });
                     }
                     SelectorKind::Item(v) => {
-                        let v = self.html.select(v).next();
-                        match v {
-                            Some(v) => match Selection::from(v).href {
-                                Some(v) => match validate_child_href(&v, scope, &self.url) {
-                                    Some(v) => children.push(v),
-                                    None => {}
-                                },
-                                None => {}
-                            },
-                            None => {}
+                        if let Some(el) = self.html.select(v).next() {
+                            // if selector returned an element, get href prop (if avail)
+                            if let Some(href) = Selection::from(el).href {
+                                if let Some(v) = validate_child_href(&href, scope, &self.url) {
+                                    children.push(v)
+                                }
+                            }
                         }
                     }
-                },
-                // Not found in child_selectors
-                None => {}
+                }
             }
         }
 

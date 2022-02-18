@@ -20,7 +20,7 @@ struct Args {
 
     #[clap(long)]
     /// Show the structs discovered
-    structs: Option<bool>,
+    show: Option<String>,
 }
 pub mod document;
 pub mod elements;
@@ -38,7 +38,7 @@ async fn main() -> Result<()> {
         .await?
         .for_docs_rs()
         .add_generic_selectors();
-    println!("Parsed {} ", &args.url);
+    println!("- Parsed {} ", &args.url);
 
     match (&args.output, args.follow) {
         (Some(v), false) => {
@@ -46,6 +46,10 @@ async fn main() -> Result<()> {
             fs::write(&v, results).await?;
         }
         (Some(v), true) => {
+            println!(
+                "- Loading and parsing {} child nodes",
+                &doc.get_child_urls().len()
+            );
             let results = serde_json::to_string(&doc.results_graph().await?)?;
             fs::write(&v, results).await?;
         }
