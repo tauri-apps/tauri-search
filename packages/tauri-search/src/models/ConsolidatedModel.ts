@@ -32,18 +32,18 @@ export type IConsolidatedModel = Omit<
   rank: number;
 
   /**
-   * most useful for API documents where it has the clearest mapping but 
+   * most useful for API documents where it has the clearest mapping but
    * we can sometimes report on this in other docs too
    */
   symbol: string | null;
   /**
    * A great mechanism for content authors to add words that should
-   * be associated with the document in markdown (as frontmatter). 
+   * be associated with the document in markdown (as frontmatter).
    * In repo's we can also add topics of the repo into this property.
    */
   tags: null | string[];
   /**
-   * allows association of content to a particular programming language 
+   * allows association of content to a particular programming language
    */
   language: string | null;
   /** the main body of text  */
@@ -59,7 +59,6 @@ export const ConsolidatedModel = createModel<IConsolidatedModel>("consolidated",
       js: ["typescript", "javascript", "js"],
       typescript: ["ts", "javascript", "js"],
       javascript: ["ts", "typescript", "js"],
-      
     })
     .filterable("from", "language", "symbol")
     .searchable(

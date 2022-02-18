@@ -1,0 +1,8 @@
+lockfileVersion: 5.3
+
+specifiers:
+<<<<<<< HEAD:packages/docs/pnpm-global/5/pnpm-lock.yaml
+  meili-searchbar: ^2.1.0
+=======
+  markdown-it-collapsible: ^1.0.0
+>>>>>>> aa60ea14d30f0a7d8de9c1528a5b632c470628f9:pnpm-global/5/pnpm-lock.yaml
