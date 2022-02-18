@@ -10,13 +10,13 @@ struct Args {
     /// The URL to inspect
     url: String,
 
-    #[clap(short, long)]
+    #[clap(short, long, parse(from_os_str))]
     /// the file where JSON results will be saved
     output: Option<PathBuf>,
 
     #[clap(short, long)]
     /// Follow document into child links
-    follow: Option<bool>,
+    follow: bool,
 
     #[clap(long)]
     /// Show the structs discovered
@@ -29,16 +29,24 @@ use document::Document;
 #[tokio::main]
 async fn main() -> Result<()> {
     let args = Args::parse();
+
+    // TODO: use reqwest::Url instead of String
+    // let url = Url::parse(&args.url)?;
+
     let doc = Document::new(&args.url)
         .load_document()
         .await?
-        .to_rust_doc()
+        .for_docs_rs()
         .add_generic_selectors();
-    let results = serde_json::to_string(&doc.results()).unwrap();
     println!("Parsed {} ", &args.url);
 
-    match args.output {
-        Some(v) => {
+    match (&args.output, args.follow) {
+        (Some(v), false) => {
+            let results = serde_json::to_string(&doc.results())?;
+            fs::write(&v, results).await?;
+        }
+        (Some(v), true) => {
+            let results = serde_json::to_string(&doc.results_graph().await?)?;
             fs::write(&v, results).await?;
         }
         _ => (),

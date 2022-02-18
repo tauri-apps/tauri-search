@@ -79,7 +79,7 @@ pub fn src(el: &ElementRef) -> Option<String> {
 }
 
 pub fn type_(el: &ElementRef) -> Option<String> {
-    match el.value().attr("src") {
+    match el.value().attr("type") {
         Some(v) => Some(v.to_string()),
         None => None,
     }
