@@ -110,12 +110,17 @@ pub struct Document {
 
 impl Document {
     pub fn new(url: &str) -> Document {
-        let url = match url.starts_with("http") {
-            true => url.to_string(),
-            false => ["https://", url].join(""),
-        };
-
-        Document { url, data: None }
+        if url.starts_with("http") {
+            Document {
+                url: url.to_string(),
+                data: None,
+            }
+        } else {
+            Document {
+                url: ["https://", url].join(""),
+                data: None,
+            }
+        }
     }
 
     /// Loads the HTTP page over the network and saves as a string
@@ -322,7 +327,7 @@ impl ParsedDoc {
     pub fn child_selectors(mut self, selectors: Vec<&str>, scope: ChildScope) -> Self {
         let new_selectors: Vec<(String, ChildScope)> = selectors
             .iter()
-            .map(|s| (s.to_string(), scope.clone()))
+            .map(|s| ((*s).to_string(), scope.clone()))
             .collect();
 
         new_selectors

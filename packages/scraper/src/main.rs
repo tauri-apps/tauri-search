@@ -19,7 +19,7 @@ struct Args {
     follow: bool,
 
     #[clap(long)]
-    /// Show the structs discovered
+    /// Show a selector as part of console output
     show: Option<String>,
 }
 pub mod document;

@@ -33,11 +33,10 @@ pub fn text(el: &ElementRef) -> Option<String> {
 }
 
 pub fn html(el: &ElementRef) -> Option<String> {
-    let html = el.inner_html();
-    if html.is_empty() {
+    if el.inner_html().is_empty() {
         None
     } else {
-        Some(html)
+        Some(el.inner_html().trim().to_string())
     }
 }
 
@@ -62,12 +61,14 @@ pub fn type_(el: &ElementRef) -> Option<String> {
 }
 
 pub fn disabled(el: &ElementRef) -> Option<bool> {
-    match el.value().attr("disabled") {
-        Some(v) => match v {
-            "true" => Some(true),
-            _ => Some(false),
-        },
-        None => None,
+    if let Some(d) = el.value().attr("disabled") {
+        if d == "true" {
+            Some(true)
+        } else {
+            Some(false)
+        }
+    } else {
+        None
     }
 }
 
