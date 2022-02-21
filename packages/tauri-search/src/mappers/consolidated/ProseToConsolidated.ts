@@ -23,8 +23,8 @@ export const ProseToConsolidated: ModelMapper<IProseModel, IConsolidatedModel> =
   hierarchy_lvl1: i.title,
   hierarchy_lvl2: i.area || null,
   hierarchy_lvl3: i.parentSection || null,
-  hierarchy_lvl4: i.headings?.join(" ") || null,
-  hierarchy_lvl5: i.text.trim().slice(0, 20),
+  hierarchy_lvl4: null,
+  hierarchy_lvl5: null,
   hierarchy_lvl6: null,
 
   url: i.url,

@@ -1,3 +1,4 @@
+import { capitalize } from "native-dash";
 import { IConsolidatedModel, IApiModel } from "~/models";
 import { ModelMapper } from "~/types";
 import { IndexRank } from "../ConsolidatedMapper";
@@ -15,14 +16,14 @@ export const ApiToConsolidated: ModelMapper<IApiModel, IConsolidatedModel> = (i)
   area: i.module,
   language: i.language,
 
-  content: null,
+  content: `${capitalize(i.language)} API docs`,
   tags: i.tags || [],
   text: i.comment?.trim()?.slice(0, 40) || "",
 
   // compatibility props
   hierarchy_lvl0: "API Docs",
-  hierarchy_lvl1: i.name,
-  hierarchy_lvl2: i.comment?.trim()?.slice(0, 20) || null,
+  hierarchy_lvl1: i.name !== i.module ? `${i.name} (in ${i.module} module)` : i.name,
+  hierarchy_lvl2: i.kind || null,
   hierarchy_lvl3: i.declaration || null,
   hierarchy_lvl4: null,
   hierarchy_lvl5: null,
