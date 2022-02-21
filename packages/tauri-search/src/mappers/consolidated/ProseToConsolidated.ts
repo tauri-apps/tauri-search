@@ -20,8 +20,8 @@ export const ProseToConsolidated: ModelMapper<IProseModel, IConsolidatedModel> =
 
   // compatibility props
   hierarchy_lvl0: "Documentation",
-  hierarchy_lvl1: i.title,
-  hierarchy_lvl2: i.area || null,
+  hierarchy_lvl1: i.area || "",
+  hierarchy_lvl2: i.title,
   hierarchy_lvl3: i.parentSection || null,
   hierarchy_lvl4: null,
   hierarchy_lvl5: null,

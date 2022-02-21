@@ -14,15 +14,15 @@ export const RepoToConsolidated: ModelMapper<IRepoModel, IConsolidatedModel> = (
   area: i.kind === "unknown" ? null : i.kind || null,
   language: i.language,
 
-  content: null,
   tags: i.topics || [],
   text: i.text.trim().slice(0, 20),
 
   // compatibility props
+  content: i.topics?.join(", ") || null,
   hierarchy_lvl0: "Repository",
   hierarchy_lvl1: i.name,
   hierarchy_lvl2: i.description,
-  hierarchy_lvl3: i.kind === "unknown" ? null : i.kind || null,
+  hierarchy_lvl3: null,
   hierarchy_lvl4: null,
   hierarchy_lvl5: null,
   hierarchy_lvl6: null,
