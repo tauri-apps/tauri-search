@@ -20,14 +20,19 @@ export const ApiToConsolidated: ModelMapper<IApiModel, IConsolidatedModel> = (i)
   text: i.comment?.trim()?.slice(0, 40) || "",
 
   // compatibility props
-  content:
-    i.module !== i.name
-      ? `Module ${i.module} in ${capitalize(i.language)} API docs`
-      : `${capitalize(i.language)} API docs`,
+  content: i.declaration || null,
   hierarchy_lvl0: "API Docs",
   hierarchy_lvl1: i.name,
-  hierarchy_lvl2: i.kind?.replace("Namespace", "Module") || null,
-  hierarchy_lvl3: i.declaration || null,
+  hierarchy_lvl2:
+    i.module !== i.name
+      ? `${capitalize(i.language)} > ${i.module} Module > ${i.kind?.replace(
+          "Namespace",
+          "Module"
+        )} > ${i.name}`
+      : `${capitalize(i.language)} > ${i.kind?.replace("Namespace", "Module")} > ${
+          i.name
+        }`,
+  hierarchy_lvl3: null,
   hierarchy_lvl4: null,
   hierarchy_lvl5: null,
   hierarchy_lvl6: null,
