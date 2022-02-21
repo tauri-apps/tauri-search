@@ -6,6 +6,7 @@ import { getRepoFile } from "~/utils/github/getRepoFile";
 import { writeCacheFile } from "~/utils/writeCacheFile";
 import { TypescriptBlock, IEnv } from "~/types";
 import { IApiModel } from "~/models";
+import { writeFileSync } from "node:fs";
 
 /**
  * Refreshes the document cache
@@ -19,6 +20,8 @@ export async function refreshTypescript(options: Partial<IEnv> = {}) {
   const ast = (await getRepoFile(`${org}/${repo}`, tsAstPath, branch)) as TypescriptBlock;
 
   const simplified = await parseTypescriptAst(ast);
+  writeFileSync("ast.json", JSON.stringify(ast));
+  writeFileSync("simplified.json", JSON.stringify(simplified));
 
   const docs: IApiModel[] = simplified.symbols.map((i) => TypescriptMapper(i));
 

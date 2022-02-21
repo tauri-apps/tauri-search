@@ -2,7 +2,7 @@ import { IConsolidatedModel, IRepoModel } from "~/models";
 import { ModelMapper } from "~/types";
 import { IndexRank } from "../ConsolidatedMapper";
 
-export const RepoToConsolidated: ModelMapper<IRepoModel, IConsolidatedModel> = i => ({
+export const RepoToConsolidated: ModelMapper<IRepoModel, IConsolidatedModel> = (i) => ({
   objectID: i.id,
   from: "repo",
   rank: IndexRank.repo,
@@ -16,17 +16,16 @@ export const RepoToConsolidated: ModelMapper<IRepoModel, IConsolidatedModel> = i
 
   content: null,
   tags: i.topics || [],
-  text: i.text,
-
+  text: i.text.trim().slice(0, 20),
 
   // compatibility props
-  hierarchy_lvl0: i.name,
-  hierarchy_lvl1: i.description,
-  hierarchy_lvl2: i.kind === "unknown" ? null : i.kind || null,
-  hierarchy_lvl3: null,
+  hierarchy_lvl0: "Repository",
+  hierarchy_lvl1: i.name,
+  hierarchy_lvl2: i.description,
+  hierarchy_lvl3: i.kind === "unknown" ? null : i.kind || null,
   hierarchy_lvl4: null,
   hierarchy_lvl5: null,
   hierarchy_lvl6: null,
 
-  url: i.url
+  url: i.url,
 });

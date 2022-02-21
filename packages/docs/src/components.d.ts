@@ -18,6 +18,7 @@ declare module 'vue' {
     Counter: typeof import('./components/Counter.vue')['default']
     CurrentIndex: typeof import('./components/CurrentIndex.vue')['default']
     'Fluent:databaseSearch24Regular': typeof import('~icons/fluent/database-search24-regular')['default']
+    FooBar: typeof import('./components/FooBar.vue')['default']
     Footer: typeof import('./components/Footer.vue')['default']
     'Iconoir:download': typeof import('~icons/iconoir/download')['default']
     LinkValidation: typeof import('./components/LinkValidation.vue')['default']
