@@ -40,8 +40,8 @@ jobs:
       GH_USER: ${{secrets.GH_USER}}
       DOCS_PATH: ${{github.event.docsPath}}
       TS_AST_PATH: ${{github.event.tsAstPath}}
-      REPO: ${{github.event.docsRep}
-      BRANCH: ${{github.event.docsBranch}
+      REPO: ${{github.event.docsRep}}
+      BRANCH: ${{github.event.docsBranch}}
 
     steps:
     - uses: actions/checkout@v2
