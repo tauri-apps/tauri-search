@@ -14,7 +14,6 @@ function parseModule(mod: TypescriptBlock) {
     fileName: mod.sources?.shift()?.fileName || "UNKNOWN",
     comment: mod?.comment?.text || mod?.comment?.text,
     commentTags: mod?.comment?.tags,
-    children: [],
   };
   const symbols: TypescriptSymbol[] = [modDefn];
 
@@ -53,6 +52,7 @@ function parseModule(mod: TypescriptBlock) {
  * @param source if not specified will use historically factual fixture data, if a URL it will load over network, if a file then will load over file system
  */
 export async function parseTypescriptAst(
+  // AST Project
   content?: TypescriptBlock
 ): Promise<TsDocProject> {
   const ast = content ? content : (JSON.parse(await fixtureContent()) as TypescriptBlock);
@@ -68,17 +68,8 @@ export async function parseTypescriptAst(
   };
 
   for (const mod of ast.children || []) {
-    if (mod.kindString === "Namespace") {
-      project.symbols.push(...parseModule(mod));
-    } else {
-      console.error(
-        `- detected a ${mod.kindString} node with a name of "${
-          mod.name
-        }" at the root level; we would expect only Namespace/module definitions at the root level${
-          mod.comment ? `\n\tcomment: ${mod.comment}` : ""
-        }`
-      );
-    }
+    project.symbols.push(...parseModule(mod));
   }
+
   return project;
 }
