@@ -59,6 +59,10 @@ export const ConsolidatedModel = createModel<IConsolidatedModel>("consolidated",
       js: ["typescript", "javascript", "js"],
       typescript: ["ts", "javascript", "js"],
       javascript: ["ts", "typescript", "js"],
+      function: ["fn"],
+      fn: ["function"],
+      enum: ["enumeration"],
+      enumeration: ["enum"],
     })
     .filterable("from", "language", "symbol")
     .searchable(
