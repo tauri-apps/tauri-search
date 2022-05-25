@@ -48,6 +48,6 @@ export const ProseMapper: ModelMapper<MarkdownAst, IProseModel> = (i) => {
     code: i.programmingLanguages,
     text: i.text,
 
-    url: `${TAURI_BASE_URL}/${i.filepath.replace("docs/", "")}/${i.filename.replace(".md", "")}`,
+    url: `${TAURI_BASE_URL}/${i.filepath.replace("docs/", "").replace(/\d{2}-/, "")}/${i.filename.replace(".md", "")}`,
   };
 };
