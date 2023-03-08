@@ -1,4 +1,8 @@
+> **Note**
+> This repo has been archived. Visit [tauri-apps/meilisearch-docsearch](https://github.com/tauri-apps/meilisearch-docsearch) for the new UI component or [tauri-apps/tauri-docs](https://github.com/tauri-apps/tauri-docs) for updated search indexing.
+
 # tauri-search
+
 > use of Meilisearch for Tauri's website
 
 ## Getting Started
@@ -39,4 +43,3 @@ For those who aren't impressed with browser based documentation ... here's a qui
 - `pnpm run cli:push-caches` - will create caches (where necessary) and push them into the local Meilisearch server
 - `pnpm run test` - runs the terminal test runner once and exits
 - `pnpm run test:watch` - runs test runner in both console and web browser and watches for changes
-
