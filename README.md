@@ -1,5 +1,5 @@
-> **Warning**
-> This repo has been archived. Visit [tauri-apps/meilisearch-docsearch](https://github.com/tauri-apps/meilisearch-docsearch) for the new UI component or [tauri-apps/tauri-docs](https://github.com/tauri-apps/tauri-docs) for the search indexing.
+> **Note**
+> This repo has been archived. Visit [tauri-apps/meilisearch-docsearch](https://github.com/tauri-apps/meilisearch-docsearch) for the new UI component or [tauri-apps/tauri-docs](https://github.com/tauri-apps/tauri-docs) for updated search indexing.
 
 # tauri-search
 
